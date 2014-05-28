@@ -109,11 +109,12 @@ for (c in countries) {
         )
     } else {
       datasharingDescription <- paste(
-        "This chart shows the number of records about biodiversity occurring in", 
+        "This chart shows the number of records about biodiversity occurring in ", 
         name, 
-        ", with separate colours for records published from within", 
+        ", with separate colours for records published from within ", 
         name, 
-        ", and those shared by publishers from other countries."
+        ", and those shared by publishers from other countries.",
+        sep=""
       )
     }
     
