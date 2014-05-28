@@ -261,6 +261,7 @@
             <h4>Note</h4>
             <p>These charts may reveal patterns that represent biases in data collection (seasonality, public holidays) or potential issues in data management (disproportionate numbers of records shown for the first or last days in the year or each month or week). 
             Such issues may arise at various stages in data processing and require further investigation.</p>
+            <p>By generating these charts <a href="http://dev.gbif.org/issues/browse/POR-2120">an issue</a> was detected in the GBIF processing which contributes to the spike seen on the first day of the year in several charts and will be addressed.</p>
           </div>
 
           <h3 id="js-occurrence-completeness" class="page-header">Completeness and precision</h3>
@@ -391,11 +392,10 @@
             </div>
           </div>
           <h3 id="js-occurrence-repatriation" class="page-header">Data sharing with country of origin</h3>
-          <p>This chart illustrates changes in the number of records published by institutions for occurrences from within their own country and the number of records published by institutions for occurrences from other countries.</p>	                    
           <div class="row">
             <div class="col-md-4">
               <h4>Origin of occurrence records</h4>
-              <p>The number of occurrence records published from within the country of occurrence and the number published from outside the country.</p>
+              <p>{{datasharingDescription}}</p>
             </div>
           </div>
           <div class="row">
@@ -416,7 +416,7 @@
                   <li><a href="#js-occurrence-temporal">Seasonality and temporal</a></li>
                   <li><a href="#js-occurrence-completeness">Record completeness</a></li>
                   <li><a href="#js-occurrence-cells">Geographic distribution</a></li>
-                  <li><a href="#js-occurrence-repatriation">Data repatriation</a></li>
+                  <li><a href="#js-occurrence-repatriation">Data sharing</a></li>
                 </ul>
               </li>
             </ul>

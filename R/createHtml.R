@@ -81,7 +81,8 @@ data <- list(
   assets  = "../assets",
   rootPath  = "..",
   title = "Global data trends",
-  description = "Summarizing the data available in the GBIF index over time."
+  description = "Summarizing the data available in the GBIF index over time.",
+  datasharingDescription = "This chart shows the total number of records published through GBIF over time, with separate colours for records published from within the country where the species occurred, and those shared by publishers from other countries."
 )
 template <- readLines("R/index-template.html")
 writeLines(whisker.render(template, data), "report/global/index.html")
@@ -97,8 +98,23 @@ for (c in countries) {
   types <- list.dirs(path=paste("report/country", c, sep="/"), full.names=FALSE, recursive=FALSE)
   for (type in types) {
     action <- "about";
-    if ('publishedBy' %in% types) {
+    if ('publishedBy' == type) {
       action <- "published by institutions within";
+      datasharingDescription <- paste(
+        "This chart shows the number of records shared by publishers within", 
+        name, 
+        "over time, with separate colours for records about species occurring in", 
+        name, 
+        "and those occurring in other countries."
+        )
+    } else {
+      datasharingDescription <- paste(
+        "This chart shows the number of records about biodiversity occurring in", 
+        name, 
+        ", with separate colours for records published from within", 
+        name, 
+        ", and those shared by publishers from other countries."
+      )
     }
     
     data <- list( 
@@ -107,7 +123,8 @@ for (c in countries) {
       title = paste(name, "data trends"),
       description = paste("Summarizing the data", 
                           action, name, 
-                          "available in the GBIF index over time.")
+                          "available in the GBIF index over time."),
+      datasharingDescription = datasharingDescription
     )
     template <- readLines("R/index-template.html")
     writeLines(whisker.render(template, data), paste("report/country/", c, type, "index.html", sep="/"))
