@@ -1,6 +1,6 @@
 ##Analytics
 
-> The project site for http://analytics.gbif-uat.org which is currently under development.
+> This is the source repository for the site http://analytics.gbif-uat.org which is currently under development.
 
 ### What are the analytics?
 GBIF have started development to capture various metrics and enable monitoring of data trends.
