@@ -16,14 +16,6 @@ path <- "report"
 path <- "report/global"
 #path <- "report/country/AD/publishedBy"
 
-csvs <- list.files(path=path, pattern="occ_complete.csv", full.names=TRUE, recursive=TRUE, include.dirs=TRUE)
-for (csv in csvs) {
-  figureDir <- gsub("csv","figure", dirname(csv))
-  occ_complete(sourceFile=csv, targetDir=figureDir) 
-}
-
-
-
 csvs <- list.files(path=path, pattern="occ_kingdom_basisOfRecord.csv", full.names=TRUE, recursive=TRUE, include.dirs=TRUE)
 for (csv in csvs) {
   figureDir <- gsub("csv","figure", dirname(csv))
