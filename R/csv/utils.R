@@ -1,3 +1,5 @@
+install.packages("reshape2")
+install.packages("plyr")
 library(reshape2)
 library(plyr)
 
