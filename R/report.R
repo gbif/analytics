@@ -12,9 +12,16 @@ source("R/graph/spe_repatriation.R")
 
 path <- "report"
 # useful to speed up development, to only use the global directory
-#path <- "report/country/US"
-#path <- "report/global"
+#path <- "report/country/DK"
+path <- "report/global"
 #path <- "report/country/AD/publishedBy"
+
+csvs <- list.files(path=path, pattern="occ_complete.csv", full.names=TRUE, recursive=TRUE, include.dirs=TRUE)
+for (csv in csvs) {
+  figureDir <- gsub("csv","figure", dirname(csv))
+  occ_complete(sourceFile=csv, targetDir=figureDir) 
+}
+
 
 
 csvs <- list.files(path=path, pattern="occ_kingdom_basisOfRecord.csv", full.names=TRUE, recursive=TRUE, include.dirs=TRUE)
