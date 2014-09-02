@@ -12,15 +12,22 @@ source("R/graph/spe_repatriation.R")
 
 path <- "report"
 # useful to speed up development, to only use the global directory
-#path <- "report/country/DK"
-path <- "report/global"
-#path <- "report/country/AD/publishedBy"
+# path <- "report/country/TG"
+# path <- "report/global"
+#path <- "report/country/AX/publishedBy"
 
 csvs <- list.files(path=path, pattern="occ_kingdom_basisOfRecord.csv", full.names=TRUE, recursive=TRUE, include.dirs=TRUE)
 for (csv in csvs) {
   figureDir <- gsub("csv","figure", dirname(csv))
   occ_kingdomBasisOfRecord(sourceFile=csv, targetDir=figureDir) 
 }
+
+# unused
+# csvs <- list.files(path=path, pattern="occ_basisOfRecord_complete.csv", full.names=TRUE, recursive=TRUE, include.dirs=TRUE)
+# for (csv in csvs) {
+#   figureDir <- gsub("csv","figure", dirname(csv))
+#   occ_basisOfRecordComplete(sourceFile=csv, targetDir=figureDir) 
+# }
 
 csvs <- list.files(path=path, pattern="occ_dayCollected.csv", full.names=TRUE, recursive=TRUE, include.dirs=TRUE)
 for (csv in csvs) {
@@ -66,13 +73,6 @@ for (csv in csvs) {
               palette = c("#005397", "#b2df8a", "#984ea3", "#FFFFE0"),
               title='Number of species having specimen records accessible through GBIF over time')
 }
-
-
-#csvs <- list.files(path=path, pattern="occ_basisOfRecord_complete.csv", full.names=TRUE, recursive=TRUE, include.dirs=TRUE)
-#for (csv in csvs) {
-#  figureDir <- gsub("csv","figure", dirname(csv))
-#  occ_basisOfRecordComplete(sourceFile=csv, targetDir=figureDir) 
-#}
 
 csvs <- list.files(path=path, pattern="occ_complete.csv", full.names=TRUE, recursive=TRUE, include.dirs=TRUE)
 for (csv in csvs) {
