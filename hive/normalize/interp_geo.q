@@ -8,16 +8,15 @@ SET mapred.output.compression.type=BLOCK;
 SET mapred.output.compression.codec=org.apache.hadoop.io.compress.SnappyCodec;
 
 -- Use lots of mappers
-mapred.map.tasks = 200;
-hive.merge.mapfiles = false;
-hive.input.format = org.apache.hadoop.hive.ql.io.HiveInputFormat;
+SET mapred.map.tasks = ${hiveconf:mapcount};
+SET hive.merge.mapfiles = false;
+SET hive.input.format = org.apache.hadoop.hive.ql.io.HiveInputFormat;
 
-ADD JAR /Users/tim/git/occurrence/occurrence-hive/target/occurrence-hive-0.17-SNAPSHOT-jar-with-dependencies.jar;
+ADD JAR ${hiveconf:epsgjar};
+ADD JAR ${hiveconf:occjar};
 CREATE TEMPORARY FUNCTION parseGeo AS 'org.gbif.occurrence.hive.udf.CoordinateCountryParseUDF';
 
-
-
-CREATE TABLE snapshot.geo_20140419 STORED AS RCFILE AS
+CREATE TABLE snapshot.tmp_geo_interp STORED AS RCFILE AS
 SELECT 
   t1.geo_key,
   g.latitude, 

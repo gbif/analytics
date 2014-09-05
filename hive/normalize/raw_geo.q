@@ -6,6 +6,7 @@ SET mapred.output.compression.codec=org.apache.hadoop.io.compress.SnappyCodec;
 -- the union all means we can run in parallel
 SET hive.exec.parallel=true;
 
+DROP TABLE IF EXISTS snapshot.raw_geo;
 CREATE TABLE snapshot.raw_geo STORED AS RCFILE AS
 SELECT
   CONCAT_WS("|", 
@@ -159,5 +160,23 @@ FROM
     SELECT COALESCE(latitude,"") AS latitude, COALESCE(longitude,"") AS longitude, COALESCE(country,"") AS country
     FROM raw_20130910
     GROUP BY COALESCE(latitude,""), COALESCE(longitude,""), COALESCE(country,"")
+    
+    UNION ALL    
+    
+    SELECT COALESCE(latitude,"") AS latitude, COALESCE(longitude,"") AS longitude, COALESCE(country,"") AS country
+    FROM raw_20131220
+    GROUP BY COALESCE(latitude,""), COALESCE(longitude,""), COALESCE(country,"")
+    
+    UNION ALL    
+    
+    SELECT COALESCE(latitude,"") AS latitude, COALESCE(longitude,"") AS longitude, COALESCE(country,"") AS country
+    FROM raw_20140328
+    GROUP BY COALESCE(latitude,""), COALESCE(longitude,""), COALESCE(country,"")
+    
+    UNION ALL    
+    
+    SELECT COALESCE(v_decimallatitude,v_verbatimlatitude,"") AS latitude, COALESCE(v_decimallongitude,v_verbatimlongitude,"") AS longitude, COALESCE(v_country,"") AS country
+    FROM raw_20140903 
+    GROUP BY COALESCE(v_decimallatitude,v_verbatimlatitude,""), COALESCE(v_decimallongitude,v_verbatimlongitude,""), COALESCE(v_country,"")
   ) t1
 GROUP BY t1.latitude,t1.longitude,t1.country;

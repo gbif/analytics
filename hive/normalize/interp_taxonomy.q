@@ -8,14 +8,14 @@ SET mapred.output.compression.type=BLOCK;
 SET mapred.output.compression.codec=org.apache.hadoop.io.compress.SnappyCodec;
 
 -- Use lots of mappers
-mapred.map.tasks = 200;
-hive.merge.mapfiles = false;
-hive.input.format = org.apache.hadoop.hive.ql.io.HiveInputFormat;
+SET mapred.map.tasks = ${hiveconf:mapcount};
+SET hive.merge.mapfiles = false;
+SET hive.input.format = org.apache.hadoop.hive.ql.io.HiveInputFormat;
 
-ADD JAR /Users/tim/git/occurrence/occurrence-hive/target/occurrence-hive-0.17-SNAPSHOT-jar-with-dependencies.jar;
+ADD JAR ${hiveconf:occjar};
 CREATE TEMPORARY FUNCTION nubLookup AS 'org.gbif.occurrence.hive.udf.NubLookupUDF';
 
-CREATE TABLE snapshot.taxonomy_20140419 STORED AS RCFILE AS
+CREATE TABLE snapshot.tmp_taxonomy_interp STORED AS RCFILE AS
 SELECT 
   t1.taxon_key,
   n.kingdom as kingdom,
