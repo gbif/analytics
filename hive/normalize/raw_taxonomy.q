@@ -188,7 +188,7 @@ FROM
     UNION ALL
 
     SELECT COALESCE(v_kingdom,"") AS kingdom, COALESCE(v_phylum,"") AS phylum, COALESCE(v_class,"") AS class_rank, COALESCE(v_order_,"") AS order_rank, COALESCE(v_family,"") AS family, COALESCE(v_genus,"") AS genus, COALESCE(v_scientificname,"") AS scientific_name, COALESCE(v_scientificnameauthorship,"") AS author
-    FROM raw_20140903
+    FROM raw_20140908
     GROUP BY COALESCE(v_kingdom,""), COALESCE(v_phylum,""), COALESCE(v_class,""), COALESCE(v_order_,""), COALESCE(v_family,""), COALESCE(v_genus,""), COALESCE(v_scientificname,""), COALESCE(v_scientificnameauthorship,"")
 
 ) t1

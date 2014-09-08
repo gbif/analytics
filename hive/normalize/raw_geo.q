@@ -178,7 +178,7 @@ FROM
   UNION ALL
 
   SELECT COALESCE(v_decimallatitude,v_verbatimlatitude,"") AS latitude, COALESCE(v_decimallongitude,v_verbatimlongitude,"") AS longitude, COALESCE(v_country,"") AS country
-  FROM raw_20140903
+  FROM raw_20140908
   GROUP BY COALESCE(v_decimallatitude,v_verbatimlatitude,""), COALESCE(v_decimallongitude,v_verbatimlongitude,""), COALESCE(v_country,"")
 
 ) t1

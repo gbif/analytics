@@ -16,6 +16,7 @@ ADD JAR ${hiveconf:epsgjar};
 ADD JAR ${hiveconf:occjar};
 CREATE TEMPORARY FUNCTION parseGeo AS 'org.gbif.occurrence.hive.udf.CoordinateCountryParseUDF';
 
+DROP TABLE IF EXISTS snapshot.tmp_geo_interp;
 CREATE TABLE snapshot.tmp_geo_interp STORED AS RCFILE AS
 SELECT 
   t1.geo_key,
