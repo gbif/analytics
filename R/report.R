@@ -16,11 +16,11 @@ path <- "report"
 # path <- "report/global"
 #path <- "report/country/AX/publishedBy"
 
-csvs <- list.files(path=path, pattern="occ_kingdom_basisOfRecord.csv", full.names=TRUE, recursive=TRUE, include.dirs=TRUE)
-for (csv in csvs) {
-  figureDir <- gsub("csv","figure", dirname(csv))
-  occ_kingdomBasisOfRecord(sourceFile=csv, targetDir=figureDir) 
-}
+# csvs <- list.files(path=path, pattern="occ_kingdom_basisOfRecord.csv", full.names=TRUE, recursive=TRUE, include.dirs=TRUE)
+# for (csv in csvs) {
+#   figureDir <- gsub("csv","figure", dirname(csv))
+#   occ_kingdomBasisOfRecord(sourceFile=csv, targetDir=figureDir) 
+# }
 
 # unused
 # csvs <- list.files(path=path, pattern="occ_basisOfRecord_complete.csv", full.names=TRUE, recursive=TRUE, include.dirs=TRUE)
@@ -29,74 +29,76 @@ for (csv in csvs) {
 #   occ_basisOfRecordComplete(sourceFile=csv, targetDir=figureDir) 
 # }
 
-csvs <- list.files(path=path, pattern="occ_dayCollected.csv", full.names=TRUE, recursive=TRUE, include.dirs=TRUE)
-for (csv in csvs) {
-  figureDir <- gsub("csv","figure", dirname(csv))
-  occ_dayCollected(sourceFile=csv, targetDir=figureDir) 
-}
+# TODO
+# csvs <- list.files(path=path, pattern="occ_dayCollected.csv", full.names=TRUE, recursive=TRUE, include.dirs=TRUE)
+# for (csv in csvs) {
+#   figureDir <- gsub("csv","figure", dirname(csv))
+#   occ_dayCollected(sourceFile=csv, targetDir=figureDir) 
+# }
+# 
+# csvs <- list.files(path=path, pattern="occ_yearCollected.csv", full.names=TRUE, recursive=TRUE, include.dirs=TRUE)
+# for (csv in csvs) {
+#   figureDir <- gsub("csv","figure", dirname(csv))
+#   occ_yearCollected(sourceFile=csv, targetDir=figureDir) 
+# }
 
-csvs <- list.files(path=path, pattern="occ_yearCollected.csv", full.names=TRUE, recursive=TRUE, include.dirs=TRUE)
-for (csv in csvs) {
-  figureDir <- gsub("csv","figure", dirname(csv))
-  occ_yearCollected(sourceFile=csv, targetDir=figureDir) 
-}
+# csvs <- list.files(path=path, pattern="spe_kingdom.csv", full.names=TRUE, recursive=TRUE, include.dirs=TRUE)
+# for (csv in csvs) {
+#   figureDir <- gsub("csv","figure", dirname(csv))
+#   spe_kingdom(sourceFile=csv, 
+#               targetDir=figureDir, 
+#               targetFile='spe_kingdom.png',
+#               #palette=c("#542788", "#998ec3", "#f1a340", "#FFFFE0"), 
+#               palette = c("#005397", "#b2df8a", "#984ea3", "#FFFFE0"),
+#               title='Number of species having occurrence records accessible through GBIF over time')
+# }
+# 
+# csvs <- list.files(path=path, pattern="spe_kingdom_observation.csv", full.names=TRUE, recursive=TRUE, include.dirs=TRUE)
+# for (csv in csvs) {
+#   figureDir <- gsub("csv","figure", dirname(csv))
+#   spe_kingdom(sourceFile=csv, 
+#               targetDir=figureDir, 
+#               targetFile='spe_kingdom_observation.png',
+#               #palette=c("#053061", "#4393c3", "#d6604d", "#FFFFE0"), 
+#               palette = c("#005397", "#b2df8a", "#984ea3", "#FFFFE0"),
+#               title='Number of species from observation records accessible through GBIF over time')
+# }
+# 
+# csvs <- list.files(path=path, pattern="spe_kingdom_specimen.csv", full.names=TRUE, recursive=TRUE, include.dirs=TRUE)
+# for (csv in csvs) {
+#   figureDir <- gsub("csv","figure", dirname(csv))
+#   spe_kingdom(sourceFile=csv, 
+#               targetDir=figureDir, 
+#               targetFile='spe_kingdom_specimen.png',
+#               #palette=c("#00441b", "#5aae61", "#c2a5cf", "#FFFFE0"), 
+#               palette = c("#005397", "#b2df8a", "#984ea3", "#FFFFE0"),
+#               title='Number of species having specimen records accessible through GBIF over time')
+# }
+# 
+# csvs <- list.files(path=path, pattern="occ_complete.csv", full.names=TRUE, recursive=TRUE, include.dirs=TRUE)
+# for (csv in csvs) {
+#   figureDir <- gsub("csv","figure", dirname(csv))
+#   occ_complete(sourceFile=csv, targetDir=figureDir) 
+# }
+# 
+# csvs <- list.files(path=path, pattern="occ_repatriation.csv", full.names=TRUE, recursive=TRUE, include.dirs=TRUE)
+# for (csv in csvs) {
+#   figureDir <- gsub("csv","figure", dirname(csv))
+#   occ_repatriation(sourceFile=csv, targetDir=figureDir) 
+# }
 
-csvs <- list.files(path=path, pattern="spe_kingdom.csv", full.names=TRUE, recursive=TRUE, include.dirs=TRUE)
-for (csv in csvs) {
-  figureDir <- gsub("csv","figure", dirname(csv))
-  spe_kingdom(sourceFile=csv, 
-              targetDir=figureDir, 
-              targetFile='spe_kingdom.png',
-              #palette=c("#542788", "#998ec3", "#f1a340", "#FFFFE0"), 
-              palette = c("#005397", "#b2df8a", "#984ea3", "#FFFFE0"),
-              title='Number of species having occurrence records accessible through GBIF over time')
-}
-
-csvs <- list.files(path=path, pattern="spe_kingdom_observation.csv", full.names=TRUE, recursive=TRUE, include.dirs=TRUE)
-for (csv in csvs) {
-  figureDir <- gsub("csv","figure", dirname(csv))
-  spe_kingdom(sourceFile=csv, 
-              targetDir=figureDir, 
-              targetFile='spe_kingdom_observation.png',
-              #palette=c("#053061", "#4393c3", "#d6604d", "#FFFFE0"), 
-              palette = c("#005397", "#b2df8a", "#984ea3", "#FFFFE0"),
-              title='Number of species from observation records accessible through GBIF over time')
-}
-
-csvs <- list.files(path=path, pattern="spe_kingdom_specimen.csv", full.names=TRUE, recursive=TRUE, include.dirs=TRUE)
-for (csv in csvs) {
-  figureDir <- gsub("csv","figure", dirname(csv))
-  spe_kingdom(sourceFile=csv, 
-              targetDir=figureDir, 
-              targetFile='spe_kingdom_specimen.png',
-              #palette=c("#00441b", "#5aae61", "#c2a5cf", "#FFFFE0"), 
-              palette = c("#005397", "#b2df8a", "#984ea3", "#FFFFE0"),
-              title='Number of species having specimen records accessible through GBIF over time')
-}
-
-csvs <- list.files(path=path, pattern="occ_complete.csv", full.names=TRUE, recursive=TRUE, include.dirs=TRUE)
-for (csv in csvs) {
-  figureDir <- gsub("csv","figure", dirname(csv))
-  occ_complete(sourceFile=csv, targetDir=figureDir) 
-}
-
-csvs <- list.files(path=path, pattern="occ_repatriation.csv", full.names=TRUE, recursive=TRUE, include.dirs=TRUE)
-for (csv in csvs) {
-  figureDir <- gsub("csv","figure", dirname(csv))
-  occ_repatriation(sourceFile=csv, targetDir=figureDir) 
-}
-
-csvs <- list.files(path=path, pattern="spe_dayCollected.csv", full.names=TRUE, recursive=TRUE, include.dirs=TRUE)
-for (csv in csvs) {
-  figureDir <- gsub("csv","figure", dirname(csv))
-  spe_dayCollected(sourceFile=csv, targetDir=figureDir) 
-}
-
-csvs <- list.files(path=path, pattern="spe_yearCollected.csv", full.names=TRUE, recursive=TRUE, include.dirs=TRUE)
-for (csv in csvs) {
-  figureDir <- gsub("csv","figure", dirname(csv))
-  spe_yearCollected(sourceFile=csv, targetDir=figureDir) 
-}
+# TODO
+# csvs <- list.files(path=path, pattern="spe_dayCollected.csv", full.names=TRUE, recursive=TRUE, include.dirs=TRUE)
+# for (csv in csvs) {
+#   figureDir <- gsub("csv","figure", dirname(csv))
+#   spe_dayCollected(sourceFile=csv, targetDir=figureDir) 
+# }
+# 
+# csvs <- list.files(path=path, pattern="spe_yearCollected.csv", full.names=TRUE, recursive=TRUE, include.dirs=TRUE)
+# for (csv in csvs) {
+#   figureDir <- gsub("csv","figure", dirname(csv))
+#   spe_yearCollected(sourceFile=csv, targetDir=figureDir) 
+# }
 
 csvs <- list.files(path=path, pattern="spe_repatriation.csv", full.names=TRUE, recursive=TRUE, include.dirs=TRUE)
 for (csv in csvs) {

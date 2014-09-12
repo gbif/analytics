@@ -1,4 +1,4 @@
-source("R/csv/Utils.R")
+source("R/csv/utils.R")
 
 extractCountryCSV(
   sourceFile = "spe_country_yearCollected.csv", 

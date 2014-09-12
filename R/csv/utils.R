@@ -1,5 +1,5 @@
-install.packages("reshape2", repos="http://cran.rstudio.com/")
-install.packages("plyr", repos="http://cran.rstudio.com/")
+# install.packages("reshape2", repos="http://cran.rstudio.com/")
+# install.packages("plyr", repos="http://cran.rstudio.com/")
 library(reshape2)
 library(plyr)
 

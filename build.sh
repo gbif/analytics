@@ -2,6 +2,7 @@ runHive="false"
 runHadoop="false"
 runPrepare="false"
 runFigures="false"
+runJson="false"
 runHtml="false"
 
 destination_db="analytics"
@@ -11,6 +12,7 @@ snapshot_db="snapshot"
 [[ $* =~ (^| )"-runHadoop"($| ) ]] && runHadoop="true" 
 [[ $* =~ (^| )"-runPrepare"($| ) ]] && runPrepare="true"
 [[ $* =~ (^| )"-runFigures"($| ) ]] && runFigures="true"
+[[ $* =~ (^| )"-runJson"($| ) ]] && runJson="true"
 [[ $* =~ (^| )"-runHtml"($| ) ]] && runHtml="true"
 
 if [ $runHive == "true" ];then
@@ -107,7 +109,7 @@ if [ $runPrepare == "true" ];then
   Rscript R/csv/occ_kingdomBasisOfRecord.R 
   Rscript R/csv/occ_dayCollected.R 
   Rscript R/csv/occ_yearCollected.R 
-  Rscript R/csv/occ_complete.R 
+  Rscript R/csv/occ_complete.R
   Rscript R/csv/occ_repatriation.R 
   Rscript R/csv/occ_cells.R 
   Rscript R/csv/spe_kingdom.R 
@@ -125,9 +127,16 @@ else
   echo 'Skipping create figures stage (add -runFigures to command to run it)'
 fi 
 
+if [ $runJson == "true" ];then
+  echo 'Creating the Json'
+  Rscript R/html-json/createJson.R 
+else
+  echo 'Skipping create json stage (add -runJson to command to run it)'
+fi
+
 if [ $runHtml == "true" ];then
   echo 'Creating the HTML'
-  Rscript R/createHtml.R 
+  Rscript R/html-json/createHtml.R 
 else
   echo 'Skipping create html stage (add -runHtml to command to run it)'
 fi

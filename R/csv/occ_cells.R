@@ -1,4 +1,4 @@
-source("R/csv/Utils.R")
+source("R/csv/utils.R")
 
 extractCountryCSV(
   sourceFile = "occ_country_cell_one_deg.csv", 
