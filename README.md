@@ -22,14 +22,14 @@ The project is divided into several parts:
 ### Steps for adding a new snapshot and then re-running the processing
 - Make sure hadoop libraries and binaries (e.g. hive) are on your path
 - The snapshot name will be the date as yyyyMMdd so e.g. 20140923.
-- Create new "raw" table from either live hbase or from a restored occurrence backup using hive/import/hbase/create_hbase_snapshot.sh. Pass in snapshot name, source hive db and source hive table e.g. create_hbase_snapshot.sh 20140923 prod_b occurrence_hbase
-- Add the new snapshot name to the hive/normalize/build_raw_scripts.sh script, to the array hbase_v2_snapshots. If the hbase schema has changed you'll have to add a new array called e.g. hbase_v3_snapshots and add logic to process that array at the bottom of the script (another loop).
-- Add the new snapshot name to hive/normalize/create_occurrence_tables.sh in the same way as above.
-- Add the new snapshot name to hive/process/build_prepare_script.sh in the same way as above.
-- Make sure the version of epsg used in the latest occurrence-hive pom.xml is the same as the one that the script hive/normalize/create_tmp_interp_tables.sh fetches.  
+- Create new "raw" table from either live hbase or from a restored occurrence backup using ´´´hive/import/hbase/create_hbase_snapshot.sh´´´. Pass in snapshot name, source hive db and source hive table e.g. ´´´create_hbase_snapshot.sh 20140923 prod_b occurrence_hbase´´´
+- Add the new snapshot name to the ´´´hive/normalize/build_raw_scripts.sh´´´ script, to the array hbase_v2_snapshots. If the hbase schema has changed you'll have to add a new array called e.g. hbase_v3_snapshots and add logic to process that array at the bottom of the script (another loop).
+- Add the new snapshot name to ´´´hive/normalize/create_occurrence_tables.sh´´´ in the same way as above.
+- Add the new snapshot name to ´´´hive/process/build_prepare_script.sh´´´ in the same way as above.
+- Make sure the version of epsg used in the latest occurrence-hive pom.xml is the same as the one that the script ´´´hive/normalize/create_tmp_interp_tables.sh´´´ fetches.  
 - From the root (analytics) directory you can now run the build.sh script to run all the HBase and Hive table building, build all the master csv files, which are in turn processed down to per country csvs, then generate the figures and the final json file needed by gbif.org/analytics. Note that this will take up to 48 hours and is unfortunately error prone, so all steps could also be run individually. In any case it's probably best to run all parts of this script on a machine in the secretariat and ideally in a "screen" session. To run it all do: 
 
-  build.sh -runHbase -runHive -runHadoop -runPrepare -runFigures -runJson
+  ´´´build.sh -runHbase -runHive -runHadoop -runPrepare -runFigures -runJson´´´
 
 
 ### Acknowledgements
