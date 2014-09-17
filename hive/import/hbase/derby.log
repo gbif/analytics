@@ -1,0 +1,20 @@
+----------------------------------------------------------------
+2014-09-17 14:58:53.692 GMT:
+ Booting Derby version The Apache Software Foundation - Apache Derby - 10.4.2.0 - (689064): instance a816c00e-0148-841f-8da1-00000cf49c50
+on database directory /Users/oliver/SourceCode/git/analytics/hive/import/hbase/TempStatsStore  
+
+Database Class Loader started - derby.database.classpath=''
+
+2014-09-17 14:58:53.927 GMT:
+Shutting down instance a816c00e-0148-841f-8da1-00000cf49c50
+----------------------------------------------------------------
+----------------------------------------------------------------
+2014-09-17 15:07:22.329 GMT:
+ Booting Derby version The Apache Software Foundation - Apache Derby - 10.4.2.0 - (689064): instance 08264012-0148-841f-8da1-00000cf49c50
+on database directory /Users/oliver/SourceCode/git/analytics/hive/import/hbase/TempStatsStore  
+
+Database Class Loader started - derby.database.classpath=''
+
+2014-09-17 15:07:22.636 GMT:
+Shutting down instance 08264012-0148-841f-8da1-00000cf49c50
+----------------------------------------------------------------

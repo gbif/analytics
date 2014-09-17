@@ -8,12 +8,23 @@ runHtml="false"
 destination_db="analytics"
 snapshot_db="snapshot"
 
+[[ $* =~ (^| )"-runHbase"($| ) ]] && runHbase="true" 
 [[ $* =~ (^| )"-runHive"($| ) ]] && runHive="true" 
 [[ $* =~ (^| )"-runHadoop"($| ) ]] && runHadoop="true" 
 [[ $* =~ (^| )"-runPrepare"($| ) ]] && runPrepare="true"
 [[ $* =~ (^| )"-runFigures"($| ) ]] && runFigures="true"
 [[ $* =~ (^| )"-runJson"($| ) ]] && runJson="true"
 [[ $* =~ (^| )"-runHtml"($| ) ]] && runHtml="true"
+
+if [ $runHbase == "true" ];then
+  echo 'Running hbase stages (import and geo/taxonomy table creation)'
+  ./hive/process/build_raw_scripts.sh
+  ./hive/process/create_tmp_raw_tables.sh
+  ./hive/process/create_tmp_interp_tables.sh
+  ./hive/normalize/create_occurrence_tables.sh
+else 
+  echo 'Skipping hbase stage (add -runHbase to command to run it)'
+fi
 
 if [ $runHive == "true" ];then
   echo 'Running hive stages (Existing tables are replaced)'
@@ -116,6 +127,9 @@ if [ $runPrepare == "true" ];then
   Rscript R/csv/spe_dayCollected.R 
   Rscript R/csv/spe_yearCollected.R
   Rscript R/csv/spe_repatriation.R 
+  
+  # this should be removed when http://dev.gbif.org/issues/browse/POR-2455 is fixed
+  rm -Rf report/country/UK
 else 
   echo 'Skipping prepare CSV stage (add -runPrepare to command to run it)'
 fi

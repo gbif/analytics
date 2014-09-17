@@ -39,5 +39,5 @@ FROM (
   SELECT 
     taxon_key, 
     nubLookup(kingdom, phylum, class_rank, order_rank, family, genus, scientific_name, author) n
-  FROM snapshot.raw_taxonomy
+  FROM snapshot.tmp_raw_taxonomy
 ) t1;

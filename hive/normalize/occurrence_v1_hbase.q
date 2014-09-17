@@ -66,7 +66,7 @@ SELECT
              COALESCE(longitude, ""),
              COALESCE(country, "") 
    ) as geo_key,
-   parseDate(year,month,day) d,
+   parseDate(year,month,day,event_date) d,
    parseBoR(basis_of_record) as basis_of_record
  FROM snapshot.raw_${hiveconf:snapshot}
 ) r

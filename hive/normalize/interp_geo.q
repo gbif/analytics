@@ -27,5 +27,5 @@ FROM (
   SELECT 
     geo_key, 
     parseGeo(latitude, longitude, country) g
-  FROM snapshot.raw_geo
+  FROM snapshot.tmp_raw_geo
 ) t1;
