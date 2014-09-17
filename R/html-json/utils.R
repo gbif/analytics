@@ -19,9 +19,6 @@ country_lists <- function() {
   for (c in countries) {  
     types <- list.dirs(path=paste("report/country", c, sep="/"), full.names=FALSE, recursive=FALSE)
     name <- ISO_3166_1[ISO_3166_1$Alpha_2 == toupper(c),]$Name
-    if (length(name) == 0) {
-      name <- paste("ISO [", toupper(c), "]", sep="")
-    }
     if ('about' %in% types) {
       about_iso <- append(about_iso, c)
       about_names <- append(about_names, name)
