@@ -19,13 +19,16 @@ country_lists <- function() {
   for (c in countries) {  
     types <- list.dirs(path=paste("report/country", c, sep="/"), full.names=FALSE, recursive=FALSE)
     name <- ISO_3166_1[ISO_3166_1$Alpha_2 == toupper(c),]$Name
-    if ('about' %in% types) {
-      about_iso <- append(about_iso, c)
-      about_names <- append(about_names, name)
-    }
-    if ('publishedBy' %in% types) {
-      publishing_iso <- append(publishing_iso, c)
-      publishing_names <- append(publishing_names, name)
+    # ignore the non-country two letter codes (e.g. ZZ)
+    if (length(name) > 0) {
+      if ('about' %in% types) {
+        about_iso <- append(about_iso, c)
+        about_names <- append(about_names, name)
+      }
+      if ('publishedBy' %in% types) {
+        publishing_iso <- append(publishing_iso, c)
+        publishing_names <- append(publishing_names, name)
+      }
     }
   }
   
