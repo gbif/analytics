@@ -9,15 +9,15 @@ declare -a hbase_v2_snapshots=("20140908")
 
 for snapshot in "${mysql_snapshots[@]}"
 do
-   hive --hiveconf occjar=/tmp/occurrence-hive.jar --hiveconf mapcount=100 --hiveconf snapshot="$snapshot" -f occurrence_mysql.q
+  hive --hiveconf occjar=/tmp/occurrence-hive.jar --hiveconf mapcount=100 --hiveconf snapshot="$snapshot" -f hive/normalize/occurrence_mysql.q
 done
 
 for snapshot in "${hbase_v1_snapshots[@]}"
 do
-   hive --hiveconf occjar=/tmp/occurrence-hive.jar --hiveconf mapcount=100 --hiveconf snapshot="$snapshot" -f occurrence_v1_hbase.q
+   hive --hiveconf occjar=/tmp/occurrence-hive.jar --hiveconf mapcount=100 --hiveconf snapshot="$snapshot" -f hive/normalize/occurrence_v1_hbase.q
 done
 
 for snapshot in "${hbase_v2_snapshots[@]}"
 do
-   hive --hiveconf occjar=/tmp/occurrence-hive.jar --hiveconf mapcount=100 --hiveconf snapshot="$snapshot" -f occurrence_v2_hbase.q
+   hive --hiveconf occjar=/tmp/occurrence-hive.jar --hiveconf mapcount=100 --hiveconf snapshot="$snapshot" -f hive/normalize/occurrence_v2_hbase.q
 done

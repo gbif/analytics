@@ -1,3 +1,4 @@
+runHbase="false"
 runHive="false"
 runHadoop="false"
 runPrepare="false"
@@ -18,9 +19,9 @@ snapshot_db="snapshot"
 
 if [ $runHbase == "true" ];then
   echo 'Running hbase stages (import and geo/taxonomy table creation)'
-  ./hive/process/build_raw_scripts.sh
-  ./hive/process/create_tmp_raw_tables.sh
-  ./hive/process/create_tmp_interp_tables.sh
+  ./hive/normalize/build_raw_scripts.sh
+  ./hive/normalize/create_tmp_raw_tables.sh
+  ./hive/normalize/create_tmp_interp_tables.sh
   ./hive/normalize/create_occurrence_tables.sh
 else 
   echo 'Skipping hbase stage (add -runHbase to command to run it)'

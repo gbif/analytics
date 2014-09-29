@@ -9,7 +9,7 @@ max=$(( ${#hbase_v2_snapshots[*]} - 1 ))
 last_modern_snapshot=${hbase_v2_snapshots[$max]}
 
 ################ RAW TAXONOMY SCRIPT
-taxonomy_file="raw_taxonomy.q"
+taxonomy_file="hive/normalize/raw_taxonomy.q"
 
 echo '
 -- Use Snappy
@@ -49,7 +49,7 @@ for snapshot in "${old_snapshots[@]}"
 do
   echo '
     SELECT COALESCE(kingdom,"") AS kingdom, COALESCE(phylum,"") AS phylum, COALESCE(class_rank,"") AS class_rank, COALESCE(order_rank,"") AS order_rank, COALESCE(family,"") AS family, COALESCE(genus,"") AS genus, COALESCE(scientific_name,"") AS scientific_name, COALESCE(author,"") AS author
-    FROM raw_'"$snapshot"'
+    FROM snapshot.raw_'"$snapshot"'
     GROUP BY COALESCE(kingdom,""), COALESCE(phylum,""), COALESCE(class_rank,""), COALESCE(order_rank,""), COALESCE(family,""), COALESCE(genus,""), COALESCE(scientific_name,""), COALESCE(author,"")
     
     UNION ALL' >> "$taxonomy_file"
@@ -59,7 +59,7 @@ for snapshot in "${hbase_v2_snapshots[@]}"
 do
   echo '
     SELECT COALESCE(v_kingdom,"") AS kingdom, COALESCE(v_phylum,"") AS phylum, COALESCE(v_class,"") AS class_rank, COALESCE(v_order_,"") AS order_rank, COALESCE(v_family,"") AS family, COALESCE(v_genus,"") AS genus, COALESCE(v_scientificname,"") AS scientific_name, COALESCE(v_scientificnameauthorship,"") AS author
-    FROM raw_'"$snapshot"'
+    FROM snapshot.raw_'"$snapshot"'
     GROUP BY COALESCE(v_kingdom,""), COALESCE(v_phylum,""), COALESCE(v_class,""), COALESCE(v_order_,""), COALESCE(v_family,""), COALESCE(v_genus,""), COALESCE(v_scientificname,""), COALESCE(v_scientificnameauthorship,"")' >> $taxonomy_file
   
   if [[ $snapshot != $last_modern_snapshot ]]; then
@@ -81,7 +81,7 @@ GROUP BY
 
 
 ################ RAW GEO SCRIPT
-geo_file="raw_geo.q"
+geo_file="hive/normalize/raw_geo.q"
 
 echo '
 -- Use Snappy
@@ -111,7 +111,7 @@ for snapshot in "${old_snapshots[@]}"
 do
   echo '
   SELECT COALESCE(latitude,"") AS latitude, COALESCE(longitude,"") AS longitude, COALESCE(country,"") AS country
-  FROM raw_'"$snapshot"'
+  FROM snapshot.raw_'"$snapshot"'
   GROUP BY COALESCE(latitude,""), COALESCE(longitude,""), COALESCE(country,"")
   
   UNION ALL' >> "$geo_file"
@@ -121,7 +121,7 @@ for snapshot in "${hbase_v2_snapshots[@]}"
 do
   echo '
   SELECT COALESCE(v_decimallatitude,v_verbatimlatitude,"") AS latitude, COALESCE(v_decimallongitude,v_verbatimlongitude,"") AS longitude, COALESCE(v_country,"") AS country
-  FROM raw_'"$snapshot"'
+  FROM snapshot.raw_'"$snapshot"'
   GROUP BY COALESCE(v_decimallatitude,v_verbatimlatitude,""), COALESCE(v_decimallongitude,v_verbatimlongitude,""), COALESCE(v_country,"")' >> $geo_file
   
   if [[ $snapshot != $last_modern_snapshot ]]; then
