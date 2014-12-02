@@ -170,6 +170,11 @@ AS SELECT
   latitude,
   longitude,
   year,
+  CASE basis_of_record 
+    WHEN 'MACHINE_OBSERVATION' THEN 'OBSERVATION' 
+    WHEN 'HUMAN_OBSERVATION' THEN 'OBSERVATION' 
+    ELSE basis_of_record
+  END as basis_of_record,  
   COUNT(*) AS occurrenceCount
 FROM analytics.snapshots
 WHERE 
@@ -186,7 +191,13 @@ GROUP BY
   country,
   latitude,
   longitude,
-  year;
+  year,
+  CASE basis_of_record 
+    WHEN 'MACHINE_OBSERVATION' THEN 'OBSERVATION' 
+    WHEN 'HUMAN_OBSERVATION' THEN 'OBSERVATION' 
+    ELSE basis_of_record
+  END;
+  
 
 ---
 -- Location of occurrences per species per year for the species within the invasive list.
@@ -206,6 +217,11 @@ AS SELECT
   latitude,
   longitude,
   year,
+  CASE basis_of_record 
+    WHEN 'MACHINE_OBSERVATION' THEN 'OBSERVATION' 
+    WHEN 'HUMAN_OBSERVATION' THEN 'OBSERVATION' 
+    ELSE basis_of_record
+  END as basis_of_record,  
   COUNT(*) AS occurrenceCount
 FROM sweden.invasives_snapshot
 GROUP BY 
@@ -220,6 +236,11 @@ GROUP BY
   country,
   latitude,
   longitude,
-  year;
+  year,
+  CASE basis_of_record 
+    WHEN 'MACHINE_OBSERVATION' THEN 'OBSERVATION' 
+    WHEN 'HUMAN_OBSERVATION' THEN 'OBSERVATION' 
+    ELSE basis_of_record
+  END;
 
 
