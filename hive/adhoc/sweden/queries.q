@@ -175,6 +175,8 @@ AS SELECT
     WHEN 'HUMAN_OBSERVATION' THEN 'OBSERVATION' 
     ELSE basis_of_record
   END as basis_of_record,  
+  publisher_id,
+  publisher_country,
   COUNT(*) AS occurrenceCount
 FROM analytics.snapshots
 WHERE 
@@ -196,7 +198,9 @@ GROUP BY
     WHEN 'MACHINE_OBSERVATION' THEN 'OBSERVATION' 
     WHEN 'HUMAN_OBSERVATION' THEN 'OBSERVATION' 
     ELSE basis_of_record
-  END;
+  END,
+  publisher_id,
+  publisher_country;
   
 
 ---
