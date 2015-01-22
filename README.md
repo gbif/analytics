@@ -5,8 +5,8 @@
 [![DOI](https://zenodo.org/badge/7464/gbif/analytics.svg)](http://dx.doi.org/10.5281/zenodo.14181)
 
 ### What are the analytics?
-GBIF have started development to capture various metrics and enable monitoring of data trends.
-The development is being done in an open manner, to enable others to verify procedures, contribute, or fork the project for their own purposes.  The early development results are visible on http://analytics.gbif-uat.org which currently show global and country specific charts illustrating the changes observed in the GBIF index since 2007.
+GBIF are capturing various metrics to enable monitoring of data trends.
+The development is being done in an open manner, to enable others to verify procedures, contribute, or fork the project for their own purposes.  The early results are visible on http://gbif.org/analytics which currently show global and country specific charts illustrating the changes observed in the GBIF index since 2007.
 
 Please note that all samples of the index have been reprocessed to **consistent quality control** and to the **same taxonomic backbone** to enable comparisons over time.  This is the first time this analysis has been possible, and is thanks to the adoption of the Hadoop environment at GBIF which enables the large scale analysis.  In total there are approximately 8 Billion records being analysed for these reports.
 
