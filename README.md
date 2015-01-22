@@ -2,6 +2,8 @@
 
 > This is the source repository for the site http://gbif.org/analytics.
 
+[![DOI](https://zenodo.org/badge/7464/gbif/analytics.svg)](http://dx.doi.org/10.5281/zenodo.14181)
+
 ### What are the analytics?
 GBIF have started development to capture various metrics and enable monitoring of data trends.
 The development is being done in an open manner, to enable others to verify procedures, contribute, or fork the project for their own purposes.  The early development results are visible on http://analytics.gbif-uat.org which currently show global and country specific charts illustrating the changes observed in the GBIF index since 2007.
