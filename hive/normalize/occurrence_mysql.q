@@ -9,6 +9,10 @@ SET hive.exec.compress.output=true;
 SET mapred.output.compressiot.type=BLOCK;
 SET mapred.output.compressiot.codec=org.apache.hadoop.io.compress.SnappyCodec;
 
+-- Do not allow Hive to run things locally as we don't control the environment.
+-- Rationale: we don't control the environment (e.g. can blow memory, might miss Snappy etc.)
+SET hive.auto.convert.join=false;
+
 SET mapred.map.tasks = ${hiveconf:mapcount};
 
 ADD JAR ${hiveconf:occjar};
