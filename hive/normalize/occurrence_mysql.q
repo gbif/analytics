@@ -13,6 +13,13 @@ SET mapred.output.compressiot.codec=org.apache.hadoop.io.compress.SnappyCodec;
 -- Rationale: we don't control the environment (e.g. can blow memory, might miss Snappy etc.)
 SET hive.auto.convert.join=false;
 
+-- Under some configurations memory can blow in the reduce phase (shuffling)
+-- Set very conservative values to prevent this and effectively ensure we merge using disk and not in memory
+--   See: http://mail-archives.apache.org/mod_mbox/hive-user/201405.mbox/%3CCAPb7cFaFOQyf98dz1E1R_VqKBZfQnG6Ld1h=VUAEjke7RK3bjw@mail.gmail.com%3E
+--   See: http://jason4zhu.blogspot.dk/2014/11/shuffle-error-by-java-lang-out-of-memory-error-java-heap-space.html
+SET mapreduce.reduce.shuffle.input.buffer.percent=0.4;
+SET mapreduce.reduce.shuffle.parallelcopies=5;
+
 SET mapred.map.tasks = ${hiveconf:mapcount};
 
 ADD JAR ${hiveconf:occjar};
