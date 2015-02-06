@@ -3,5 +3,5 @@
 
 curl -L 'http://repository.gbif.org/service/local/artifact/maven/redirect?r=releases&g=org.gbif.occurrence&a=occurrence-hive&v=RELEASE&c=jar-with-dependencies' > /tmp/occurrence-hive.jar
 curl -L 'http://download.osgeo.org/webdav/geotools/org/geotools/gt-epsg-hsql/12.1/gt-epsg-hsql-12.1.jar' > /tmp/gt-epsg-hsql.jar
-hive --hiveconf occjar=/tmp/occurrence-hive.jar --hiveconf epsgjar=/tmp/gt-epsg-hsql.jar --hiveconf mapcount=100 -f hive/normalize/interp_geo.q
-hive --hiveconf occjar=/tmp/occurrence-hive.jar --hiveconf mapcount=100 -f hive/normalize/interp_taxonomy.q
+hive --hiveconf occjar=/tmp/occurrence-hive.jar --hiveconf props=hive/normalize/occurrence-processor.properties --hiveconf epsgjar=/tmp/gt-epsg-hsql.jar --hiveconf mapcount=100 -f hive/normalize/interp_geo.q
+hive --hiveconf occjar=/tmp/occurrence-hive.jar --hiveconf props=hive/normalize/occurrence-processor.properties --hiveconf mapcount=100 -f hive/normalize/interp_taxonomy.q

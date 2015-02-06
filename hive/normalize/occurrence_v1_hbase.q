@@ -3,6 +3,7 @@
 -- Fix UDF classpath issues
 SET mapreduce.task.classpath.user.precedence = true;
 SET mapreduce.user.classpath.first=true;
+SET mapreduce.job.user.classpath.first=true;
 
 -- Use Snappy
 SET hive.exec.compress.output=true;

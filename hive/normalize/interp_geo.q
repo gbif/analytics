@@ -14,6 +14,7 @@ SET hive.input.format = org.apache.hadoop.hive.ql.io.HiveInputFormat;
 
 ADD JAR ${hiveconf:epsgjar};
 ADD JAR ${hiveconf:occjar};
+ADD JAR ${hiveconf:props};
 CREATE TEMPORARY FUNCTION parseGeo AS 'org.gbif.occurrence.hive.udf.CoordinateCountryParseUDF';
 
 DROP TABLE IF EXISTS snapshot.tmp_geo_interp;

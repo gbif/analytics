@@ -13,6 +13,7 @@ SET hive.merge.mapfiles = false;
 SET hive.input.format = org.apache.hadoop.hive.ql.io.HiveInputFormat;
 
 ADD JAR ${hiveconf:occjar};
+ADD JAR ${hiveconf:props};
 CREATE TEMPORARY FUNCTION nubLookup AS 'org.gbif.occurrence.hive.udf.NubLookupUDF';
 
 DROP TABLE IF EXISTS snapshot.tmp_taxonomy_interp;

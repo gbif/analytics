@@ -1,8 +1,9 @@
 -- This script requires three parameters to be passed in the command line: mapcount (# of mappers), occjar (the occurrence-hive.jar to use), and snapshot (e.g. 20071219)
 
 -- Fix UDF classpath issues
-SET mapreduce.task.classpath.user.precedence = true;
-SET mapreduce.user.classpath.first=true;
+--SET mapreduce.task.classpath.user.precedence=true;
+--SET mapreduce.user.classpath.first=true;
+SET mapreduce.job.user.classpath.first=true;
   
 -- Use Snappy
 SET hive.exec.compress.output=true;
