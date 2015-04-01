@@ -24,7 +24,7 @@ The project is divided into several parts:
 ### Steps for adding a new snapshot and then re-running the processing
 - Make sure hadoop libraries and binaries (e.g. hive) are on your path
 - The snapshot name will be the date as ```yyyyMMdd``` so e.g. ```20140923```.
-- Create new "raw" table from either live hbase or from a restored occurrence backup using ```hive/import/hbase/create_hbase_snapshot.sh```. Pass in snapshot db, snapshot name, source hive db and source hive table e.g. ```create_hbase_snapshot.sh snapshot 20140923 prod_b occurrence_hbase```
+- Create new "raw" table from either live hbase or from a restored occurrence backup using ```hive/import/hbase/create_new_snapshot.sh```. Pass in snapshot db, snapshot name, source hive db and source hive table e.g. ```hive/import/hbase/create_new_snapshot.sh snapshot 20140923 prod_b occurrence_hbase```
 - Add the new snapshot name to the ```hive/normalize/build_raw_scripts.sh``` script, to the array hbase_v2_snapshots. If the hbase schema has changed you'll have to add a new array called e.g. hbase_v3_snapshots and add logic to process that array at the bottom of the script (another loop).
 - Add the new snapshot name to ```hive/normalize/create_occurrence_tables.sh``` in the same way as above.
 - Add the new snapshot name to ```hive/process/build_prepare_script.sh``` in the same way as above.
