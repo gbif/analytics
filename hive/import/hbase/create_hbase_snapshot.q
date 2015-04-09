@@ -1,7 +1,3 @@
--- this will only work if the hbase schema hasn't changed!
-ADD JAR ${hiveconf:hivehbase};
--- hbase not needed in cdh5+
--- ADD JAR ${hiveconf:hbase};
 
 -- this needed on 0.13+
 SET hive.support.quoted.identifiers=none;
