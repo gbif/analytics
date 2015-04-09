@@ -22,6 +22,7 @@ The project is divided into several parts:
 - R scripts that use moustache templating to produce the old static site
 
 ### Steps for adding a new snapshot and then re-running the processing
+- This will only work on a Cloudera Manager managed gateway such as ```prodgateway-vh``` 
 - Make sure hadoop libraries and binaries (e.g. hive) are on your path
 - The snapshot name will be the date as ```yyyyMMdd``` so e.g. ```20140923```.
 - Create new "raw" table from either live hbase or from a restored occurrence backup using ```hive/import/hbase/create_new_snapshot.sh```. Pass in snapshot db, snapshot name, source hive db and source hive table e.g. ```hive/import/hbase/create_new_snapshot.sh snapshot 20150409 prod_b occurrence_hbase```
