@@ -14,7 +14,7 @@ SET hive.input.format = org.apache.hadoop.hive.ql.io.HiveInputFormat;
 
 ADD JAR ${hiveconf:occjar};
 ADD JAR ${hiveconf:props};
-CREATE TEMPORARY FUNCTION nubLookup AS 'org.gbif.occurrence.hive.udf.NubLookupUDF';
+CREATE TEMPORARY FUNCTION nubLookup AS 'org.gbif.occurrence.hive.udf.SpeciesMatchUDF';
 
 DROP TABLE IF EXISTS snapshot.tmp_taxonomy_interp;
 CREATE TABLE snapshot.tmp_taxonomy_interp STORED AS RCFILE AS
@@ -39,6 +39,6 @@ SELECT
 FROM (
   SELECT 
     taxon_key, 
-    nubLookup(kingdom, phylum, class_rank, order_rank, family, genus, scientific_name, author) n
+    nubLookup(${hiveconf:api}, kingdom, phylum, class_rank, order_rank, family, genus, scientific_name, author) n
   FROM snapshot.tmp_raw_taxonomy
 ) t1;
