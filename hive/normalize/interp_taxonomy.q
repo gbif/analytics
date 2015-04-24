@@ -18,7 +18,7 @@ CREATE TEMPORARY FUNCTION nubLookup AS 'org.gbif.occurrence.hive.udf.SpeciesMatc
 
 DROP TABLE IF EXISTS snapshot.tmp_taxonomy_interp;
 CREATE TABLE snapshot.tmp_taxonomy_interp STORED AS RCFILE AS
-SELECT 
+SELECT
   t1.taxon_key,
   n.kingdom as kingdom,
   n.phylum as phylum,
@@ -37,8 +37,8 @@ SELECT
   n.nubSpeciesId as species_id,
   n.nubId as taxon_id
 FROM (
-  SELECT 
-    taxon_key, 
-    nubLookup(${hiveconf:api}, kingdom, phylum, class_rank, order_rank, family, genus, scientific_name, author) n
+  SELECT
+    taxon_key,
+    nubLookup("${hiveconf:api}", kingdom, phylum, class_rank, order_rank, family, genus, scientific_name, null, null) n
   FROM snapshot.tmp_raw_taxonomy
 ) t1;
