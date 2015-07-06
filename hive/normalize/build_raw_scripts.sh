@@ -3,10 +3,12 @@
 
 declare -a mysql_snapshots=("20071219" "20080401" "20080627" "20081010" "20081217" "20090406" "20090617" "20090925" "20091216" "20100401" "20100726" "20101117" "20110221" "20110610" "20110905" "20120118" "20120326" "20120713" "20121031" "20121211" "20130220" "20130521" "20130709" "20130910")
 declare -a hbase_v1_snapshots=("20131220" "20140328")
-declare -a hbase_v2_snapshots=("20140908" "20150119" "20150409" "20150703")
+declare -a hbase_v2_snapshots=("20140908" "20150119" "20150409")
+# v3 exists only because of a tiny difference in taxonomy schema (v_order_ became v_order)
+declare -a hbase_v3_snapshots=("20150703")
 
-max=$(( ${#hbase_v2_snapshots[*]} - 1 ))
-last_modern_snapshot=${hbase_v2_snapshots[$max]}
+max=$(( ${#hbase_v3_snapshots[*]} - 1 ))
+last_modern_snapshot=${hbase_v3_snapshots[$max]}
 
 ################ RAW TAXONOMY SCRIPT
 taxonomy_file="hive/normalize/raw_taxonomy.q"
@@ -60,7 +62,17 @@ do
   echo '
     SELECT COALESCE(v_kingdom,"") AS kingdom, COALESCE(v_phylum,"") AS phylum, COALESCE(v_class,"") AS class_rank, COALESCE(v_order_,"") AS order_rank, COALESCE(v_family,"") AS family, COALESCE(v_genus,"") AS genus, COALESCE(v_scientificname,"") AS scientific_name, COALESCE(v_scientificnameauthorship,"") AS author
     FROM snapshot.raw_'"$snapshot"'
-    GROUP BY COALESCE(v_kingdom,""), COALESCE(v_phylum,""), COALESCE(v_class,""), COALESCE(v_order_,""), COALESCE(v_family,""), COALESCE(v_genus,""), COALESCE(v_scientificname,""), COALESCE(v_scientificnameauthorship,"")' >> $taxonomy_file
+    GROUP BY COALESCE(v_kingdom,""), COALESCE(v_phylum,""), COALESCE(v_class,""), COALESCE(v_order_,""), COALESCE(v_family,""), COALESCE(v_genus,""), COALESCE(v_scientificname,""), COALESCE(v_scientificnameauthorship,"")
+    
+    UNION ALL' >> $taxonomy_file
+done
+
+for snapshot in "${hbase_v3_snapshots[@]}"
+do
+  echo '
+    SELECT COALESCE(v_kingdom,"") AS kingdom, COALESCE(v_phylum,"") AS phylum, COALESCE(v_class,"") AS class_rank, COALESCE(v_order,"") AS order_rank, COALESCE(v_family,"") AS family, COALESCE(v_genus,"") AS genus, COALESCE(v_scientificname,"") AS scientific_name, COALESCE(v_scientificnameauthorship,"") AS author
+    FROM snapshot.raw_'"$snapshot"'
+    GROUP BY COALESCE(v_kingdom,""), COALESCE(v_phylum,""), COALESCE(v_class,""), COALESCE(v_order,""), COALESCE(v_family,""), COALESCE(v_genus,""), COALESCE(v_scientificname,""), COALESCE(v_scientificnameauthorship,"")' >> $taxonomy_file
   
   if [[ $snapshot != $last_modern_snapshot ]]; then
     echo "UNION ALL" >> $taxonomy_file
@@ -117,7 +129,8 @@ do
   UNION ALL' >> "$geo_file"
 done
 
-for snapshot in "${hbase_v2_snapshots[@]}"
+new_snapshots=( ${hbase_v2_snapshots[@]} ${hbase_v3_snapshots[@]} )
+for snapshot in "${new_snapshots[@]}"
 do
   echo '
   SELECT COALESCE(v_decimallatitude,v_verbatimlatitude,"") AS latitude, COALESCE(v_decimallongitude,v_verbatimlongitude,"") AS longitude, COALESCE(v_country,"") AS country
@@ -128,6 +141,7 @@ do
     echo "UNION ALL" >> $geo_file
   fi
 done
+    
     
 echo '
 ) t1
