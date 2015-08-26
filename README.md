@@ -41,7 +41,7 @@ The project is divided into several parts:
 
 ### Notes for country report producers
 - Arial and Arial Narrow will be required on the machine from which the runFigures command is run. For linux that means a new dir under /usr/share/fonts with
-the .ttf files from this project's fonts/ dir copied in.
+the .ttf files from this project's fonts/ dir copied in (the provisioning projet's ansible scripts take care of this).
 - the /usr/lib64/R/library/extrafontdb dir must be writeable by the user running the runFigures command because font stuff will be written there on first load
 
 
