@@ -1,3 +1,6 @@
+-- spe_yearCollected needs more heap
+SET mapreduce.map.memory.mb=2048;
+
 CREATE DATABASE IF NOT EXISTS ${hiveconf:DB};
 
 -- Increase the memory for this job which is memory intensive.
