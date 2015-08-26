@@ -2,34 +2,37 @@ library(reshape2)
 library(plyr)
 library(ggplot2) 
 source("R/graph/utils.R")
+source("R/graph/plot_utils.R")
 
-spe_repatriation <- function(sourceFile, targetDir) {
+spe_repatriation <- function(sourceFile, plotsDir) {
   print(paste("Processing repatriation graphs for: ", sourceFile))
-  dir.create(targetDir, showWarnings=F)  
-  
+
   DF <- read.table(sourceFile, header=T, sep=",")
   DF$snapshot <- as.Date(DF$snapshot)  
   DF <- melt(DF, id=c("snapshot"))
-  colnames(DF) <- c("snapshot", "status", "count")
-  total <- ddply(DF, .(snapshot), summarize, count=sum(count), .drop=FALSE)
+  colnames(DF) <- c("snapshot", "origin", "occurrenceCount")
+  total <- ddply(DF, .(snapshot), summarize, occurrenceCount=sum(occurrenceCount), .drop=FALSE)
   displayOrder <- c("national", "international")
-  DF$status <- factor(DF$status, rev(displayOrder))
-  
+  DF$origin <- factor(DF$origin, rev(displayOrder))
+  palette <- c('#9e9ac8', '#2d004b')
   # don't plot if only a single point
-  if (length(unique(DF$snapshot)) > 1 && sum(as.numeric(DF$count)) > 0) {
-    p1 <- ggplot(DF, aes(x=snapshot,y=count)) + 
-             scale_x_date() +
-             # unknown bug: displayOrder works in RStudio here, but not on command line
-             geom_area(aes(fill=status, group = status, order = factor(status,c("national", "international"))), position='stack', linetype=0, alpha=0.7 ) +
-             ylab("Number of species (in thousands)") +
-             xlab("Date") +
-             geom_line(data = total, colour = "black", size=1) +
-             geom_point(data = total, colour = "black") +        
-             scale_fill_manual(values=c('#9e9ac8', '#2d004b')) +
-             scale_y_continuous(label = kilo_formatter) +
-            ggtitle("Number of species repatriated")
-    
-    #ggsave(filename=paste(targetDir, "occ_yearCollected.png", sep="/"), plot=p1, width=8, height=6 )
-    savePng(p1, paste(targetDir, "spe_repatriation.png", sep="/"))
+  if (length(unique(DF$snapshot)) > 1 && sum(as.numeric(DF$occurrenceCount)) > 0) {
+    generatePlots(
+      df=DF,
+      totalDf=total, 
+      plotsDir=plotsDir,
+      targetFilePattern="spe_repatriation", 
+      plotTitle="Origin of species records", 
+      dataCol="origin", 
+      xCol="snapshot", 
+      yCol="occurrenceCount", 
+      xTitle="Date",
+      yTitle="Number of occurrences (in millions)", 
+      yFormatter=mill_formatter, 
+      legendTitle="Origin", 
+      seriesColours=palette, 
+      seriesValues=displayOrder,
+      seriesTitles=c("national"="From within country", "international"="From other countries")
+    )
   }
 }

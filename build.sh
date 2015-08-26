@@ -138,6 +138,11 @@ fi
 if [ $runFigures == "true" ];then
   echo 'Generating the figures'
   Rscript R/report.R 
+#   mac specific, typical font defaults
+#   embed_dingbats_mac.sh report /System/Library/Fonts
+  # linux specific, paths as per readme
+  embed_dingbats_linux.sh report /usr/share/fonts
+  Rscript R/generate_indesign_merge_csv_for_mac.R
 else
   echo 'Skipping create figures stage (add -runFigures to command to run it)'
 fi 

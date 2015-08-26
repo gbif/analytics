@@ -39,6 +39,12 @@ The project is divided into several parts:
 
   ```nohup build.sh -runHbase -runHive -runHadoop -runPrepare -runFigures -runJson &```
 
+### Notes for country report producers
+- Arial and Arial Narrow will be required on the machine from which the runFigures command is run. For linux that means a new dir under /usr/share/fonts with
+the .ttf files from this project's fonts/ dir copied in.
+- the /usr/lib64/R/library/extrafontdb dir must be writeable by the user running the runFigures command because font stuff will be written there on first load
+
+
 ### Acknowledgements
 The work presented here is not new, and builds on ideas already published.  In particular the work of Javier Otegui, Arturo H. Ariño, María A. Encinas, Francisco Pando (http://www.plosone.org/article/info%3Adoi%2F10.1371%2Fjournal.pone.0055144) was used as inspiration during the first development iteration, and Javier Otegui kindly provided a crash course in R to kickstart the development.  
 

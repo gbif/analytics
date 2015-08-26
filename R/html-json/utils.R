@@ -1,13 +1,17 @@
 # install.packages("ISOcodes")
 library(ISOcodes)
 
-country_lists <- function() {
-  # The index home page
+# add the iso countries with GBIF name overrides under the global name ISO_3166_1
+gbif_iso_countries <- function() {
   # Rewrite the iso values to names
   data("ISO_3166_1")
-  
   # apply the GBIF modifications to country names
   ISO_3166_1$Name[ISO_3166_1$Alpha_2 == "TW"] <- "Chinese Taipei"
+}
+
+country_lists <- function() {
+  # The index home page
+  gbif_iso_countries()
   
   about_iso <- c()
   about_names <- c()

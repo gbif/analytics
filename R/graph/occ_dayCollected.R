@@ -18,6 +18,5 @@ occ_dayCollected <- function(sourceFile, targetDir) {
     scale_y_continuous(label = mill_formatter) +
     ggtitle("Number of occurrences per day of year") 
   
-  #ggsave(filename=paste(targetDir, "occ_dayCollected.png", sep="/"), plot=p1, width=8, height=6 )
   savePng(p1, paste(targetDir, "occ_dayCollected.png", sep="/"))
 }

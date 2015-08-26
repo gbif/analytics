@@ -2,7 +2,9 @@ library(reshape2)
 library(plyr)
 library(ggplot2) 
 source("R/graph/utils.R")
-
+############
+# UNUSED!
+############
 occ_basisOfRecordComplete <- function(sourceFile, targetDir) {
   print(paste("Processing basisOfRecordComplete graphs for: ", sourceFile))
 
