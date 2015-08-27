@@ -3,6 +3,7 @@ runHive="false"
 runHadoop="false"
 runPrepare="false"
 runFigures="false"
+runCountryReports="false"
 runJson="false"
 runHtml="false"
 
@@ -14,6 +15,7 @@ snapshot_db="snapshot"
 [[ $* =~ (^| )"-runHadoop"($| ) ]] && runHadoop="true" 
 [[ $* =~ (^| )"-runPrepare"($| ) ]] && runPrepare="true"
 [[ $* =~ (^| )"-runFigures"($| ) ]] && runFigures="true"
+[[ $* =~ (^| )"-runCountryReports"($| ) ]] && runCountryReports="true"
 [[ $* =~ (^| )"-runJson"($| ) ]] && runJson="true"
 [[ $* =~ (^| )"-runHtml"($| ) ]] && runHtml="true"
 
@@ -142,9 +144,15 @@ if [ $runFigures == "true" ];then
 #   embed_dingbats_mac.sh report /System/Library/Fonts
   # linux specific, paths as per readme
   embed_dingbats_linux.sh report /usr/share/fonts
-  Rscript R/generate_indesign_merge_csv_for_mac.R
 else
   echo 'Skipping create figures stage (add -runFigures to command to run it)'
+fi 
+
+if [ $runCountryReports == "true" ];then
+  echo 'Generating indesign merge files for Country Reports'
+  Rscript R/generate_indesign_merge_csv_for_mac.R
+else
+  echo 'Skipping country reports stage (add -runCountryReports to command to run it)'
 fi 
 
 if [ $runJson == "true" ];then

@@ -1,0 +1,15 @@
+-- Enforce file: This is used to make uniform groups to fix uneven results  
+
+-- CREATE TEMPORARY TABLE classes AS
+-- SELECT DISTINCT class_ FROM class_matrix
+
+
+
+-- Step 2.
+-- SELECT * FROM (
+-- SELECT country_code FROM iso_region)t1 JOIN
+-- (SELECT * FROM classes)t2 
+
+SELECT * FROM (
+ SELECT country_code FROM iso_region)t1 JOIN
+ (SELECT * FROM kingdoms)t2 

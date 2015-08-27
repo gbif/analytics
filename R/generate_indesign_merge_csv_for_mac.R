@@ -1,3 +1,4 @@
+source ("R/country-reports/traffic_table2_world_vs_national.R")
 source("R/html-json/utils.R")
 
 #########
@@ -21,6 +22,8 @@ countryPath <- "report/country"
 flagsPath <- "flags"
 macHdName="Macintosh HD"
 
+trafficReport <- generateTrafficStats()
+
 indesignMacPath <- function(hdName, absolutePath) {
   return(paste(hdName, gsub("/", ":", absolutePath), sep=""))
 }
@@ -34,11 +37,13 @@ about <- function(country, filename, macPath) {
 }
 
 writeCsv <- function(DF, header, filecount) {
-  # now assign proper colnames and remove the tmp header row (row 1)
-  colnames(DF)=header
-  DF <- DF[-c(1), ]
   filename <- paste(paste("indesign_merge_mac_", filecount, sep=""), ".csv", sep="")
   write.csv(DF, filename, row.names=FALSE)    
+}
+
+joinWithOtherData <- function(DF) {
+  DF <- merge(DF, trafficReport, by = "CountryCode")
+  return(DF)
 }
 
 macFlagsPath <- indesignMacPath(macHdName, normalizePath(flagsPath))
@@ -77,6 +82,10 @@ for (country in countries) {
   }
   if (count %% countriesPerCsv == 0) {
     filecount=filecount+1
+    # remove the tmp header row and give proper colnames
+    colnames(DF)=header
+    DF <- DF[-c(1), ]
+    DF <- joinWithOtherData(DF)
     writeCsv(DF, header, filecount)
     DF<-header
   }
