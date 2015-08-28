@@ -1,3 +1,4 @@
+source ("R/country-reports/traffic_table1_top5_cities.R")
 source ("R/country-reports/traffic_table2_world_vs_national.R")
 source("R/html-json/utils.R")
 
@@ -23,6 +24,7 @@ flagsPath <- "flags"
 macHdName="Macintosh HD"
 
 trafficReport <- generateTrafficStats()
+trafficTop5Cities <- generateTrafficTop5Cities()
 
 indesignMacPath <- function(hdName, absolutePath) {
   return(paste(hdName, gsub("/", ":", absolutePath), sep=""))
@@ -43,6 +45,7 @@ writeCsv <- function(DF, header, filecount) {
 
 joinWithOtherData <- function(DF) {
   DF <- merge(DF, trafficReport, by = "CountryCode")
+  DF <- merge(DF, trafficTop5Cities, by = "CountryCode")
   return(DF)
 }
 
