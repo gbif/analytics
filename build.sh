@@ -9,6 +9,8 @@ runHtml="false"
 
 destination_db="analytics"
 snapshot_db="snapshot"
+production_db="prod_b"
+countryreports_db="country_reports"
 
 [[ $* =~ (^| )"-runHbase"($| ) ]] && runHbase="true" 
 [[ $* =~ (^| )"-runHive"($| ) ]] && runHive="true" 
@@ -149,8 +151,11 @@ else
 fi 
 
 if [ $runCountryReports == "true" ];then
+  echo 'Executing hive for country reports'
+  hive --hiveconf CR_DB="$countryreports_db" --hiveconf PROD_DB="$production_db" -f hive/country-reports/kingdom_matrix.q
+  echo 'Copying hadoop csvs for country reports'  
   echo 'Generating indesign merge files for Country Reports'
-  Rscript R/generate_indesign_merge_csv_for_mac.R
+  # Rscript R/generate_indesign_merge_csv_for_mac.R
 else
   echo 'Skipping country reports stage (add -runCountryReports to command to run it)'
 fi 
