@@ -7,7 +7,7 @@ DROP TABLE IF EXISTS ${hiveconf:CR_DB}.kingdom_matrix;
 CREATE TABLE ${hiveconf:CR_DB}.kingdom_matrix
 ROW FORMAT DELIMITED FIELDS TERMINATED BY ',' STORED AS TEXTFILE 
 AS SELECT t1.country, t1.kingdom , sum(`_c2`)+sum(`_c3`), 
-CASE WHEN round((sum(`_c2`)/sum(`_c3`))*100) IS NULL THEN 'No prior occurrences' ELSE round((sum(`_c2`)/sum(`_c3`))*100) END AS increase
+CASE WHEN round((sum(`_c2`)/sum(`_c3`))*100) IS NULL THEN '-' ELSE round((sum(`_c2`)/sum(`_c3`))*100) END AS increase
 
 FROM
 (
@@ -29,7 +29,7 @@ UNION ALL
 SELECT t1.country, 
 CASE WHEN t1.kingdom = '' THEN 'Unknown' ELSE t1.kingdom END AS kingdom, 
 sum(`_c2`)+sum(`_c3`), 
-CASE WHEN round((sum(`_c2`)/sum(`_c3`))*100) IS NULL THEN 'No prior occurrences' ELSE round((sum(`_c2`)/sum(`_c3`))*100) END AS increase
+CASE WHEN round((sum(`_c2`)/sum(`_c3`))*100) IS NULL THEN '-' ELSE round((sum(`_c2`)/sum(`_c3`))*100) END AS increase
 
 FROM
 (
