@@ -1,5 +1,6 @@
 source ("R/country-reports/traffic_table1_top5_cities.R")
 source ("R/country-reports/traffic_table2_world_vs_national.R")
+source ("R/country-reports/pg1_kingdom_matrix.R")
 source("R/html-json/utils.R")
 
 #########
@@ -23,8 +24,11 @@ countryPath <- "report/country"
 flagsPath <- "flags"
 macHdName="Macintosh HD"
 
+kingdomMatrix <- generateKingdomMatrix("hadoop/cr_kingdom_matrix.csv")
+# these invocations mean the google api calls go out when this script is loaded
 trafficReport <- generateTrafficStats()
 trafficTop5Cities <- generateTrafficTop5Cities()
+
 
 indesignMacPath <- function(hdName, absolutePath) {
   return(paste(hdName, gsub("/", ":", absolutePath), sep=""))
@@ -46,6 +50,7 @@ writeCsv <- function(DF, header, filecount) {
 joinWithOtherData <- function(DF) {
   DF <- merge(DF, trafficReport, by = "CountryCode")
   DF <- merge(DF, trafficTop5Cities, by = "CountryCode")
+  DF <- merge(DF, kingdomMatrix, by = "CountryCode")
   return(DF)
 }
 
@@ -67,6 +72,7 @@ DF<-header
 for (country in countries) {
   count=count+1
   if (country %in% ISO_3166_1$Alpha_2) {
+    # print(paste("Preparing country: ", country, sep=""))
     row=c(country, 
           ISO_3166_1[ISO_3166_1$Alpha_2 == toupper(country),]$Name,
           paste(macFlagsPath, paste(tolower(country), ".png", sep=""), sep=":"),
@@ -84,6 +90,7 @@ for (country in countries) {
     DF=rbind(DF, row)
   }
   if (count %% countriesPerCsv == 0) {
+    # print(paste("Writing csv with country count at ", count, sep=""))
     filecount=filecount+1
     # remove the tmp header row and give proper colnames
     colnames(DF)=header
@@ -93,4 +100,9 @@ for (country in countries) {
     DF<-header
   }
 }
+# left over
+filecount=filecount+1
+colnames(DF)=header
+DF <- DF[-c(1), ]
+DF <- joinWithOtherData(DF)
 writeCsv(DF, header, filecount)
