@@ -1,5 +1,8 @@
 library(dplyr)
 
+# for testing
+# csvDataFile <- "hadoop/cr_kingdom_matrix.csv"
+
 generateKingdomMatrix <- function(csvDataFile) {
   kingdomRawDF <- read.csv(csvDataFile, na.strings="")
 
@@ -17,6 +20,7 @@ generateKingdomMatrix <- function(csvDataFile) {
   countCols <- c()
   percentCols <- c()
   flat_kingdoms <- NULL
+  
   for (kingdom in kingdoms) {
     singleKingdom <- data.frame(kingdomDF[kingdomDF$kingdom == kingdom,], stringsAsFactors = FALSE)
     # drop kingdom column (all identical)
@@ -30,9 +34,9 @@ generateKingdomMatrix <- function(csvDataFile) {
                 percentCol(kingdom)
                 )
     colnames(singleKingdom) <- header
-    # percent col gets '-' for NA and appended '%' otherwise
-    singleKingdom[,3] <- as.character(singleKingdom[,3])
-    singleKingdom[,3] <- ifelse(singleKingdom[,3] == "-", "-", paste(as.character(singleKingdom[,3]), "%", sep="")) 
+    # percent col gets '-' for NA, and otherwise a +/- prepended and '%' appended
+    singleKingdom[,3] <- as.numeric(singleKingdom[,3])
+    singleKingdom[,3] <- ifelse(singleKingdom[,3] > 0, paste("+ ", paste(as.character(singleKingdom[,3]), "%", sep=""), sep=""), paste("- ", paste(as.character(singleKingdom[,3]), "%", sep=""), sep="")) 
 
     if (is.null(flat_kingdoms)) {
       flat_kingdoms <- data.frame(singleKingdom, stringsAsFactors=FALSE)

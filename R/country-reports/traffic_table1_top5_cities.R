@@ -19,16 +19,17 @@ generateTrafficTop5Cities <- function() {
   
   ga.query <- QueryBuilder(query.list)
   ga.data <- GetReportData(ga.query, token, paginate_query = T)
+  colnames(ga.data) <- c("CountryCode", "city", "sessions")
   #Pagination required
   
   # group_by() and top_n() are dplyr functions that simulate SQL.
-  top5 <- group_by(ga.data, countryIsoCode)
-  total_traffic <- summarise(top5, total=sum(as.integer(sessions)))
-  # Creates data frame for total sessions by country. Works because of the group_by()
+  top5 <- group_by(ga.data, CountryCode)
+  # this awkward construction because of strange behaviour on command line where CountryCode column wasn't appearing after summarise (but worked in RStudio)
+  total_traffic <- data.frame(CountryCode=unique(top5$CountryCode), total=summarise(top5, total=sum(as.integer(sessions))), stringsAsFactors = FALSE)
   top5 <- top_n(top5, 5)
-  top5 <- left_join(top5, total_traffic, by='countryIsoCode')
+  top5 <- left_join(top5, total_traffic, by='CountryCode')
   top5$percentage <- paste(format(round((top5$sessions/top5$total)*100, digits=2), nsmall = 2), "%", sep="")
-  top5$ranking <- ave(top5$sessions, top5$countryIsoCode, FUN=function(x) order(-x) )
+  top5$ranking <- ave(top5$sessions, top5$CountryCode, FUN=function(x) order(-x) )
   top5[is.na(top5)] <- "No Data"
   top5$city[top5$city == "(not set)"] <- "Unknown"
   # finally, drop Totals column since all we need is percent, and reorder columns so rank is first

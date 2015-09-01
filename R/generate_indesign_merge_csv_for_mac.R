@@ -1,5 +1,6 @@
 source ("R/country-reports/traffic_table1_top5_cities.R")
 source ("R/country-reports/traffic_table2_world_vs_national.R")
+source ("R/country-reports/traffic_fig3_sessions_by_week.R")
 source ("R/country-reports/pg1_kingdom_matrix.R")
 source("R/html-json/utils.R")
 
@@ -24,11 +25,15 @@ countryPath <- "report/country"
 flagsPath <- "flags"
 macHdName="Macintosh HD"
 
+print("Generating kingdom matrix")
 kingdomMatrix <- generateKingdomMatrix("hadoop/cr_kingdom_matrix.csv")
 # these invocations mean the google api calls go out when this script is loaded
+print("Generating traffic report")
 trafficReport <- generateTrafficStats()
+print("Generating traffic top 5 cities")
 trafficTop5Cities <- generateTrafficTop5Cities()
-
+# TODO: this takes awhile, move to -runFigures
+generateTrafficWeeklyPlots()
 
 indesignMacPath <- function(hdName, absolutePath) {
   return(paste(hdName, gsub("/", ":", absolutePath), sep=""))
@@ -40,6 +45,10 @@ publishedBy <- function(country, filename, macPath) {
 
 about <- function(country, filename, macPath) {
   return(paste(macPath, paste(country, paste(macAbout, filename, sep=":"), sep=":"), sep=":"))
+}
+
+countryReports <- function(country, filename, macPath) {
+  return(paste(macPath, paste(country, paste(macCountryReports, filename, sep=":"), sep=":"), sep=":"))
 }
 
 writeCsv <- function(DF, header, filecount) {
@@ -59,16 +68,21 @@ macCountryPath <- indesignMacPath(macHdName, normalizePath(countryPath))
 
 macAbout="about:print"
 macPublishedBy="publishedBy:print"
+macCountryReports="country_reports"
 
 gbif_iso_countries()
 # create csv with tmp header row
-header=c("CountryCode","CountryName","@Flag","@Fig2","@Fig5","@Fig6","@Fig7","@Fig8","@Fig9","@Fig10","@Fig11","@Fig12","@Fig13")
+header=c("CountryCode","CountryName","@Flag","@Fig2","@Fig3","@Fig5","@Fig6","@Fig7","@Fig8","@Fig9","@Fig10","@Fig11","@Fig12","@Fig13")
 
 # for every country in report/country add line to csv with mac specific path following:
 countries <- list.dirs(path=countryPath, full.names=FALSE, recursive=FALSE)
 count=0
 filecount=0
 DF<-header
+
+# test, remove
+# countries <- head(countries, 5)
+
 for (country in countries) {
   count=count+1
   if (country %in% ISO_3166_1$Alpha_2) {
@@ -77,6 +91,7 @@ for (country in countries) {
           ISO_3166_1[ISO_3166_1$Alpha_2 == toupper(country),]$Name,
           paste(macFlagsPath, paste(tolower(country), ".png", sep=""), sep=":"),
           publishedBy(country, "occ_kingdom.pdf", macCountryPath), 
+          countryReports(country, "web_traffic_sessions_by_week.pdf", macCountryPath),
           about(country, "occ_kingdom.pdf", macCountryPath), 
           about(country, "spe_kingdom.pdf", macCountryPath), 
           about(country, "occ_complete_kingdom_specimen.pdf", macCountryPath),

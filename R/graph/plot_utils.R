@@ -109,3 +109,27 @@ createPlot <- function(plotTheme, df, totalDf, plotTitle, dataCol, xCol, yCol, x
 
   return(plot)
 }
+
+###########
+# This function is just for the weekly web traffic chart on page 2. Lives here because of same need for print and web themes and dirs. For now print only (produces pdf).
+# TODO: fix hardcoded dates/labels
+###########
+generateWeeklyTrafficPlot <- function(df, plotsDir, targetFilePattern) {
+  #pdf
+  printPlot <- createWeeklyTrafficPlot(df)
+  dir.create(plotsDir, showWarnings=F)  
+  printFile <- paste(plotsDir, paste(targetFilePattern, ".pdf", sep=""), sep="/")
+  print(paste("Writing print plot: ", printFile))
+  ggsave(filename=printFile, plot=printPlot, width=4, height=1, scale=2)
+  embed_fonts(file=printFile)
+}
+
+createWeeklyTrafficPlot <- function(df) {
+  plot <- 
+    ggplot(df, aes(x = `yearWeek`, y = sessions, group = CountryCode)) + 
+    geom_area(position = "identity", colour="black", fill="blue", alpha=0.2) + 
+    geom_line(size = 1.5, colour="blue", alpha=0.6) + 
+    geom_point(size = 4, colour="blue", alpha=0.6) +
+    scale_x_discrete(breaks = c("201440", "201503", "201516"), labels=c("September 2014", "January 2015", "April 2015")) +
+    theme(axis.title.x = element_blank(), axis.title.y = element_blank()) 
+}
