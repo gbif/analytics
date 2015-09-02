@@ -2,6 +2,7 @@ source ("R/country-reports/traffic_table1_top5_cities.R")
 source ("R/country-reports/traffic_table2_world_vs_national.R")
 source ("R/country-reports/traffic_fig3_sessions_by_week.R")
 source ("R/country-reports/pg1_kingdom_matrix.R")
+source ("R/country-reports/pg1_pub_research.R")
 source("R/html-json/utils.R")
 
 #########
@@ -24,6 +25,7 @@ countriesPerCsv=20
 countryPath <- "report/country"
 flagsPath <- "flags"
 macHdName="Macintosh HD"
+apiUrl="http://api.gbif-uat.org/v1/"
 
 print("Generating kingdom matrix")
 kingdomMatrix <- generateKingdomMatrix("hadoop/cr_kingdom_matrix.csv")
@@ -33,7 +35,11 @@ trafficReport <- generateTrafficStats()
 print("Generating traffic top 5 cities")
 trafficTop5Cities <- generateTrafficTop5Cities()
 # TODO: this takes awhile, move to -runFigures
-generateTrafficWeeklyPlots()
+# print("Generating traffic weekly plots")
+# generateTrafficWeeklyPlots()
+# TODO: very slow outside secretariat
+print("Generating publication stats")
+pg1Research <- generatePublicationStats(apiUrl)
 
 indesignMacPath <- function(hdName, absolutePath) {
   return(paste(hdName, gsub("/", ":", absolutePath), sep=""))
@@ -60,6 +66,7 @@ joinWithOtherData <- function(DF) {
   DF <- merge(DF, trafficReport, by = "CountryCode")
   DF <- merge(DF, trafficTop5Cities, by = "CountryCode")
   DF <- merge(DF, kingdomMatrix, by = "CountryCode")
+  DF <- merge(DF, pg1Research, by = "CountryCode")
   return(DF)
 }
 
