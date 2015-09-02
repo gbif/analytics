@@ -45,7 +45,10 @@ generateTrafficStats <- function() {
   
   mergedTraffic <- cbind(perCountryTraffic, worldwideTraffic)
   # TODO: give everyone a minimum of 0.01%, since nobody wants to see 0
-  mergedTraffic$country_percent_of_global_sessions <- format(round(100*mergedTraffic$country_sessions / mergedTraffic$global_sessions, digits=2), nsmall = 2)
+  mergedTraffic$country_percent_of_global_sessions <- paste(format(round(100*mergedTraffic$country_sessions / mergedTraffic$global_sessions, digits=2), nsmall = 2), "%", sep="")
+  # pretty print total sessions
+  mergedTraffic$country_sessions <- prettyNum(mergedTraffic$country_sessions, big.mark=",")
+  mergedTraffic$global_sessions <- prettyNum(mergedTraffic$global_sessions, big.mark=",")
   
   return(mergedTraffic)
 }

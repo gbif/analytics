@@ -28,8 +28,9 @@ generateTrafficTop5Cities <- function() {
   total_traffic <- data.frame(CountryCode=unique(top5$CountryCode), total=summarise(top5, total=sum(as.integer(sessions))), stringsAsFactors = FALSE)
   top5 <- top_n(top5, 5)
   top5 <- left_join(top5, total_traffic, by='CountryCode')
-  top5$percentage <- paste(format(round((top5$sessions/top5$total)*100, digits=2), nsmall = 2), "%", sep="")
+  top5$percentage <- paste(as.character(format(round((top5$sessions/top5$total)*100, digits=2), nsmall = 2)), "%", sep="")
   top5$ranking <- ave(top5$sessions, top5$CountryCode, FUN=function(x) order(-x) )
+  top5$sessions <- prettyNum(top5$sessions, big.mark=",")
   top5[is.na(top5)] <- "No Data"
   top5$city[top5$city == "(not set)"] <- "Unknown"
   # finally, drop Totals column since all we need is percent, and reorder columns so rank is first
