@@ -3,6 +3,7 @@ source ("R/country-reports/traffic_table2_world_vs_national.R")
 source ("R/country-reports/traffic_fig3_sessions_by_week.R")
 source ("R/country-reports/pg1_kingdom_matrix.R")
 source ("R/country-reports/pg1_pub_research.R")
+source ("R/country-reports/pg3_recent_publications.R")
 source("R/html-json/utils.R")
 
 #########
@@ -35,11 +36,13 @@ trafficReport <- generateTrafficStats()
 print("Generating traffic top 5 cities")
 trafficTop5Cities <- generateTrafficTop5Cities()
 # TODO: this takes awhile, move to -runFigures
-# print("Generating traffic weekly plots")
-# generateTrafficWeeklyPlots()
+print("Generating traffic weekly plots")
+generateTrafficWeeklyPlots()
 # TODO: very slow outside secretariat
 print("Generating publication stats")
 pg1Research <- generatePublicationStats(apiUrl)
+print("Generating latest publications")
+pg3Pubs <- generateRecentPublications(apiUrl)
 
 indesignMacPath <- function(hdName, absolutePath) {
   return(paste(hdName, gsub("/", ":", absolutePath), sep=""))
@@ -63,10 +66,11 @@ writeCsv <- function(DF, header, filecount) {
 }
 
 joinWithOtherData <- function(DF) {
-  DF <- merge(DF, trafficReport, by = "CountryCode")
-  DF <- merge(DF, trafficTop5Cities, by = "CountryCode")
-  DF <- merge(DF, kingdomMatrix, by = "CountryCode")
-  DF <- merge(DF, pg1Research, by = "CountryCode")
+  DF <- merge(DF, trafficReport, by = "CountryCode", all.x = TRUE)
+  DF <- merge(DF, trafficTop5Cities, by = "CountryCode", all.x = TRUE)
+  DF <- merge(DF, kingdomMatrix, by = "CountryCode", all.x = TRUE)
+  DF <- merge(DF, pg1Research, by = "CountryCode", all.x = TRUE)
+  DF <- merge(DF, pg3Pubs, by = "CountryCode", all.x = TRUE)
   return(DF)
 }
 
@@ -87,13 +91,10 @@ count=0
 filecount=0
 DF<-header
 
-# test, remove
-# countries <- head(countries, 5)
-
 for (country in countries) {
   count=count+1
   if (country %in% ISO_3166_1$Alpha_2) {
-    # print(paste("Preparing country: ", country, sep=""))
+    print(paste("Preparing country: ", country, sep=""))
     row=c(country, 
           ISO_3166_1[ISO_3166_1$Alpha_2 == toupper(country),]$Name,
           paste(macFlagsPath, paste(tolower(country), ".png", sep=""), sep=":"),
@@ -127,4 +128,6 @@ filecount=filecount+1
 colnames(DF)=header
 DF <- DF[-c(1), ]
 DF <- joinWithOtherData(DF)
+# all NA to empty string
+DF[is.na(DF)] <- ""
 writeCsv(DF, header, filecount)
