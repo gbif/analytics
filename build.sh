@@ -154,13 +154,13 @@ if [ $runCountryReports == "true" ];then
   echo 'Executing hive for country reports'
   # todo: move to hive section 
   # hive --hiveconf CR_DB="$countryreports_db" --hiveconf PROD_DB="$production_db" -f hive/country-reports/kingdom_matrix.q
-  hive --hiveconf CR_DB="$countryreports_db" --hiveconf PROD_DB="$production_db" -f hive/country-reports/pg1_pub_blob.q
+  # hive --hiveconf CR_DB="$countryreports_db" --hiveconf PROD_DB="$production_db" -f hive/country-reports/pg1_pub_blob.q
   echo 'Copying hadoop csvs for country reports'  
   # todo: move to hadoop section
   # hdfs dfs -getmerge /user/hive/warehouse/"$countryreports_db".db/kingdom_matrix hadoop/cr_kingdom_matrix.csv
-  hdfs dfs -getmerge /user/hive/warehouse/"$countryreports_db".db/pg1_pub_blob hadoop/cr_pg1_pub_blob.csv
+  # hdfs dfs -getmerge /user/hive/warehouse/"$countryreports_db".db/pg1_pub_blob hadoop/cr_pg1_pub_blob.csv
   echo 'Generating indesign merge files for Country Reports'
-  # Rscript R/generate_indesign_merge_csv_for_mac.R
+  Rscript R/generate_indesign_merge_csv_for_mac.R
 else
   echo 'Skipping country reports stage (add -runCountryReports to command to run it)'
 fi 

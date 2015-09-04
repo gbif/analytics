@@ -3,6 +3,7 @@ source ("R/country-reports/traffic_table2_world_vs_national.R")
 source ("R/country-reports/traffic_fig3_sessions_by_week.R")
 source ("R/country-reports/pg1_kingdom_matrix.R")
 source ("R/country-reports/pg1_pub_research.R")
+source ("R/country-reports/pg1_pub_blob.R")
 source ("R/country-reports/pg3_recent_publications.R")
 source("R/html-json/utils.R")
 
@@ -36,11 +37,13 @@ trafficReport <- generateTrafficStats()
 print("Generating traffic top 5 cities")
 trafficTop5Cities <- generateTrafficTop5Cities()
 # TODO: this takes awhile, move to -runFigures
-print("Generating traffic weekly plots")
-generateTrafficWeeklyPlots()
+# print("Generating traffic weekly plots")
+# generateTrafficWeeklyPlots()
 # TODO: very slow outside secretariat
 print("Generating publication stats")
 pg1Research <- generatePublicationStats(apiUrl)
+print("Generating pg1 pub blob")
+pg1PubBlob <- generatePg1PubBlob()
 print("Generating latest publications")
 pg3Pubs <- generateRecentPublications(apiUrl)
 
@@ -70,6 +73,7 @@ joinWithOtherData <- function(DF) {
   DF <- merge(DF, trafficTop5Cities, by = "CountryCode", all.x = TRUE)
   DF <- merge(DF, kingdomMatrix, by = "CountryCode", all.x = TRUE)
   DF <- merge(DF, pg1Research, by = "CountryCode", all.x = TRUE)
+  DF <- merge(DF, pg1PubBlob, by = "CountryCode", all.x = TRUE)
   DF <- merge(DF, pg3Pubs, by = "CountryCode", all.x = TRUE)
   return(DF)
 }
