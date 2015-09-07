@@ -5,8 +5,8 @@ generatePg1PubBlob <- function() {
   pub_blob[is.na(pub_blob)]<-0
   
   colnames(pub_blob) <- c("CountryCode", "pg1_pub_this_year", "pg1_pub_all_time")
-  pub_blob$pg1_pub_this_year <- prettyNum(pub_blob$pg1_pub_this_year, big.mark = ",")
-  pub_blob$pg1_pub_all_time <- prettyNum(pub_blob$pg1_pub_all_time, big.mark = ",")
+  pub_blob$pg1_pub_this_year <- prettyNum(pub_blob$pg1_pub_this_year, big.mark = ",", preserve.width = "individual")
+  pub_blob$pg1_pub_all_time <- prettyNum(pub_blob$pg1_pub_all_time, big.mark = ",", preserve.width = "individual")
   
   return(pub_blob)
 }

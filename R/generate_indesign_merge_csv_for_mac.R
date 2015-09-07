@@ -1,10 +1,12 @@
-source ("R/country-reports/traffic_table1_top5_cities.R")
-source ("R/country-reports/traffic_table2_world_vs_national.R")
-source ("R/country-reports/traffic_fig3_sessions_by_week.R")
 source ("R/country-reports/pg1_kingdom_matrix.R")
 source ("R/country-reports/pg1_pub_research.R")
 source ("R/country-reports/pg1_pub_blob.R")
+source ("R/country-reports/pg2_traffic_table1_top5_cities.R")
+source ("R/country-reports/pg2_traffic_table2_world_vs_national.R")
+source ("R/country-reports/pg2_traffic_fig3_sessions_by_week.R")
 source ("R/country-reports/pg3_recent_publications.R")
+source ("R/country-reports/pg3_download_blob.R")
+source ("R/country-reports/pg3_fig4_country_downloads_per_month.R")
 source("R/html-json/utils.R")
 
 #########
@@ -13,6 +15,8 @@ source("R/html-json/utils.R")
 #
 # Figure  PDF
 # 2       publishedby/occ_kingdom.pdf
+# 3       countryReports/web_traffic_sessions_by_week.pdf
+# 4       countryReports/downloaded_records_by_month.pdf
 # 5       about/occ_kingdom.pdf
 # 6       about/spe_kingdom.pdf
 # 7       about/occ_complete_kingdom_specimen.pdf
@@ -36,14 +40,22 @@ print("Generating traffic report")
 trafficReport <- generateTrafficStats()
 print("Generating traffic top 5 cities")
 trafficTop5Cities <- generateTrafficTop5Cities()
-# TODO: this takes awhile, move to -runFigures
+
+# TODO: these take awhile, move to -runFigures
 # print("Generating traffic weekly plots")
 # generateTrafficWeeklyPlots()
+print("Generating monthly download plots")
+generateCountryDownloadsPlots()
+
 # TODO: very slow outside secretariat
 print("Generating publication stats")
 pg1Research <- generatePublicationStats(apiUrl)
 print("Generating pg1 pub blob")
 pg1PubBlob <- generatePg1PubBlob()
+
+print("Generating download stats")
+pg3DownloadBlob <- generateCountryDownloadStats()
+# TODO: slow outside secretariat
 print("Generating latest publications")
 pg3Pubs <- generateRecentPublications(apiUrl)
 
@@ -69,11 +81,14 @@ writeCsv <- function(DF, header, filecount) {
 }
 
 joinWithOtherData <- function(DF) {
-  DF <- merge(DF, trafficReport, by = "CountryCode", all.x = TRUE)
-  DF <- merge(DF, trafficTop5Cities, by = "CountryCode", all.x = TRUE)
   DF <- merge(DF, kingdomMatrix, by = "CountryCode", all.x = TRUE)
   DF <- merge(DF, pg1Research, by = "CountryCode", all.x = TRUE)
   DF <- merge(DF, pg1PubBlob, by = "CountryCode", all.x = TRUE)
+  # many countries haven't published, convert their NA to 0
+  DF[is.na(DF)] <- 0
+  DF <- merge(DF, trafficReport, by = "CountryCode", all.x = TRUE)
+  DF <- merge(DF, trafficTop5Cities, by = "CountryCode", all.x = TRUE)
+  DF <- merge(DF, pg3DownloadBlob, by = "CountryCode", all.x = TRUE)
   DF <- merge(DF, pg3Pubs, by = "CountryCode", all.x = TRUE)
   return(DF)
 }
@@ -87,7 +102,7 @@ macCountryReports="country_reports"
 
 gbif_iso_countries()
 # create csv with tmp header row
-header=c("CountryCode","CountryName","@Flag","@Fig2","@Fig3","@Fig5","@Fig6","@Fig7","@Fig8","@Fig9","@Fig10","@Fig11","@Fig12","@Fig13")
+header=c("CountryCode","CountryName","@Flag","@Fig2","@Fig3","@Fig4","@Fig5","@Fig6","@Fig7","@Fig8","@Fig9","@Fig10","@Fig11","@Fig12","@Fig13")
 
 # for every country in report/country add line to csv with mac specific path following:
 countries <- list.dirs(path=countryPath, full.names=FALSE, recursive=FALSE)
@@ -104,6 +119,7 @@ for (country in countries) {
           paste(macFlagsPath, paste(tolower(country), ".png", sep=""), sep=":"),
           publishedBy(country, "occ_kingdom.pdf", macCountryPath), 
           countryReports(country, "web_traffic_sessions_by_week.pdf", macCountryPath),
+          countryReports(country, "downloaded_records_by_month.pdf", macCountryPath),
           about(country, "occ_kingdom.pdf", macCountryPath), 
           about(country, "spe_kingdom.pdf", macCountryPath), 
           about(country, "occ_complete_kingdom_specimen.pdf", macCountryPath),

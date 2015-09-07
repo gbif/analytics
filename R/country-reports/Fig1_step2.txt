@@ -1,7 +1,0 @@
--- Add globals
-SELECT t2.country, concat('+', t2.increase) AS increase, t2.base, concat('+', t2.`_wcol0`) AS global_increase, t2.global_base FROM  
-(
-SELECT t1.countrycode AS country, t1.increase AS increase, t1.base AS base, t1.`_wcol0` AS global_base, sum(t1.increase) OVER () FROM (
-SELECT countrycode, `_c1` AS increase, `_c2` AS base,  sum(`_c2`) OVER () FROM fig1
-  )t1
-  )t2

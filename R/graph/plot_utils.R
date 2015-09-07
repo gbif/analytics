@@ -133,3 +133,40 @@ createWeeklyTrafficPlot <- function(df) {
     scale_x_discrete(breaks = c("201440", "201503", "201516"), labels=c("September 2014", "January 2015", "April 2015")) +
     theme(axis.title.x = element_blank(), axis.title.y = element_blank()) 
 }
+
+###########
+# This function is just for the monthly download chart on page 3. Lives here because of same need for print and web themes and dirs. For now print only (produces pdf).
+# TODO: fix hardcoded dates/labels
+###########
+generateMonthlyDownloadPlot <- function(df, plotsDir, targetFilePattern) {
+  #pdf
+  printPlot <- createMonthlyDownloadPlot(df)
+  dir.create(plotsDir, showWarnings=F)  
+  printFile <- paste(plotsDir, paste(targetFilePattern, ".pdf", sep=""), sep="/")
+  print(paste("Writing print plot: ", printFile))
+  ggsave(filename=printFile, plot=printPlot, width=4, height=2, scale=2)
+  embed_fonts(file=printFile)
+}
+
+createMonthlyDownloadPlot <- function(df) {
+  minY <- min(df$count)
+  maxYAxis <- max(df$count)*1.04
+  
+  plot <- 
+    ggplot(df, aes(x = `year_month`, y = count, group = CountryCode)) + 
+    geom_area(position = "identity", colour="black", fill="blue", alpha=0.6) + 
+    geom_line(size = 1.5, colour="blue", alpha=0.6) +
+    theme(
+      axis.text.x=element_text(angle = 45, hjust = 1),
+      axis.title.y=element_text(vjust=1.1)
+    ) +
+    scale_x_discrete(name="",expand=c(0,0))
+  
+  if (minY > 1000000) {
+    plot <- plot +
+      scale_y_continuous(name="Records downloaded (in millions)",expand=c(0,0),limits=c(0,maxYAxis),label=mill_formatter)
+  } else {
+    plot <- plot +
+    scale_y_continuous(name="Records downloaded (in thousands)",expand=c(0,0),limits=c(0,maxYAxis),label=kilo_formatter)
+  }
+}
