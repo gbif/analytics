@@ -1,4 +1,4 @@
--- Base table for kingdom matrix (pg 1 taxonomy bubbles). Result used by taxon_matrix.R
+-- Base table for kingdom matrix (pg 1 taxonomy bubbles). Result used by pg1_taxon_matrix.R
 
 CREATE DATABASE IF NOT EXISTS ${hiveconf:CR_DB};
 

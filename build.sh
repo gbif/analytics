@@ -143,9 +143,9 @@ if [ $runFigures == "true" ];then
   echo 'Generating the figures'
   Rscript R/report.R 
 #   mac specific, typical font defaults
-   embed_dingbats_mac.sh report /System/Library/Fonts
+   # embed_dingbats_mac.sh report /System/Library/Fonts
   # linux specific, paths as per readme
-  #embed_dingbats_linux.sh report /usr/share/fonts
+  embed_dingbats_linux.sh report /usr/share/fonts
 else
   echo 'Skipping create figures stage (add -runFigures to command to run it)'
 fi 
@@ -153,8 +153,9 @@ fi
 if [ $runCountryReports == "true" ];then
   echo 'Executing hive for country reports'
   # todo: move to hive section 
-  # hive --hiveconf CR_DB="$countryreports_db" --hiveconf PROD_DB="$production_db" -f hive/country-reports/kingdom_matrix.q
+  # hive --hiveconf CR_DB="$countryreports_db" --hiveconf PROD_DB="$production_db" -f hive/country-reports/pg1_kingdom_matrix.q
   # hive --hiveconf CR_DB="$countryreports_db" --hiveconf PROD_DB="$production_db" -f hive/country-reports/pg1_pub_blob.q
+  # hive --hiveconf CR_DB="$countryreports_db" --hiveconf PROD_DB="$production_db" -f hive/country-reports/pg4_taxon_matrix.q
   echo 'Copying hadoop csvs for country reports'  
   # todo: move to hadoop section
   # hdfs dfs -getmerge /user/hive/warehouse/"$countryreports_db".db/kingdom_matrix hadoop/cr_kingdom_matrix.csv
