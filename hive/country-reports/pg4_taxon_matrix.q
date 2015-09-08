@@ -4,8 +4,9 @@ CREATE DATABASE IF NOT EXISTS ${hiveconf:CR_DB};
 
 -- generate class counts for pg4 taxon matrix
 DROP TABLE IF EXISTS ${hiveconf:CR_DB}.class_matrix;
-CREATE TABLE ${hiveconf:CR_DB}.class_matrix AS
-SELECT t1.country, t1.class_, sum(`_c2`)+sum(`_c3`), 
+CREATE TABLE ${hiveconf:CR_DB}.class_matrix 
+ROW FORMAT DELIMITED FIELDS TERMINATED BY ',' STORED AS TEXTFILE 
+AS SELECT t1.country, t1.class_, sum(`_c2`)+sum(`_c3`), 
 CASE WHEN round((sum(`_c2`)/sum(`_c3`))*100) IS NULL THEN 'No prior occurrences' ELSE round((sum(`_c2`)/sum(`_c3`))*100) END AS increase
 FROM
 (
@@ -26,8 +27,9 @@ GROUP BY t1.country, t1.class_;
 
 -- generate phylum counts for pg4 taxon matrix
 DROP TABLE IF EXISTS ${hiveconf:CR_DB}.phylum_matrix;
-CREATE TABLE ${hiveconf:CR_DB}.phylum_matrix AS 
-SELECT t1.country, t1.phylum AS phylum, sum(`_c2`)+sum(`_c3`) AS total, 
+CREATE TABLE ${hiveconf:CR_DB}.phylum_matrix 
+ROW FORMAT DELIMITED FIELDS TERMINATED BY ',' STORED AS TEXTFILE 
+AS SELECT t1.country, t1.phylum AS phylum, sum(`_c2`)+sum(`_c3`) AS total, 
 CASE WHEN round((sum(`_c2`)/sum(`_c3`))*100) IS NULL THEN 'No prior occurrences' ELSE round((sum(`_c2`)/sum(`_c3`))*100) END AS increase 
 
 FROM
