@@ -1,12 +1,13 @@
-source ("R/country-reports/pg1_kingdom_matrix.R")
-source ("R/country-reports/pg1_pub_research.R")
-source ("R/country-reports/pg1_pub_blob.R")
-source ("R/country-reports/pg2_traffic_table1_top5_cities.R")
-source ("R/country-reports/pg2_traffic_table2_world_vs_national.R")
-source ("R/country-reports/pg2_traffic_fig3_sessions_by_week.R")
-source ("R/country-reports/pg3_recent_publications.R")
-source ("R/country-reports/pg3_download_blob.R")
-source ("R/country-reports/pg3_fig4_country_downloads_per_month.R")
+source("R/country-reports/pg1_kingdom_matrix.R")
+source("R/country-reports/pg1_pub_research.R")
+source("R/country-reports/pg1_pub_blob.R")
+source("R/country-reports/pg2_traffic_table1_top5_cities.R")
+source("R/country-reports/pg2_traffic_table2_world_vs_national.R")
+source("R/country-reports/pg2_traffic_fig3_sessions_by_week.R")
+source("R/country-reports/pg3_recent_publications.R")
+source("R/country-reports/pg3_download_blob.R")
+source("R/country-reports/pg3_fig4_country_downloads_per_month.R")
+source("R/country-reports/pg4_taxon_matrix.R")
 source("R/html-json/utils.R")
 
 #########
@@ -59,6 +60,9 @@ pg3DownloadBlob <- generateCountryDownloadStats()
 print("Generating latest publications")
 pg3Pubs <- generateRecentPublications(apiUrl)
 
+print("Generating class/phylum bubbles")
+pg4TaxonMatrix <- generateClassPhylumMatrix("hadoop/cr_pg4_class_matrix.csv", "hadoop/cr_pg4_phylum_matrix.csv")
+
 indesignMacPath <- function(hdName, absolutePath) {
   return(paste(hdName, gsub("/", ":", absolutePath), sep=""))
 }
@@ -90,6 +94,7 @@ joinWithOtherData <- function(DF) {
   DF <- merge(DF, trafficTop5Cities, by = "CountryCode", all.x = TRUE)
   DF <- merge(DF, pg3DownloadBlob, by = "CountryCode", all.x = TRUE)
   DF <- merge(DF, pg3Pubs, by = "CountryCode", all.x = TRUE)
+  DF <- merge(DF, pg4TaxonMatrix, by = "CountryCode", all.x = TRUE)
   return(DF)
 }
 

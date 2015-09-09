@@ -160,6 +160,8 @@ if [ $runCountryReports == "true" ];then
   # todo: move to hadoop section
   # hdfs dfs -getmerge /user/hive/warehouse/"$countryreports_db".db/kingdom_matrix hadoop/cr_kingdom_matrix.csv
   # hdfs dfs -getmerge /user/hive/warehouse/"$countryreports_db".db/pg1_pub_blob hadoop/cr_pg1_pub_blob.csv
+#   hdfs dfs -getmerge /user/hive/warehouse/"$countryreports_db".db/class_matrix hadoop/cr_pg4_class_matrix.csv
+#   hdfs dfs -getmerge /user/hive/warehouse/"$countryreports_db".db/phylum_matrix hadoop/cr_pg4_phylum_matrix.csv
   echo 'Generating indesign merge files for Country Reports'
   Rscript R/generate_indesign_merge_csv_for_mac.R
 else
