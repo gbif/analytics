@@ -1,5 +1,6 @@
 install.packages("reshape2", repos="http://cran.rstudio.com/")
 install.packages("plyr", repos="http://cran.rstudio.com/")
+install.packages("Rcppr", repos="http://cran.rstudio.com/")
 install.packages("dplyr", repos="http://cran.rstudio.com/")
 install.packages("ggplot2", repos="http://cran.rstudio.com/")
 install.packages("whisker", repos="http://cran.rstudio.com/")
