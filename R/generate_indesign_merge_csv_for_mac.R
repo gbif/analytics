@@ -9,6 +9,7 @@ source("R/country-reports/pg3_download_blob.R")
 source("R/country-reports/pg3_fig4_country_downloads_per_month.R")
 source("R/country-reports/pg4_taxon_matrix.R")
 source("R/country-reports/pg6_5_recent_datasets.R")
+source("R/country-reports/pg7_pub_blob.R")
 source("R/html-json/utils.R")
 
 #########
@@ -67,6 +68,9 @@ pg4TaxonMatrix <- generateClassPhylumMatrix("hadoop/cr_pg4_class_matrix.csv", "h
 print("Generating latest datasets")
 pg6RecentDatasets <- generateRecentDatasets(apiUrl)
 
+print("Generating pg7 pub blob")
+pg7PubBlob <- generatePg7PubBlob()
+
 indesignMacPath <- function(hdName, absolutePath) {
   return(paste(hdName, gsub("/", ":", absolutePath), sep=""))
 }
@@ -102,6 +106,9 @@ joinWithOtherData <- function(DF) {
   DF <- merge(DF, pg6RecentDatasets, by = "CountryCode", all.x = TRUE)
   # many countries haven't published, convert their NA to ""
   DF[is.na(DF)] <- ""
+  DF <- merge(DF, pg7PubBlob, by = "CountryCode", all.x = TRUE)
+  # many countries haven't published, convert their NA to 0
+  DF[is.na(DF)] <- 0
   
   return(DF)
 }
