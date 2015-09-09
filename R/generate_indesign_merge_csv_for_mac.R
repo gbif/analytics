@@ -8,6 +8,7 @@ source("R/country-reports/pg3_recent_publications.R")
 source("R/country-reports/pg3_download_blob.R")
 source("R/country-reports/pg3_fig4_country_downloads_per_month.R")
 source("R/country-reports/pg4_taxon_matrix.R")
+source("R/country-reports/pg6_5_recent_datasets.R")
 source("R/html-json/utils.R")
 
 #########
@@ -63,6 +64,9 @@ pg3Pubs <- generateRecentPublications(apiUrl)
 print("Generating class/phylum bubbles")
 pg4TaxonMatrix <- generateClassPhylumMatrix("hadoop/cr_pg4_class_matrix.csv", "hadoop/cr_pg4_phylum_matrix.csv")
 
+print("Generating latest datasets")
+pg6RecentDatasets <- generateRecentDatasets(apiUrl)
+
 indesignMacPath <- function(hdName, absolutePath) {
   return(paste(hdName, gsub("/", ":", absolutePath), sep=""))
 }
@@ -95,6 +99,7 @@ joinWithOtherData <- function(DF) {
   DF <- merge(DF, pg3DownloadBlob, by = "CountryCode", all.x = TRUE)
   DF <- merge(DF, pg3Pubs, by = "CountryCode", all.x = TRUE)
   DF <- merge(DF, pg4TaxonMatrix, by = "CountryCode", all.x = TRUE)
+  DF <- merge(DF, pg6RecentDatasets, by = "CountryCode", all.x = TRUE)
   return(DF)
 }
 
