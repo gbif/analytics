@@ -100,6 +100,9 @@ joinWithOtherData <- function(DF) {
   DF <- merge(DF, pg3Pubs, by = "CountryCode", all.x = TRUE)
   DF <- merge(DF, pg4TaxonMatrix, by = "CountryCode", all.x = TRUE)
   DF <- merge(DF, pg6RecentDatasets, by = "CountryCode", all.x = TRUE)
+  # many countries haven't published, convert their NA to ""
+  DF[is.na(DF)] <- ""
+  
   return(DF)
 }
 

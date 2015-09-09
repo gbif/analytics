@@ -35,10 +35,10 @@ generateRecentDatasets <- function(apiUrl) {
   datasetsDF$count <- prettyNum(datasetsDF$count, big.mark=",")
   
   # now transform into one row per country
-  gbif_iso_countries()
-  countries <- data.frame(ISO_3166_1$Alpha_2, stringsAsFactors = FALSE)
-  colnames(countries) <- c("CountryCode")
-  flat_top5 <- countries
+  # gbif_iso_countries()
+  # countries <- data.frame(ISO_3166_1$Alpha_2, stringsAsFactors = FALSE)
+  # colnames(countries) <- c("CountryCode")
+  flat_top5 <- NULL
   for (i in 1:5) {
     singleRank <- datasetsDF[datasetsDF$rank == i,]
     # rename columns
@@ -51,13 +51,18 @@ generateRecentDatasets <- function(apiUrl) {
                 paste(paste("dataset", i, sep=""), "_rank", sep=""),
                 paste(paste("dataset", i, sep=""), "_count", sep=""))
     colnames(singleRank) <- header
-    flat_top5 <- merge(flat_top5, singleRank, all = TRUE)
+    if (is.null(flat_top5)) {
+      flat_top5 <- singleRank
+    } else {
+      flat_top5 <- merge(flat_top5, singleRank, all = TRUE)
+    }
   } 
   # remove no country row
   flat_top5 <- flat_top5[!is.na(flat_top5$CountryCode), ]
   # all NA to empty string
   flat_top5[is.na(flat_top5)] <- ""
   
+  return(flat_top5)
 }
 
 # Call the gbif api to get the count for a dataset, given its type.
