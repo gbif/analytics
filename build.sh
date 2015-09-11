@@ -157,6 +157,7 @@ if [ $runCountryReports == "true" ];then
   # hive --hiveconf CR_DB="$countryreports_db" --hiveconf PROD_DB="$production_db" -f hive/country-reports/pg1_pub_blob.q
   # hive --hiveconf CR_DB="$countryreports_db" --hiveconf PROD_DB="$production_db" -f hive/country-reports/pg4_taxon_matrix.q
   # hive --hiveconf CR_DB="$countryreports_db" --hiveconf PROD_DB="$production_db" -f hive/country-reports/pg7_pub_blob.q
+  hive --hiveconf CR_DB="$countryreports_db" --hiveconf PROD_DB="$production_db" -f hive/country-reports/pg7_top8_datasets.q
   echo 'Copying hadoop csvs for country reports'  
   # todo: move to hadoop section
   # hdfs dfs -getmerge /user/hive/warehouse/"$countryreports_db".db/kingdom_matrix hadoop/cr_kingdom_matrix.csv
@@ -164,8 +165,9 @@ if [ $runCountryReports == "true" ];then
   # hdfs dfs -getmerge /user/hive/warehouse/"$countryreports_db".db/class_matrix hadoop/cr_pg4_class_matrix.csv
   # hdfs dfs -getmerge /user/hive/warehouse/"$countryreports_db".db/phylum_matrix hadoop/cr_pg4_phylum_matrix.csv
   # hdfs dfs -getmerge /user/hive/warehouse/"$countryreports_db".db/pg7_pub_blob hadoop/cr_pg7_pub_blob.csv
+  hdfs dfs -getmerge /user/hive/warehouse/"$countryreports_db".db/pg7_top8_datasets hadoop/cr_pg7_top8_datasets.csv
   echo 'Generating indesign merge files for Country Reports'
-  Rscript R/generate_indesign_merge_csv_for_mac.R
+  # Rscript R/generate_indesign_merge_csv_for_mac.R
 else
   echo 'Skipping country reports stage (add -runCountryReports to command to run it)'
 fi 
