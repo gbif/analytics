@@ -1,4 +1,4 @@
-- Hive query for page 7 top 8 datasets
+-- Hive query for page 7 top 8 datasets
 
 CREATE DATABASE IF NOT EXISTS ${hiveconf:CR_DB};
 
