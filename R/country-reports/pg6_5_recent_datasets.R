@@ -2,7 +2,6 @@
 library(RPostgreSQL)
 library(dplyr)
 library(jsonlite)
-source("R/html-json/utils.R")
 # NOTE: you need to create a db_secrets.R that contains the following variables:
 # 
 # Postgres prod registry
@@ -32,12 +31,9 @@ generateRecentDatasets <- function(apiUrl) {
   dbDisconnect(ps_con)
 
   datasetsDF$count <- mapply(getCount, datasetsDF$type, datasetsDF$key)
-  datasetsDF$count <- prettyNum(datasetsDF$count, big.mark=",")
+  datasetsDF$count <- prettyNum(datasetsDF$count, big.mark=",", preserve.width = "individual")
   
   # now transform into one row per country
-  # gbif_iso_countries()
-  # countries <- data.frame(ISO_3166_1$Alpha_2, stringsAsFactors = FALSE)
-  # colnames(countries) <- c("CountryCode")
   flat_top5 <- NULL
   for (i in 1:5) {
     singleRank <- datasetsDF[datasetsDF$rank == i,]

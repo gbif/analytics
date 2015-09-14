@@ -11,6 +11,8 @@ source("R/country-reports/pg4_taxon_matrix.R")
 source("R/country-reports/pg6_5_recent_datasets.R")
 source("R/country-reports/pg6_4_newest_publishers.R")
 source("R/country-reports/pg7_pub_blob.R")
+source("R/country-reports/pg7_top8_datasets.R")
+source("R/country-reports/pg7_top10_countries.R")
 source("R/html-json/utils.R")
 
 #########
@@ -64,55 +66,66 @@ writeCsv <- function(DF, header, filecount) {
   write.csv(DF, filename, row.names=FALSE)    
 }
 
+print("Generating kingdom matrix")
+kingdomMatrix <- generateKingdomMatrix("hadoop/cr_kingdom_matrix.csv")
+
+print("Generating publication stats")
+pg1Research <- generatePublicationStats(apiUrl)
+
+print("Generating pg1 pub blob")
+pg1PubBlob <- generatePg1PubBlob()
+
+print("Generating traffic report")
+trafficReport <- generateTrafficStats()
+
+print("Generating traffic top 5 cities")
+trafficTop5Cities <- generateTrafficTop5Cities()
+
+print("Generating download stats")
+pg3DownloadBlob <- generateCountryDownloadStats()
+
+print("Generating latest publications")
+pg3Pubs <- generateRecentPublications(apiUrl)
+
+print("Generating class/phylum bubbles")
+pg4TaxonMatrix <- generateClassPhylumMatrix("hadoop/cr_pg4_class_matrix.csv", "hadoop/cr_pg4_phylum_matrix.csv")
+
+print("Generating latest datasets")
+pg6RecentDatasets <- generateRecentDatasets(apiUrl)
+
+print("Generating newest publishers")
+pg6NewestPublishers <- generateNewestPublishers(apiUrl)
+
+print("Generating pg7 pub blob")
+pg7PubBlob <- generatePg7PubBlob()
+
+print("Generating pg7 top8 datasets")
+pg7Datasets <- generatePg7Top8Datasets()
+
+print("Generating pg7 top10 countries")
+pg7Countries <- generatePg7Top10Countries()
+
+
 joinWithOtherData <- function(DF) {
-  print("Generating kingdom matrix")
-  kingdomMatrix <- generateKingdomMatrix("hadoop/cr_kingdom_matrix.csv")
   DF <- merge(DF, kingdomMatrix, by = "CountryCode", all.x = TRUE)
-  
-  print("Generating publication stats")
-  pg1Research <- generatePublicationStats(apiUrl)
   DF <- merge(DF, pg1Research, by = "CountryCode", all.x = TRUE)
-  
-  print("Generating pg1 pub blob")
-  pg1PubBlob <- generatePg1PubBlob()
   DF <- merge(DF, pg1PubBlob, by = "CountryCode", all.x = TRUE)
   # many countries haven't published, convert their NA to 0
   DF[is.na(DF)] <- 0
-  
-  print("Generating traffic report")
-  trafficReport <- generateTrafficStats()
   DF <- merge(DF, trafficReport, by = "CountryCode", all.x = TRUE)
-  
-  print("Generating traffic top 5 cities")
-  trafficTop5Cities <- generateTrafficTop5Cities()
   DF <- merge(DF, trafficTop5Cities, by = "CountryCode", all.x = TRUE)
-  
-  print("Generating download stats")
-  pg3DownloadBlob <- generateCountryDownloadStats()
   DF <- merge(DF, pg3DownloadBlob, by = "CountryCode", all.x = TRUE)
-  
-  print("Generating latest publications")
-  pg3Pubs <- generateRecentPublications(apiUrl)
   DF <- merge(DF, pg3Pubs, by = "CountryCode", all.x = TRUE)
-  
-  print("Generating class/phylum bubbles")
-  pg4TaxonMatrix <- generateClassPhylumMatrix("hadoop/cr_pg4_class_matrix.csv", "hadoop/cr_pg4_phylum_matrix.csv")
   DF <- merge(DF, pg4TaxonMatrix, by = "CountryCode", all.x = TRUE)
-  
-  print("Generating latest datasets")
-  pg6RecentDatasets <- generateRecentDatasets(apiUrl)
   DF <- merge(DF, pg6RecentDatasets, by = "CountryCode", all.x = TRUE)
   DF[is.na(DF)] <- ""
-  
-  print("Generating newest publishers")
-  pg6NewestPublishers <- generateNewestPublishers(apiUrl)
   DF <- merge(DF, pg6NewestPublishers, by = "CountryCode", all.x = TRUE)
   DF[is.na(DF)] <- ""
-  
-  print("Generating pg7 pub blob")
-  pg7PubBlob <- generatePg7PubBlob()
   DF <- merge(DF, pg7PubBlob, by = "CountryCode", all.x = TRUE)
   DF[is.na(DF)] <- 0
+  DF <- merge(DF, pg7Datasets, by = "CountryCode", all.x = TRUE)
+  DF <- merge(DF, pg7Countries, by = "CountryCode", all.x = TRUE)
+  DF[is.na(DF)] <- ""
   
   return(DF)
 }
