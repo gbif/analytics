@@ -1,12 +1,12 @@
 # Table 1 - web traffic: top 5 cities by session for each country
 require(RGoogleAnalytics)
 require(dplyr)
-source("R/html-json/utils.R")
+source("html-json/utils.R")
 
 # TODO: parameterize start and end dates
 generateTrafficTop5Cities <- function() {
   # TODO: real secrets, not for commit!
-  load("R/country-reports/token_file")
+  load("./token_file")
   ValidateToken(token)
   
   query.list <- Init(start.date = "2014-07-01",
@@ -23,24 +23,26 @@ generateTrafficTop5Cities <- function() {
   #Pagination required
   
   # group_by() and top_n() are dplyr functions that simulate SQL.
-  top5 <- group_by(ga.data, CountryCode)
+  top5 <- group_by(ga.data, CountryCode)  
   # this awkward construction because of strange behaviour on command line where CountryCode column wasn't appearing after summarise (but worked in RStudio)
-  total_traffic <- data.frame(CountryCode=unique(top5$CountryCode), total=summarise(top5, total=sum(as.integer(sessions))), stringsAsFactors = FALSE)
+  total_traffic <- data.frame(summarise(top5, total=sum(as.integer(sessions))), stringsAsFactors = FALSE)
+  top5 <- top5[which(top5$city != "(not set)"),]
   top5 <- top_n(top5, 5)
   top5 <- left_join(top5, total_traffic, by='CountryCode')
   top5$percentage <- paste(as.character(format(round((top5$sessions/top5$total)*100, digits=2), nsmall = 2)), "%", sep="")
+  
   top5$ranking <- ave(top5$sessions, top5$CountryCode, FUN=function(x) order(-x) )
   top5$sessions <- prettyNum(top5$sessions, big.mark=",")
-  top5[is.na(top5)] <- "No Data"
-  top5$city[top5$city == "(not set)"] <- "Unknown"
+    
   # finally, drop Totals column since all we need is percent, and reorder columns so rank is first
-  top5 <- top5[-4]
+  top5 <- top5[, !names(top5) %in% c("total")]
   top5 <- top5[c(1,5,2,3,4)]
     
   # now transform into one row per country
   flat_top5 <- NULL
   for (i in 1:5) {
     singleRank <- top5[top5$ranking == i,]
+    
     # rename columns
     header <- c("CountryCode", 
                 paste(paste("city", i, sep=""), "_rank", sep=""),
@@ -50,9 +52,10 @@ generateTrafficTop5Cities <- function() {
     colnames(singleRank) <- header
     
     if (is.null(flat_top5)) {
-      flat_top5 <- singleRank
+      flat_top5 <- singleRank      
     } else {
-      flat_top5 <- merge(flat_top5, singleRank, all = TRUE)
+      flat_top5 <- merge(flat_top5, singleRank, by.x="CountryCode", by.y="CountryCode", all = TRUE)
+      #break
     }
   } 
   # all NA to empty string
