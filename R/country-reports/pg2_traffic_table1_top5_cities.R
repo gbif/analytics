@@ -1,18 +1,12 @@
 # Table 1 - web traffic: top 5 cities by session for each country
-<<<<<<< Updated upstream
-require(RGoogleAnalytics)
-require(dplyr)
-source("html-json/utils.R")
-=======
 library(RGoogleAnalytics)
 library(dplyr)
 source("R/html-json/utils.R")
->>>>>>> Stashed changes
 
 # TODO: parameterize start and end dates
 generateTrafficTop5Cities <- function() {
   # TODO: real secrets, not for commit!
-  load("./token_file")
+  load("R/country-reports/token_file")
   ValidateToken(token)
   
   query.list <- Init(start.date = "2014-07-01",
