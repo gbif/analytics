@@ -1,7 +1,13 @@
 # Table 1 - web traffic: top 5 cities by session for each country
+<<<<<<< Updated upstream
 require(RGoogleAnalytics)
 require(dplyr)
 source("html-json/utils.R")
+=======
+library(RGoogleAnalytics)
+library(dplyr)
+source("R/html-json/utils.R")
+>>>>>>> Stashed changes
 
 # TODO: parameterize start and end dates
 generateTrafficTop5Cities <- function() {
@@ -25,10 +31,11 @@ generateTrafficTop5Cities <- function() {
   # group_by() and top_n() are dplyr functions that simulate SQL.
   top5 <- group_by(ga.data, CountryCode)  
   # this awkward construction because of strange behaviour on command line where CountryCode column wasn't appearing after summarise (but worked in RStudio)
-  total_traffic <- data.frame(summarise(top5, total=sum(as.integer(sessions))), stringsAsFactors = FALSE)
+  total_traffic <- data.frame(CountryCode=unique(top5$CountryCode), total=summarise(top5, total=sum(as.integer(sessions))), stringsAsFactors = FALSE)
+  # we pull 6 in case one of them has "(not set)" as a top 6 country, in which case we drop it and have at most 5 real cities
+  top5 <- top_n(top5, 6)
   top5 <- top5[which(top5$city != "(not set)"),]
-  top5 <- top_n(top5, 5)
-  top5 <- left_join(top5, total_traffic, by='CountryCode')
+  top5 <- merge(top5, total_traffic)
   top5$percentage <- paste(as.character(format(round((top5$sessions/top5$total)*100, digits=2), nsmall = 2)), "%", sep="")
   
   top5$ranking <- ave(top5$sessions, top5$CountryCode, FUN=function(x) order(-x) )
