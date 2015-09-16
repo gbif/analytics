@@ -35,7 +35,7 @@ generateKingdomMatrix <- function(csvDataFile) {
                 )
     colnames(singleKingdom) <- header
     # percent col gets '-' for NA, and otherwise a +/- prepended and '%' appended
-    singleKingdom[,3] <- as.numeric(singleKingdom[,3])
+    singleKingdom[,3] <- as.numeric(as.character(singleKingdom[,3]))
     singleKingdom[,3] <- ifelse(singleKingdom[,3] > 0, paste("+ ", paste(as.character(singleKingdom[,3]), "%", sep=""), sep=""), paste("- ", paste(as.character(singleKingdom[,3]), "%", sep=""), sep="")) 
 
     if (is.null(flat_kingdoms)) {
