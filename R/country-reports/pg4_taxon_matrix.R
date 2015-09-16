@@ -51,7 +51,7 @@ flatten <- function(df) {
     colnames(singleTaxon) <- header
     # percent col gets '-' for NA, and otherwise a +/- prepended and '%' appended
     singleTaxon[,3] <- as.numeric(as.character(singleTaxon[,3]))
-    singleTaxon[,3] <- ifelse(singleTaxon[,3] > 0, paste("+ ", paste(as.character(singleTaxon[,3]), "%", sep=""), sep=""), paste("- ", paste(as.character(singleTaxon[,3]), "%", sep=""), sep="")) 
+    singleTaxon[,3] <- ifelse(singleTaxon[,3] == 0, "0 %", ifelse(singleTaxon[,3] > 0, paste("+ ", paste(as.character(singleTaxon[,3]), "%", sep=""), sep=""), paste("- ", paste(as.character(singleTaxon[,3]), "%", sep=""), sep="")))
     
     if (is.null(flat_taxa)) {
       flat_taxa <- data.frame(singleTaxon, stringsAsFactors=FALSE)
