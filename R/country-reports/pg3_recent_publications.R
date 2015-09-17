@@ -3,6 +3,7 @@ library(jsonlite)
 source("R/html-json/utils.R")
 
 # apiUrl <- "http://api.gbif-uat.org/v1/"
+# countryCode <- "US"
 # ask the given apiUrl (e.g. "http://api.gbif.org/v1/") for most recent publication for each country
 generateRecentPublications <- function(apiUrl) {
   
@@ -88,15 +89,20 @@ generateRecentPublications <- function(apiUrl) {
       trimmedCountryArticles$pages <- ifelse(grepl("n/a", trimmedCountryArticles$pages, fixed=TRUE), "", trimmedCountryArticles$pages)
       
       # add formatting to make reference strings(eg volume(issue):pages)
-      trimmedCountryArticles$issue <- ifelse(nchar(trimmedCountryArticles$issue) > 0, paste("(", paste(trimmedCountryArticles$issue, ")", sep=""), sep = ""), "")
-      trimmedCountryArticles$pages <- ifelse(nchar(trimmedCountryArticles$pages) > 0, paste(":", trimmedCountryArticles$pages, sep = ""), "")
-      
+      trimmedCountryArticles$ref <- mapply(buildRefString, trimmedCountryArticles$volume, trimmedCountryArticles$issue, trimmedCountryArticles$pages)
+      # now drop the volume, issue, and pages cols
+      trimmedCountryArticles <-  trimmedCountryArticles[, !names(trimmedCountryArticles) %in% c("volume", "issue", "pages")]
+      # add year formatting (add brackets)  
+      trimmedCountryArticles$year <- paste("(", paste(trimmedCountryArticles$year, ")", sep=""), sep="")
+      # add . to journal titles (when given)
+      trimmedCountryArticles$source <- ifelse(nchar(trimmedCountryArticles$source) > 0, paste(trimmedCountryArticles$source, ".", sep=""), trimmedCountryArticles$source)
+
       # construct a single identifier, preferring doi,issn,pmid 
       idList <- c()
       for (i in 1:length(trimmedCountryArticles$title)) {
         id <- ""
         if (!is.na(trimmedCountryArticles$doi[[i]]) && nchar(trimmedCountryArticles$doi[[i]]) > 0) {
-          id <- paste("doi:", trimmedCountryArticles$doi[[i]], sep="")
+          id <- paste("http://dx.doi.org/", trimmedCountryArticles$doi[[i]], sep="")
         } else if (!is.na(trimmedCountryArticles$issn[[i]]) && nchar(trimmedCountryArticles$issn[[i]]) > 0) {
           id <- paste("issn:", trimmedCountryArticles$issn[[i]], sep="")
         } else if (!is.na(trimmedCountryArticles$pmid[[i]]) && nchar(trimmedCountryArticles$pmid[[i]]) > 0) {
@@ -128,9 +134,7 @@ generateRecentPublications <- function(apiUrl) {
                 paste(paste("pub", i, sep=""), "_year", sep=""),
                 paste(paste("pub", i, sep=""), "_title", sep=""),
                 paste(paste("pub", i, sep=""), "_source", sep=""),
-                paste(paste("pub", i, sep=""), "_volume", sep=""),
-                paste(paste("pub", i, sep=""), "_issue", sep=""),
-                paste(paste("pub", i, sep=""), "_pages", sep=""),
+                paste(paste("pub", i, sep=""), "_ref", sep=""),
                 paste(paste("pub", i, sep=""), "_identifier", sep="")
     )
     colnames(singleRank) <- header
@@ -145,4 +149,20 @@ generateRecentPublications <- function(apiUrl) {
   flatArticles[is.na(flatArticles)] <- ""
   
   return(flatArticles)
+}
+
+buildRefString <- function(volume, issue, pages) {
+  if ((nchar(volume) > 0 || nchar(issue) > 0) && nchar(pages) > 0) {
+    pages <- paste(":", pages, sep="")
+  }
+  if (nchar(issue) > 0) {
+    issue <- paste("(", paste(issue, ")", sep=""), sep="")
+  }
+  
+  refString <- paste(volume, paste(issue, pages, sep=""), sep="")
+  if (nchar(refString) > 0) {
+    refString <- paste(refString, ".", sep="")
+  }
+  
+  return(refString)
 }
