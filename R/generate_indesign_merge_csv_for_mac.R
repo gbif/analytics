@@ -63,7 +63,7 @@ countryReports <- function(country, filename, macPath) {
 
 writeCsv <- function(DF, header, filecount) {
   filename <- paste(paste("indesign_merge_mac_", filecount, sep=""), ".csv", sep="")
-  write.csv(DF, filename, row.names=FALSE)    
+  write.csv(DF, filename, row.names=FALSE, fileEncoding="UTF-8")    
 }
 
 print("Generating kingdom matrix")
