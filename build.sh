@@ -159,7 +159,7 @@ if [ $runCountryReports == "true" ];then
   # hive --hiveconf CR_DB="$countryreports_db" --hiveconf PROD_DB="$production_db" -f hive/country-reports/pg7_pub_blob.q
   # hive --hiveconf CR_DB="$countryreports_db" --hiveconf PROD_DB="$production_db" -f hive/country-reports/pg7_top8_datasets.q
   # hive --hiveconf CR_DB="$countryreports_db" --hiveconf PROD_DB="$production_db" -f hive/country-reports/pg7_top10_countries.q
-  echo 'Copying hadoop csvs for country reports'  
+  echo 'Copying hadoop csvs for country reports'
   # todo: move to hadoop section
   # hdfs dfs -getmerge /user/hive/warehouse/"$countryreports_db".db/kingdom_matrix hadoop/cr_kingdom_matrix.csv
   # hdfs dfs -getmerge /user/hive/warehouse/"$countryreports_db".db/pg1_pub_blob hadoop/cr_pg1_pub_blob.csv
@@ -168,6 +168,9 @@ if [ $runCountryReports == "true" ];then
   # hdfs dfs -getmerge /user/hive/warehouse/"$countryreports_db".db/pg7_pub_blob hadoop/cr_pg7_pub_blob.csv
   # hdfs dfs -getmerge /user/hive/warehouse/"$countryreports_db".db/pg7_top8_datasets hadoop/cr_pg7_top8_datasets.csv
   # hdfs dfs -getmerge /user/hive/warehouse/"$countryreports_db".db/pg7_top10_countries hadoop/cr_pg7_top10_countries.csv
+  echo 'Copying placeholder pdf for missing charts'
+  ./country_reports/copy_placeholders.sh
+  
   echo 'Generating indesign merge files for Country Reports'
   Rscript R/generate_indesign_merge_csv_for_mac.R
 else

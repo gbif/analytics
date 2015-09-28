@@ -37,7 +37,7 @@ countriesPerCsv=20
 countryPath <- "report/country"
 flagsPath <- "flags"
 macHdName="Macintosh HD"
-apiUrl="http://api.gbif-uat.org/v1/"
+apiUrl="http://api.gbif.org/v1/"
 
 # TODO: these take awhile, move to -runFigures
 # print("Generating traffic weekly plots")
@@ -62,8 +62,11 @@ countryReports <- function(country, filename, macPath) {
 }
 
 writeCsv <- function(DF, header, filecount) {
+  tmpfilename <- "tmp.csv"
+  write.table(DF, tmpfilename, row.names=FALSE, fileEncoding="UTF-8", sep = "\t")
+  # indesign needs UTF-16, and R can't do it (really, really dumb)
   filename <- paste(paste("indesign_merge_mac_", filecount, sep=""), ".csv", sep="")
-  write.csv(DF, filename, row.names=FALSE, fileEncoding="UTF-8")    
+  system(paste("iconv -f 'UTF-8' -t 'UTF-16LE' tmp.csv > ", filename, sep=""))
 }
 
 print("Generating kingdom matrix")
