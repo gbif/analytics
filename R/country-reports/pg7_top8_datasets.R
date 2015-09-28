@@ -2,12 +2,18 @@
 library(dplyr)
 library(jsonlite)
 
+# test, remove
+apiUrl <- "http://api.gbif.org/v1/"
+
 # ask the given apiUrl (e.g. "http://api.gbif.org/v1/") for the names of top 8 datasets about country
 generatePg7Top8Datasets <- function(apiUrl) {
   top8 <- read.csv("hadoop/cr_pg7_top8_datasets.csv", na.strings="", encoding="UTF-8", header = FALSE)
   colnames(top8) <- c("CountryCode", "dataset_key", "count", "rank")
   top8$count <- prettyNum(top8$count, big.mark = ",", preserve.width = "individual")
   top8$title <- sapply(top8$dataset_key, getDatasetName)
+  # clean tabs and linefeeds
+  badWhitespace <- "[\n\t]"
+  top8$title <- gsub(badWhitespace, "", top8$title)
   top8$modified <- sapply(top8$dataset_key, getDatasetModified)
   # now drop the key column
   top8 <- top8[,-2]

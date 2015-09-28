@@ -32,6 +32,13 @@ generateRecentDatasets <- function(apiUrl) {
 
   datasetsDF$count <- mapply(getCount, datasetsDF$type, datasetsDF$key)
   datasetsDF$count <- prettyNum(datasetsDF$count, big.mark=",", preserve.width = "individual")
+  datasetsDF$count <- paste(as.character(datasetsDF$count), " records.", sep="")
+  
+  # add styling for report use
+  datasetsDF$dataset_title <- paste(datasetsDF$dataset_title, ".", sep="")
+  datasetsDF$type <- paste(datasetsDF$type, ".", sep="")
+  datasetsDF$date <- paste("Updated ", paste(datasetsDF$date, ".", sep=""), sep="")
+  datasetsDF$organization_title <- paste("Published by ", paste(datasetsDF$organization_title, ".", sep=""), sep="")
   
   # now transform into one row per country
   flat_top5 <- NULL
