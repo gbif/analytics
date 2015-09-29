@@ -33,7 +33,7 @@ source("R/html-json/utils.R")
 # 12      publishedby/occ_complete_observation.pdf
 # 13      publishedby/occ_repatriation.pdf
 #########
-countriesPerCsv=20
+countriesPerCsv=65
 countryPath <- "report/country"
 flagsPath <- "flags"
 macHdName="Macintosh HD"
@@ -183,11 +183,15 @@ for (country in countries) {
     DF<-header
   }
 }
-# left over
-filecount=filecount+1
-colnames(DF)=header
-DF <- DF[-c(1), ]
-DF <- joinWithOtherData(DF)
-# all NA to empty string
-DF[is.na(DF)] <- ""
-writeCsv(DF, header, filecount)
+# left over, if any
+if (is.data.frame(DF)) {
+  filecount=filecount+1
+  print(paste("Setting final header for DF of count", nrow(DF), sep=""))
+  print(DF)
+  colnames(DF)=header
+  DF <- DF[-c(1), ]
+  DF <- joinWithOtherData(DF)
+  # all NA to empty string
+  DF[is.na(DF)] <- ""
+  writeCsv(DF, header, filecount)
+}

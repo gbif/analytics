@@ -17,7 +17,7 @@ countries=`ls -d $pathprefix/country/*`
 for country in $countries
 do
   countrycode=`echo $country | rev | cut -d \/ -f 1 | rev`
-  echo "$countrycode"
+  # echo "$countrycode"
   aboutpath="$pathprefix"country/$countrycode/about/print
   if [ ! -d $aboutpath ]; then
     echo "Creating $aboutpath"

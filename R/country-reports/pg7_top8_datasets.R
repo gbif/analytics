@@ -2,9 +2,6 @@
 library(dplyr)
 library(jsonlite)
 
-# test, remove
-apiUrl <- "http://api.gbif.org/v1/"
-
 # ask the given apiUrl (e.g. "http://api.gbif.org/v1/") for the names of top 8 datasets about country
 generatePg7Top8Datasets <- function(apiUrl) {
   top8 <- read.csv("hadoop/cr_pg7_top8_datasets.csv", na.strings="", encoding="UTF-8", header = FALSE)

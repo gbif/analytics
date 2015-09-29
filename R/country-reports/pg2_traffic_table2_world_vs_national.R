@@ -27,8 +27,10 @@ generateTrafficStats <- function() {
   worldwideTraffic <- GetReportData(query, token)
   # Converts char columns to numeric and enforced two digit format
   # TODO: this throws a warning but works in the end. Strange transposition attempt...
-  worldwideTraffic[,2:5] <- data.frame(sapply(worldwideTraffic[,2:5], FUN=function(x) format(round(as.numeric(x), digits = 2), nsmall = 2)), stringsAsFactors = F)
+  # worldwideTraffic[,2:5] <- data.frame(sapply(worldwideTraffic[,2:5], FUN=function(x) format(round(as.numeric(x), digits = 2), nsmall = 2)), stringsAsFactors = F)
+  worldwideTraffic[,2:5] <- sapply(worldwideTraffic[,2:5], FUN=function(x) round(as.numeric(x), digits = 2))
   colnames(worldwideTraffic)=c("global_sessions", "global_pages_per_sessions", "global_avg_sessions_duration", "global_bounce_rate", "global_percent_new_sessions")
+  worldwideTraffic$global_avg_sessions_duration <- formatSeconds(worldwideTraffic$global_avg_sessions_duration)
   
   # fetch the per country traffic stats from Google Analytics
   rawQuery <- Init(start.date = "2014-07-01",
@@ -42,6 +44,7 @@ generateTrafficStats <- function() {
   # Converts char columns to numeric and enforced two digit format
   perCountryTraffic[,3:6] <- data.frame(sapply(perCountryTraffic[,3:6], FUN=function(x) format(round(as.numeric(x), digits = 2), nsmall = 2)), stringsAsFactors = F)
   colnames(perCountryTraffic)=c("CountryCode", "country_sessions", "country_pages_per_sessions", "country_avg_sessions_duration", "country_bounce_rate", "country_percent_new_sessions")
+  perCountryTraffic$country_avg_sessions_duration <- formatSeconds(as.numeric(perCountryTraffic$country_avg_sessions_duration))
   
   mergedTraffic <- cbind(perCountryTraffic, worldwideTraffic)
   # TODO: give everyone a minimum of 0.01%, since nobody wants to see 0
@@ -51,4 +54,12 @@ generateTrafficStats <- function() {
   mergedTraffic$global_sessions <- prettyNum(mergedTraffic$global_sessions, big.mark=",")
   
   return(mergedTraffic)
+}
+
+formatSeconds <- function(seconds) {
+  min <- as.integer(seconds %/% 60)
+  sec <- as.integer(seconds %% 60)
+  result <- paste(sprintf("%.1d", min), paste(":", sprintf("%.2d", sec), sep=""), sep="")
+
+  return(result)
 }
