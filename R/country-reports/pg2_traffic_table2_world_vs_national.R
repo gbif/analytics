@@ -1,19 +1,10 @@
 # Table 2 - web traffic: worldwide and national analytics breakdown
-require(RGoogleAnalytics)
+library(RGoogleAnalytics)
 source("R/html-json/utils.R")
-
-# needed for web traffic page:
-
-# csv columns
-# country_sessions, country_percent_of_global_sessions, city1_name, city1_sessions, city1_percent_of_country_sessions, <for 5 cities>, 
-# global_sessions, global_pages_per_session, global_avg_session_duration, global_bounce_rate, global_perecent_new_sessions, 
-# country_pages_per_session, country_avg_session_duration, country_bounce_rate, country_perecent_new_sessions
-
-# chart: Figure 3 "Number of user sessions per week originating in country"
 
 # TODO: parameterize start and end dates
 generateTrafficStats <- function() {
-  # TODO: real secrets, not for commit!
+  # real secrets, not for commit!
   load("R/country-reports/token_file")
   ValidateToken(token)
   
@@ -25,9 +16,7 @@ generateTrafficStats <- function() {
                      table.id = "ga:73962076")
   query <- QueryBuilder(rawQuery)
   worldwideTraffic <- GetReportData(query, token)
-  # Converts char columns to numeric and enforced two digit format
-  # TODO: this throws a warning but works in the end. Strange transposition attempt...
-  # worldwideTraffic[,2:5] <- data.frame(sapply(worldwideTraffic[,2:5], FUN=function(x) format(round(as.numeric(x), digits = 2), nsmall = 2)), stringsAsFactors = F)
+  # Enforced two digit format
   worldwideTraffic[,2:5] <- sapply(worldwideTraffic[,2:5], FUN=function(x) round(as.numeric(x), digits = 2))
   colnames(worldwideTraffic)=c("global_sessions", "global_pages_per_sessions", "global_avg_sessions_duration", "global_bounce_rate", "global_percent_new_sessions")
   worldwideTraffic$global_avg_sessions_duration <- formatSeconds(worldwideTraffic$global_avg_sessions_duration)

@@ -1,11 +1,12 @@
 # Figure 3 - web traffic: sessions per week from country, for the last year
-require(ggplot2)
-require(plyr)
+library(ggplot2)
+library(plyr)
+library(RGoogleAnalytics)
 source("R/graph/utils.R")
 source("R/graph/plot_utils.R")
 
 generateTrafficWeeklyPlots <- function() {
-  # TODO: real secrets, not for commit!
+  # real secrets, not for commit!
   load("R/country-reports/token_file")
   ValidateToken(token)
   

@@ -5,7 +5,7 @@ source("R/html-json/utils.R")
 
 # TODO: parameterize start and end dates
 generateTrafficTop5Cities <- function() {
-  # TODO: real secrets, not for commit!
+  # real secrets, not for commit!
   load("R/country-reports/token_file")
   ValidateToken(token)
   
