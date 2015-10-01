@@ -6,7 +6,7 @@ curl -L 'http://repository.gbif.org/service/local/artifact/maven/redirect?r=rele
 declare -a mysql_snapshots=("20071219" "20080401" "20080627" "20081010" "20081217" "20090406" "20090617" "20090925" "20091216" "20100401" "20100726" "20101117" "20110221" "20110610" "20110905" "20120118" "20120326" "20120713" "20121031" "20121211" "20130220" "20130521" "20130709" "20130910")
 declare -a hbase_v1_snapshots=("20131220" "20140328")
 declare -a hbase_v2_snapshots=("20140908" "20150119" "20150409")
-declare -a hbase_v3_snapshots=("20150703")
+declare -a hbase_v3_snapshots=("20150703", "20151001")
 
 for snapshot in "${mysql_snapshots[@]}"
 do
