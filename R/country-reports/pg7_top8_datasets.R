@@ -15,6 +15,11 @@ generatePg7Top8Datasets <- function(apiUrl) {
   # now drop the key column
   top8 <- top8[,-2]
   
+  # formatting data to look right for InDesign when not enough rows
+  top8$title <- paste(top8$title, ".", sep="")
+  top8$count <- paste(top8$count, " occurrences in ", sep="")
+  top8$modified <- paste("(last updated ", paste(top8$modified, ").", sep=""))
+
   flat_top8 <- NULL
   for (i in 1:8) {
     singleRank <- top8[top8$rank == i,]
