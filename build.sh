@@ -48,6 +48,14 @@ if [ $runHive == "true" ];then
   hive --hiveconf DB="$destination_db" -f hive/process/spe_yearCollected.q
   
   hive --hiveconf DB="$destination_db" -f hive/process/repatriation.q
+  
+  echo 'Running hive for country reports'
+  hive --hiveconf CR_DB="$countryreports_db" --hiveconf PROD_DB="$production_db" -f hive/country-reports/pg1_kingdom_matrix.q
+  hive --hiveconf CR_DB="$countryreports_db" --hiveconf PROD_DB="$production_db" -f hive/country-reports/pg1_pub_blob.q
+  hive --hiveconf CR_DB="$countryreports_db" --hiveconf PROD_DB="$production_db" -f hive/country-reports/pg4_taxon_matrix.q
+  hive --hiveconf CR_DB="$countryreports_db" --hiveconf PROD_DB="$production_db" -f hive/country-reports/pg7_pub_blob.q
+  hive --hiveconf CR_DB="$countryreports_db" --hiveconf PROD_DB="$production_db" -f hive/country-reports/pg7_top8_datasets.q
+  hive --hiveconf CR_DB="$countryreports_db" --hiveconf PROD_DB="$production_db" -f hive/country-reports/pg7_top10_countries.q
 else 
   echo 'Skipping hive stage (add -runHive to command to run it)'
 fi
@@ -113,6 +121,15 @@ if [ $runHadoop == "true" ];then
   hadoop dfs -getmerge /user/hive/warehouse/"$destination_db".db/spe_country_repatriation hadoop/spe_country_repatriation.csv
   hadoop dfs -getmerge /user/hive/warehouse/"$destination_db".db/spe_publishercountry_repatriation hadoop/spe_publisherCountry_repatriation.csv 
   hadoop dfs -getmerge /user/hive/warehouse/"$destination_db".db/spe_repatriation hadoop/spe_repatriation.csv
+  
+  echo 'Downloading CSVs from Hadoop for country reports'
+  hdfs dfs -getmerge /user/hive/warehouse/"$countryreports_db".db/kingdom_matrix hadoop/cr_kingdom_matrix.csv
+  hdfs dfs -getmerge /user/hive/warehouse/"$countryreports_db".db/pg1_pub_blob hadoop/cr_pg1_pub_blob.csv
+  hdfs dfs -getmerge /user/hive/warehouse/"$countryreports_db".db/class_matrix hadoop/cr_pg4_class_matrix.csv
+  hdfs dfs -getmerge /user/hive/warehouse/"$countryreports_db".db/phylum_matrix hadoop/cr_pg4_phylum_matrix.csv
+  hdfs dfs -getmerge /user/hive/warehouse/"$countryreports_db".db/pg7_pub_blob hadoop/cr_pg7_pub_blob.csv
+  hdfs dfs -getmerge /user/hive/warehouse/"$countryreports_db".db/pg7_top8_datasets hadoop/cr_pg7_top8_datasets.csv
+  hdfs dfs -getmerge /user/hive/warehouse/"$countryreports_db".db/pg7_top10_countries hadoop/cr_pg7_top10_countries.csv
 else 
   echo 'Skipping hadoop copy stage (add -runHadoop to command to run it)'
 fi
@@ -151,23 +168,6 @@ else
 fi 
 
 if [ $runCountryReports == "true" ];then
-  echo 'Executing hive for country reports'
-  # todo: move to hive section 
-  # hive --hiveconf CR_DB="$countryreports_db" --hiveconf PROD_DB="$production_db" -f hive/country-reports/pg1_kingdom_matrix.q
-  # hive --hiveconf CR_DB="$countryreports_db" --hiveconf PROD_DB="$production_db" -f hive/country-reports/pg1_pub_blob.q
-  # hive --hiveconf CR_DB="$countryreports_db" --hiveconf PROD_DB="$production_db" -f hive/country-reports/pg4_taxon_matrix.q
-  # hive --hiveconf CR_DB="$countryreports_db" --hiveconf PROD_DB="$production_db" -f hive/country-reports/pg7_pub_blob.q
-  # hive --hiveconf CR_DB="$countryreports_db" --hiveconf PROD_DB="$production_db" -f hive/country-reports/pg7_top8_datasets.q
-  # hive --hiveconf CR_DB="$countryreports_db" --hiveconf PROD_DB="$production_db" -f hive/country-reports/pg7_top10_countries.q
-  echo 'Copying hadoop csvs for country reports'
-  # todo: move to hadoop section
-  # hdfs dfs -getmerge /user/hive/warehouse/"$countryreports_db".db/kingdom_matrix hadoop/cr_kingdom_matrix.csv
-  # hdfs dfs -getmerge /user/hive/warehouse/"$countryreports_db".db/pg1_pub_blob hadoop/cr_pg1_pub_blob.csv
-  # hdfs dfs -getmerge /user/hive/warehouse/"$countryreports_db".db/class_matrix hadoop/cr_pg4_class_matrix.csv
-  # hdfs dfs -getmerge /user/hive/warehouse/"$countryreports_db".db/phylum_matrix hadoop/cr_pg4_phylum_matrix.csv
-  # hdfs dfs -getmerge /user/hive/warehouse/"$countryreports_db".db/pg7_pub_blob hadoop/cr_pg7_pub_blob.csv
-  # hdfs dfs -getmerge /user/hive/warehouse/"$countryreports_db".db/pg7_top8_datasets hadoop/cr_pg7_top8_datasets.csv
-  # hdfs dfs -getmerge /user/hive/warehouse/"$countryreports_db".db/pg7_top10_countries hadoop/cr_pg7_top10_countries.csv
   echo 'Copying placeholder pdf for missing charts'
   ./country_reports/copy_placeholders.sh
   
