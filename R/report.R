@@ -10,10 +10,10 @@ source("R/graph/spe_dayCollected.R")
 source("R/graph/spe_yearCollected.R")
 source("R/graph/spe_repatriation.R")
 
-# path <- "report"
+path <- "report"
 # useful to speed up development, to only use the global directory
 # path <- "report/global"
-path <- "report/country/DE"
+# path <- "report/country/DE"
 #path <- "report/country/AX/publishedBy"
 
 csvs <- list.files(path=path, pattern="occ_kingdom_basisOfRecord.csv", full.names=TRUE, recursive=TRUE, include.dirs=TRUE)
