@@ -3,14 +3,13 @@ library(RGoogleAnalytics)
 library(dplyr)
 source("R/html-json/utils.R")
 
-# TODO: parameterize start and end dates
-generateTrafficTop5Cities <- function() {
+generateTrafficTop5Cities <- function(start_date, end_date) {
   # real secrets, not for commit!
   load("R/country-reports/token_file")
   ValidateToken(token)
   
-  query.list <- Init(start.date = "2014-07-01",
-                     end.date = "2015-06-30",                   
+  query.list <- Init(start.date = start_date,
+                     end.date = end_date,                   
                      dimensions = "ga:countryIsoCode, ga:city",
                      metrics = "ga:sessions",                   
                      max.results = 10000,

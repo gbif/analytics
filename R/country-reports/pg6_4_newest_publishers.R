@@ -3,14 +3,10 @@ library(jsonlite)
 library(dplyr)
 source("R/html-json/utils.R")
 
-# test, remove
-# apiUrl <- "http://api.gbif.org/v1/"
-# country <- "US"
-
 generateNewestPublishers <- function(apiUrl) {
   orgPath <- "organization?country="
 
-  gbif_iso_countries()
+  ISO_3166_1 <- gbif_iso_countries()
   
   maxOrgs = 4 #Max number of organizations/publishers returned
   cutoff_date = "2015-07-01"

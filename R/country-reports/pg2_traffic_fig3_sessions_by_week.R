@@ -5,7 +5,7 @@ library(RGoogleAnalytics)
 source("R/graph/utils.R")
 source("R/graph/plot_utils.R")
 
-generateTrafficWeeklyPlots <- function() {
+generateTrafficWeeklyPlots <- function(start_date, end_date) {
   # real secrets, not for commit!
   load("R/country-reports/token_file")
   ValidateToken(token)
@@ -14,8 +14,8 @@ generateTrafficWeeklyPlots <- function() {
   plotsDir <- "country_reports"
   plotName <- "web_traffic_sessions_by_week"
   
-  query.list <- Init(start.date = "2014-07-01",
-                     end.date = "2015-06-30",                   
+  query.list <- Init(start.date = start_date,
+                     end.date = end_date,                   
                      dimensions = "ga:countryIsoCode, ga:yearWeek, ga:yearMonth",
                      metrics = "ga:sessions",
                      max.results = 10000,

@@ -1,8 +1,5 @@
 library(dplyr)
 
-# for testing
-# csvDataFile <- "hadoop/cr_kingdom_matrix.csv"
-
 generateKingdomMatrix <- function(csvDataFile) {
   kingdomRawDF <- read.csv(csvDataFile, na.strings="")
 

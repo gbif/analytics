@@ -1,10 +1,6 @@
 # Page 4 taxon matrix (class and phylum bubbles). Uses the results of hive queries in pg4_taxon_matrix.q
 library(dplyr)
 
-# for testing
-# csvClassDataFile <- "hadoop/cr_pg4_class_matrix.csv"
-# csvPhylumDataFile <- "hadoop/cr_pg4_phylum_matrix.csv"
-
 generateClassPhylumMatrix <- function(csvClassDataFile, csvPhylumDataFile) {
   
   # class portion

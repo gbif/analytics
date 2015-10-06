@@ -33,17 +33,15 @@ source("R/html-json/utils.R")
 # 12      publishedby/occ_complete_observation.pdf
 # 13      publishedby/occ_repatriation.pdf
 #########
+# reporting period
+startDate <- "2014-07-01"
+endDate <- "2015-06-30"
+# on a mid-2014 MacBook Pro with 16GB RAM, 140 countries is about the limit for the merge step in indesign (lots of beachballs, but still works in the end)
 countriesPerCsv=140
 countryPath <- "report/country"
 flagsPath <- "flags"
 macHdName="Macintosh HD"
 apiUrl="http://api.gbif.org/v1/"
-
-# TODO: these take awhile, move to -runFigures
-# print("Generating traffic weekly plots")
-# generateTrafficWeeklyPlots()
-# print("Generating monthly download plots")
-# generateCountryDownloadsPlots()
 
 indesignMacPath <- function(hdName, absolutePath) {
   return(paste(hdName, gsub("/", ":", absolutePath), sep=""))
@@ -79,13 +77,19 @@ print("Generating pg1 pub blob")
 pg1PubBlob <- generatePg1PubBlob()
 
 print("Generating traffic report")
-trafficReport <- generateTrafficStats()
+trafficReport <- generateTrafficStats(startDate, endDate)
 
 print("Generating traffic top 5 cities")
-trafficTop5Cities <- generateTrafficTop5Cities()
+trafficTop5Cities <- generateTrafficTop5Cities(startDate, endDate)
+
+print("Generating traffic weekly plots")
+generateTrafficWeeklyPlots(startDate, endDate)
+
+print("Generating monthly download plots")
+generateCountryDownloadsPlots(startDate, endDate)
 
 print("Generating download stats")
-pg3DownloadBlob <- generateCountryDownloadStats()
+pg3DownloadBlob <- generateCountryDownloadStats(startDate, endDate)
 
 print("Generating latest publications")
 pg3Pubs <- generateRecentPublications(apiUrl)
@@ -140,7 +144,7 @@ macAbout="about:print"
 macPublishedBy="publishedBy:print"
 macCountryReports="country_reports"
 
-gbif_iso_countries()
+ISO_3166_1 <- gbif_iso_countries()
 # create csv with tmp header row
 header=c("CountryCode","CountryName","@Flag","@Fig2","@Fig3","@Fig4","@Fig5","@Fig6","@Fig7","@Fig8","@Fig9","@Fig10","@Fig11","@Fig12","@Fig13")
 

@@ -2,13 +2,10 @@
 library(jsonlite)
 source("R/html-json/utils.R")
 
-# apiUrl <- "http://api.gbif-uat.org/v1/"
-# countryCode <- "US"
 # ask the given apiUrl (e.g. "http://api.gbif.org/v1/") for most recent publication for each country
 generateRecentPublications <- function(apiUrl) {
   
-  # load country map into global var
-  gbif_iso_countries()
+  ISO_3166_1 <- gbif_iso_countries()
   
   recentArticles <- NULL
   for (countryCode in ISO_3166_1$Alpha_2) {

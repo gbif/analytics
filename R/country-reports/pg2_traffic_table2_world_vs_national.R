@@ -2,15 +2,14 @@
 library(RGoogleAnalytics)
 source("R/html-json/utils.R")
 
-# TODO: parameterize start and end dates
-generateTrafficStats <- function() {
+generateTrafficStats <- function(start_date, end_date) {
   # real secrets, not for commit!
   load("R/country-reports/token_file")
   ValidateToken(token)
   
   # fetch the worldwide traffic stats from Google Analytics
-  rawQuery <- Init(start.date = "2014-07-01",
-                     end.date = "2015-06-30",                   
+  rawQuery <- Init(start.date = start_date,
+                     end.date = end_date,                   
                      metrics = "ga:sessions, ga:pageviewsPerSession, ga:avgSessionDuration, ga:bounceRate, ga:percentNewSessions",                   
                      max.results = 10000,
                      table.id = "ga:73962076")
@@ -22,8 +21,8 @@ generateTrafficStats <- function() {
   worldwideTraffic$global_avg_sessions_duration <- formatSeconds(worldwideTraffic$global_avg_sessions_duration)
   
   # fetch the per country traffic stats from Google Analytics
-  rawQuery <- Init(start.date = "2014-07-01",
-                end.date = "2015-06-30",                   
+  rawQuery <- Init(start.date = start_date,
+                end.date = end_date,                   
                 dimensions = "ga:countryIsoCode",
                 metrics = "ga:sessions, ga:pageviewsPerSession, ga:avgSessionDuration, ga:bounceRate, ga:percentNewSessions",                   
                 max.results = 10000,
@@ -36,7 +35,7 @@ generateTrafficStats <- function() {
   perCountryTraffic$country_avg_sessions_duration <- formatSeconds(as.numeric(perCountryTraffic$country_avg_sessions_duration))
   
   mergedTraffic <- cbind(perCountryTraffic, worldwideTraffic)
-  # TODO: give everyone a minimum of 0.01%, since nobody wants to see 0
+  # TODO: give everyone with > 0 traffic a minimum of 0.01%, since nobody wants to see 0
   mergedTraffic$country_percent_of_global_sessions <- paste(format(round(100*mergedTraffic$country_sessions / mergedTraffic$global_sessions, digits=2), nsmall = 2), "%", sep="")
   # pretty print total sessions
   mergedTraffic$country_sessions <- prettyNum(mergedTraffic$country_sessions, big.mark=",")

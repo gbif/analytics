@@ -1,4 +1,4 @@
-# copy the placeholder image into place for every missing chart, for each of about/print and publishedBy/print
+# copy the placeholder image into place for every missing chart, for each of about/print and publishedBy/print and country_reports
 
 # full path to dir of this script
 workingdir=`dirname $0`/

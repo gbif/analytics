@@ -1,7 +1,7 @@
 # Pg3 download stats per country and globally. Needs users from drupal joined with downloads from reg.
-require(RMySQL)
-require(RPostgreSQL)
-require(dplyr)
+library(RMySQL)
+library(RPostgreSQL)
+library(dplyr)
 source("R/html-json/utils.R")
 # NOTE: you need to create a db_secrets.R that contains the following variables:
 # 
@@ -18,7 +18,7 @@ source("R/html-json/utils.R")
 # ps_password 
 source("R/country-reports/db_secrets.R")
 
-generateCountryDownloadStats <- function() {
+generateCountryDownloadStats <- function(start_date, end_date) {
   # Users table from drupal (mysql)
   my_sql <- "SELECT t1.usr, t1.mail, t1.country, t1.iso FROM (
   SELECT users.uid, users.name AS usr, field_data_field_firstname.field_firstname_value, 
@@ -38,8 +38,7 @@ generateCountryDownloadStats <- function() {
   dbDisconnect(my_con)
 
   # filtered downloads table from registry (postgres)
-  ps_sql <- "SELECT created_by FROM occurrence_download od
-  WHERE od.status = 'SUCCEEDED' AND od.notification_addresses NOT LIKE '%@gbif.org' AND date(od.created) BETWEEN '2014-07-01' AND '2015-06-30';"
+  ps_sql <- sprintf("SELECT created_by FROM occurrence_download od WHERE od.status = 'SUCCEEDED' AND od.notification_addresses NOT LIKE '%%@gbif.org' AND date(od.created) BETWEEN '%s' AND '%s';", start_date, end_date)
   ps_con <- dbConnect(RPostgreSQL::PostgreSQL(), user=ps_user, password=ps_password, dbname=ps_databaseName, host=ps_host)
   downloadsDF <- dbGetQuery(ps_con, ps_sql)
   dbDisconnect(ps_con)

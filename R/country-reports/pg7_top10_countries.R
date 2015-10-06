@@ -8,7 +8,7 @@ generatePg7Top10Countries <- function() {
   top10 <- top10[!is.na(top10$CountryCode), ]
   top10[is.na(top10)] <- ""
   top10$count <- prettyNum(top10$count, big.mark = ",", preserve.width = "individual")
-  gbif_iso_countries()
+  ISO_3166_1 <- gbif_iso_countries()
   simpleCountries <- data.frame(ISO_3166_1$Alpha_2,ISO_3166_1$Name)
   colnames(simpleCountries) <- c("country_code", "contrib_country_name")
   top10 <- merge(top10, simpleCountries, by.x="contrib_country", by.y="country_code")
