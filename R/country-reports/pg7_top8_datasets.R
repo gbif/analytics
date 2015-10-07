@@ -2,19 +2,24 @@
 library(dplyr)
 library(jsonlite)
 
+apiUrl <- "http://api.gbif.org/v1/"
+
 # ask the given apiUrl (e.g. "http://api.gbif.org/v1/") for the names of top 8 datasets about country
 generatePg7Top8Datasets <- function(apiUrl) {
   top8 <- read.csv("hadoop/cr_pg7_top8_datasets.csv", na.strings="", encoding="UTF-8", header = FALSE)
   colnames(top8) <- c("CountryCode", "dataset_key", "count", "rank")
   top8$count <- prettyNum(top8$count, big.mark = ",", preserve.width = "individual")
-  top8$title <- sapply(top8$dataset_key, getDatasetName)
+  # top8$title <- sapply(top8$dataset_key, getDatasetName)
+  # top8$modified <- sapply(top8$dataset_key, getDatasetModified)
+  details <- as.data.frame(t(sapply(top8$dataset_key, getDatasetDetails)))
+  colnames(details) <- c("title", "modified")
+  top8 <- cbind(top8, details)
+  # now drop the key column
+  top8 <- top8[,-2]
+
   # clean tabs and linefeeds
   badWhitespace <- "[\n\t]"
   top8$title <- gsub(badWhitespace, "", top8$title)
-  top8$modified <- sapply(top8$dataset_key, getDatasetModified)
-  # now drop the key column
-  top8 <- top8[,-2]
-  
   # formatting data to look right for InDesign when not enough rows
   top8$title <- paste(top8$title, ".", sep="")
   top8$count <- paste(top8$count, " occurrences in ", sep="")
@@ -44,28 +49,8 @@ generatePg7Top8Datasets <- function(apiUrl) {
   return(flat_top8)
 }
 
-# TODO: this is criminal - combine into one api call and extract the two fields in one shot
-getDatasetName <- function(datasetKey) {
-  datasetPath <- paste(apiUrl, paste("dataset/", datasetKey, sep=""), sep="")
-  dataset = tryCatch({
-    fromJSON(datasetPath)
-  }, warning = function(w) {
-    NULL
-  }, error = function(e) {
-    NULL
-  }, finally = {
-    NULL
-  })
-
-  result <- ""
-  if (!is.null(dataset)) {
-    result <- dataset$title
-  }
-  
-  return(result)
-}
-
-getDatasetModified <- function(datasetKey) {
+# return 2 element char array with dataset title and last modified date (as yyyy-mm-dd)
+getDatasetDetails <- function(datasetKey) {
   datasetPath <- paste(apiUrl, paste("dataset/", datasetKey, sep=""), sep="")
   dataset = tryCatch({
     fromJSON(datasetPath)
@@ -79,7 +64,7 @@ getDatasetModified <- function(datasetKey) {
   
   result <- ""
   if (!is.null(dataset)) {
-    result <- strsplit(dataset$modified, split="T", fixed=TRUE)[[1]][1]
+    result <- c(dataset$title, strsplit(dataset$modified, split="T", fixed=TRUE)[[1]][1])
   }
   
   return(result)
