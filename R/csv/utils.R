@@ -1,5 +1,3 @@
-# install.packages("reshape2", repos="http://cran.rstudio.com/")
-# install.packages("plyr", repos="http://cran.rstudio.com/")
 library(reshape2)
 library(plyr)
 
@@ -37,9 +35,18 @@ writeCsvPerGroup <- function(DF, groupTerm, filename, parentDir, childDir) {
 ##
 # Utility to extract the provided groups from the source CSV and write the target CSVs
 #
+
+
+# testing, remove
+# sourceFile <- "occ_country_kingdom_basisOfRecord.csv"
+# sourceSchema <- c("snapshot", "country", "kingdom", "basisOfRecord", "occurrenceCount")
+# targetFile <- "occ_kingdom_basisOfRecord.csv"
+# group <- c("country")
+# groupLabel <- c("about")
+
 extractCountryCSV <- function(sourceFile, sourceSchema, targetFile, group, groupLabel) {
   writeCsvPerGroup(
-    DF = read.table(file=paste(sourceDir, sourceFile, sep="/"), header=F, sep=",",  col.names = sourceSchema),
+    DF = read.table(file=paste(sourceDir, sourceFile, sep="/"), header=F, sep=",",  col.names = sourceSchema, na.strings="FOO"),
     groupTerm = group, 
     filename = targetFile, 
     parentDir = "country", 
