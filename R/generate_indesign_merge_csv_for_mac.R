@@ -36,7 +36,7 @@ source("R/html-json/utils.R")
 # reporting period
 startDate <- "2014-07-01"
 endDate <- "2015-06-30"
-# on a mid-2014 MacBook Pro with 16GB RAM, 140 countries is about the limit for the merge step in indesign (lots of beachballs, but still works in the end)
+# on a mid-2014 MacBook Pro with 16GB RAM, 140 countries is a reasonable limit for the merge step in indesign (lots of beachballs, but still works in the end). All countries has worked, just requires patience.
 countriesPerCsv=140
 countryPath <- "report/country"
 flagsPath <- "flags"
@@ -133,7 +133,7 @@ joinWithOtherData <- function(DF) {
   DF <- merge(DF, pg7Datasets, by = "CountryCode", all.x = TRUE)
   DF <- merge(DF, pg7Countries, by = "CountryCode", all.x = TRUE)
   DF[is.na(DF)] <- ""
-  
+
   return(DF)
 }
 
@@ -158,14 +158,14 @@ for (country in countries) {
   count=count+1
   if (country %in% ISO_3166_1$Alpha_2) {
     print(paste("Preparing country: ", country, sep=""))
-    row=c(country, 
+    row=c(country,
           ISO_3166_1[ISO_3166_1$Alpha_2 == toupper(country),]$Name,
           paste(macFlagsPath, paste(tolower(country), ".png", sep=""), sep=":"),
-          publishedBy(country, "occ_kingdom.pdf", macCountryPath), 
+          publishedBy(country, "occ_kingdom.pdf", macCountryPath),
           countryReports(country, "web_traffic_sessions_by_week.pdf", macCountryPath),
           countryReports(country, "downloaded_records_by_month.pdf", macCountryPath),
-          about(country, "occ_kingdom.pdf", macCountryPath), 
-          about(country, "spe_kingdom.pdf", macCountryPath), 
+          about(country, "occ_kingdom.pdf", macCountryPath),
+          about(country, "spe_kingdom.pdf", macCountryPath),
           about(country, "occ_complete_kingdom_specimen.pdf", macCountryPath),
           about(country, "occ_complete_kingdom_observation.pdf", macCountryPath),
           about(country, "occ_complete_geo_specimen.pdf", macCountryPath),
@@ -187,7 +187,8 @@ for (country in countries) {
     DF<-header
   }
 }
-# left over, if any
+
+# conditionally writing the left over (if any) doesn't always work - haven't investigated enough to know why
 # if (is.data.frame(DF)) {
   filecount=filecount+1
   print(paste("Setting final header for DF of count", nrow(DF), sep=""))
