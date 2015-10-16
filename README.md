@@ -31,7 +31,11 @@ The project is divided into several parts:
 - Add the new snapshot name to ```hive/process/build_prepare_script.sh``` in the same way as above.
 - Replace the last element of "temporalFacetSnapshots" in R/graph/utils.R with your new snapshot. Follow the formatting in use, e.g. 2015-01-19
 - Make sure the version of epsg used in the latest occurrence project pom.xml is the same as the one that the script ```hive/normalize/create_tmp_interp_tables.sh``` fetches. Do that by checking the pom.xml (hopefully still at: https://github.com/gbif/occurrence/blob/master/pom.xml) for the geotools.version. That version should be the same as what's in the shell script (at time of writing the geotools.version was 12.1 and the script line was ```curl -L 'http://download.osgeo.org/webdav/geotools/org/geotools/gt-epsg-hsql/12.1/gt-epsg-hsql-12.1.jar' > /tmp/gt-epsg-hsql.jar```)
-- If you're planning on using the country reports results generated during the build.sh run, you have to update the R/generate_indesign_merge_csv_for_mac.R script with the start and end dates of your report, as well as how many countries per csv you want
+- If you're planning on using the country reports results generated during the build.sh run, you have to update the R/generate_indesign_merge_csv_for_mac.R script with:
+  - the start and end dates of your report
+  - how many countries per csv you want
+  - the name of the root drive on the apple computer that will run the indesign merge (often "Macintosh HD" or "Macintosh SSD")
+  - make sure you've read the README in the R/country-reports directory and created the Google Analytics token and database file
 - From the root (analytics) directory you can now run the build.sh script to run all the HBase and Hive table building, build all the master csv files, which are in turn processed down to per country csvs, then generate the figures and the final json file needed by gbif.org/analytics. Note that this will take up to 48 hours and is unfortunately error prone, so all steps could also be run individually. In any case it's probably best to run all parts of this script on a machine in the secretariat and ideally in a "screen" session. To run it all do: 
 
   ```build.sh -runHbase -runHive -runHadoop -runPrepare -runFigures -runJson```
@@ -44,23 +48,10 @@ The project is divided into several parts:
 - Arial and Arial Narrow will be required on the machine from which the runFigures command is run. For linux that means a new dir under /usr/share/fonts with
 the .ttf files from this project's fonts/ dir copied in (the provisioning project's ansible scripts take care of this).
 - the /usr/lib64/R/library/extrafontdb dir must be writeable by the user running the runFigures command because font stuff will be written there on first load
-- you need to create a R/country-reports/db_secrets.R that contains the following variables:
-
-
-```R
-my_host <- ""
-my_databaseName <- ""
-my_user <- ""
-my_password <- ""
-
-ps_host <- ""
-ps_databaseName <- ""
-ps_user <- ""
-ps_password <- ""
-```
+- create the files described in https://github.com/gbif/analytics/blob/master/R/country-reports/README.md
 
 ### Steps to build country reports after the R part is done
-The R part of country reports is finished after all the steps in the build.sh script are done. Then you need to take the created csvs and charts in order to populate and indesign template and from there make pdfs. As
+The R part of country reports is finished after all the steps in the build.sh script are done. Then you need to take the created csvs and charts in order to populate an InDesign template and from there make pdfs. As
 of time of writing (October 2015) the InDesign work has to be done on an Apple computer because of how the csvs are written. For the sake of example I'll assume you're running build.sh on prodgateway-vh and are building
 the InDesign bits locally.
 
@@ -88,7 +79,7 @@ the InDesign bits locally.
 - ```chown -R apache.apache /var/www/html/drupal/sites/default/files/gbif_analytics_new```
 - ```mv gbif_analytics gbif_analytics_old && mv gbif_analytics_new gbif_analytics```
 - then make a backup of the old analytics, just in case something gets spotted in the new run that looks wrong, but make the backup in /root (e.g. ```cd /root``` and ```tar czvf gbif_analytics_old.tar.gz /var/www/html/drupal/sites/default/files/gbif_analytics_old```
-- check http://gbif.org/analytics, write an email to staff@gbif.org giving heads up on the new data, and accept the many accolades due your eminence
+- check http://gbif.org/analytics, write an email to staff@gbif.org giving heads up on the new data, and accept the many accolades due your outstanding achievement in the field of excellence!
 
 
 
