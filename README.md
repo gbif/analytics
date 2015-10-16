@@ -70,7 +70,7 @@ the InDesign bits locally.
 - from the menu icons on the right choose Organize Pages, then at the top choose Split, and in the Split By dropdown choose Top level bookmarks. Click Output options and pick a destination for the split files, and make sure "Use bookmark names for file names" is selected. Then press the Split button and your pdfs will be created reasonably quickly.
 - repeat that process until you've done all the indesign_merge_mac_*.csv files, and you therefore have all the country reports as pdfs
 - now scp your pdfs directory back to prodgateway-vh and put it in your analytics directory (at same level as report)
-- on prodgateway-vh run the distribute-country-dfs.sh from the analytics dir to copy the dfs into their respective country directories
+- on prodgateway-vh run the distribute-country-pdfs.sh from the analytics dir to copy the pdfs into their respective country directories
 - now you've got all the content needed to update gbif.org/analytics
 - I suggest making a copy of the reports dir called reports_for_export, which you can then clean up a bit as follows:
   - if you ran the -runHtml step you have unneeded html which you can delete with ```find reports_for_export/ -name '*.html' -exec -rm {} \;```
@@ -78,7 +78,7 @@ the InDesign bits locally.
 - scp the reports_for_export to root@prodapps-vh:/var/www/html/drupal/sites/default/files/gbif_analytics_new
 - ```chown -R apache.apache /var/www/html/drupal/sites/default/files/gbif_analytics_new```
 - ```mv gbif_analytics gbif_analytics_old && mv gbif_analytics_new gbif_analytics```
-- then make a backup of the old analytics, just in case something gets spotted in the new run that looks wrong, but make the backup in /root (e.g. ```cd /root``` and ```tar czvf gbif_analytics_old.tar.gz /var/www/html/drupal/sites/default/files/gbif_analytics_old```
+- then make a backup of the old analytics, just in case something gets spotted in the new run that looks wrong, but make the backup in /root (e.g. ```cd /root``` and ```tar czvf gbif_analytics_old.tar.gz /var/www/html/drupal/sites/default/files/gbif_analytics_old``` and then delete the old dir to free up space (```rm -Rf /var/www/html/drupal/sites/default/files/gbif_analytics_old```)
 - check http://gbif.org/analytics, write an email to staff@gbif.org giving heads up on the new data, and accept the many accolades due your outstanding achievement in the field of excellence!
 
 
