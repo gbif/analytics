@@ -11,21 +11,25 @@ library(jsonlite)
 # ps_password 
 source("R/country-reports/db_secrets.R")
 
+#*This references a local credentials file used for debugging:
+#source("db_secrets.R")
+
 # ask the given apiUrl (e.g. "http://api.gbif.org/v1/") for the dataset count for each of the 5 most recent, per country
-generateRecentDatasets <- function(apiUrl) {
+generateRecentDatasets <- function(apiUrl, end_date) {
 
   # TODO: this modified date is last time the registry entry was updated - we should probably show "last modified" for most recently modified record from this dataset
-  ps_sql <- "SELECT * FROM (
+  ps_sql <- sprintf("SELECT * FROM (
     SELECT o.country, d.key as key, d.title AS dataset_title, 
     CASE 
     WHEN d.type = 'METADATA' THEN 'Metadata dataset'
     WHEN d.type = 'CHECKLIST' THEN 'Checklist dataset'
-    WHEN d.type = 'OCCURRENCE' THEN 'Occurrence dataset' 
+    WHEN d.type = 'OCCURRENCE' THEN 'Occurrence dataset'
+    WHEN d.type = 'SAMPLING_EVENT' THEN 'Sample based dataset'
     END AS type,
     to_char(d.modified, 'DD Mon, YYYY') AS date, o.title AS organization_title, row_number() OVER (PARTITION BY o.country ORDER BY date(d.modified) DESC) AS rank FROM organization o
     JOIN dataset d ON o.key = d.publishing_organization_key
-    WHERE d.deleted IS NULL AND date(d.modified) < '2015-07-01'
-  ) t1 WHERE rank <=5"
+    WHERE d.deleted IS NULL AND date(d.modified) < '%s'
+  ) t1 WHERE rank <=5", end_date)
   ps_con <- dbConnect(RPostgreSQL::PostgreSQL(), user=ps_user, password=ps_password, dbname=ps_databaseName, host=ps_host)
   datasetsDF <- dbGetQuery(ps_con, ps_sql)
   dbDisconnect(ps_con)
