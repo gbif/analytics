@@ -55,9 +55,9 @@ if [ $runHive == "true" ];then
   hive --hiveconf DB="$destination_db" -f hive/process/repatriation.q
 
   echo 'Running hive for country reports'
-  hive --hiveconf CR_DB="$countryreports_db" --hiveconf PROD_DB="$production_db" --hiveconf START_DATE="$start_date" --hiveconf END_DATE="$END_date" -f hive/country-reports/pg1_kingdom_matrix.q
-  hive --hiveconf CR_DB="$countryreports_db" --hiveconf PROD_DB="$production_db" --hiveconf START_DATE="$start_date" --hiveconf END_DATE="$END_date" -f hive/country-reports/pg1_pub_blob.q
-  hive --hiveconf CR_DB="$countryreports_db" --hiveconf PROD_DB="$production_db" --hiveconf START_DATE="$start_date" --hiveconf END_DATE="$END_date" -f hive/country-reports/pg4_taxon_matrix.q
+  hive --hiveconf CR_DB="$countryreports_db" --hiveconf PROD_DB="$production_db" --hiveconf START_DATE="$start_date" --hiveconf END_DATE="$end_date" -f hive/country-reports/pg1_kingdom_matrix.q
+  hive --hiveconf CR_DB="$countryreports_db" --hiveconf PROD_DB="$production_db" --hiveconf START_DATE="$start_date" --hiveconf END_DATE="$end_date" -f hive/country-reports/pg1_pub_blob.q
+  hive --hiveconf CR_DB="$countryreports_db" --hiveconf PROD_DB="$production_db" --hiveconf START_DATE="$start_date" --hiveconf END_DATE="$end_date" -f hive/country-reports/pg4_taxon_matrix.q
   hive --hiveconf CR_DB="$countryreports_db" --hiveconf PROD_DB="$production_db" -f hive/country-reports/pg7_pub_blob.q
   hive --hiveconf CR_DB="$countryreports_db" --hiveconf PROD_DB="$production_db" -f hive/country-reports/pg7_top8_datasets.q
   hive --hiveconf CR_DB="$countryreports_db" --hiveconf PROD_DB="$production_db" -f hive/country-reports/pg7_top10_countries.q
