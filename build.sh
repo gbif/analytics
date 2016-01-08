@@ -26,6 +26,7 @@ if [ $runHbase == "true" ];then
   ./hive/normalize/build_raw_scripts.sh
   ./hive/normalize/create_tmp_raw_tables.sh
   ./hive/normalize/create_tmp_interp_tables.sh
+  echo 'Creating occurrence tables'
   ./hive/normalize/create_occurrence_tables.sh
 else 
   echo 'Skipping hbase stage (add -runHbase to command to run it)'

@@ -75,4 +75,8 @@ UNION ALL
 SELECT '2015-04-09' AS snapshot, id, CAST(dataset_id AS String) AS dataset_id, CAST(publisher_id AS String) AS publisher_id, kingdom, phylum, class_rank, order_rank, family, genus, species, scientific_name, kingdom_id, phylum_id, class_id, order_id, family_id, genus_id, species_id, taxon_id, basis_of_record, latitude, longitude, country, day, month, year, publisher_country FROM ${hiveconf:SNAPSHOT_DB}.occurrence_20150409
 UNION ALL
 SELECT '2015-07-03' AS snapshot, id, CAST(dataset_id AS String) AS dataset_id, CAST(publisher_id AS String) AS publisher_id, kingdom, phylum, class_rank, order_rank, family, genus, species, scientific_name, kingdom_id, phylum_id, class_id, order_id, family_id, genus_id, species_id, taxon_id, basis_of_record, latitude, longitude, country, day, month, year, publisher_country FROM ${hiveconf:SNAPSHOT_DB}.occurrence_20150703
+UNION ALL
+SELECT '2015-10-01' AS snapshot, id, CAST(dataset_id AS String) AS dataset_id, CAST(publisher_id AS String) AS publisher_id, kingdom, phylum, class_rank, order_rank, family, genus, species, scientific_name, kingdom_id, phylum_id, class_id, order_id, family_id, genus_id, species_id, taxon_id, basis_of_record, latitude, longitude, country, day, month, year, publisher_country FROM ${hiveconf:SNAPSHOT_DB}.occurrence_20151001
+UNION ALL
+SELECT '2016-01-04' AS snapshot, id, CAST(dataset_id AS String) AS dataset_id, CAST(publisher_id AS String) AS publisher_id, kingdom, phylum, class_rank, order_rank, family, genus, species, scientific_name, kingdom_id, phylum_id, class_id, order_id, family_id, genus_id, species_id, taxon_id, basis_of_record, latitude, longitude, country, day, month, year, publisher_country FROM ${hiveconf:SNAPSHOT_DB}.occurrence_20160104
 ) t1
