@@ -3,25 +3,24 @@ library(jsonlite)
 library(dplyr)
 source("R/html-json/utils.R")
 
-generateNewestPublishers <- function(apiUrl) {
+generateNewestPublishers <- function(apiUrl,cutoff_date) {
   orgPath <- "organization?country="
 
   ISO_3166_1 <- gbif_iso_countries()
-  
+
   maxOrgs = 4 #Max number of organizations/publishers returned
-  cutoff_date = "2015-07-01"
-  
-  # Uses the JSONLite to retrieve new publishers by country 
+
+  # Uses the JSONLite to retrieve new publishers by country
   newest_publishers <- data.frame(country=character(), title=character(), rank=integer(), stringsAsFactors = FALSE)
-  for (country in ISO_3166_1$Alpha_2) { 
+  for (country in ISO_3166_1$Alpha_2) {
     new_orgs <- fromJSON(paste(apiUrl, paste(orgPath, country, sep=""), sep=""))
     res <- new_orgs$results
-    
-    if (new_orgs$count != 0){ 
+
+    if (new_orgs$count != 0){
       res <- res[order(res$created, decreasing = T),][as.Date(res$created) < cutoff_date, ]
       for (j in 1:maxOrgs){
         if (!is.null(res$title[j])) {
-          newest_publishers[nrow(newest_publishers)+1, ] <- c(country, res$title[j], j)    
+          newest_publishers[nrow(newest_publishers)+1, ] <- c(country, res$title[j], j)
         }
       }
     }
@@ -36,19 +35,19 @@ generateNewestPublishers <- function(apiUrl) {
     # drop unneeded rank column
     singleRank <- singleRank[,-3]
     # rename columns
-    header <- c("CountryCode", 
+    header <- c("CountryCode",
                 paste(paste("newest_publisher_", i, sep=""), "_name", sep=""))
     colnames(singleRank) <- header
     singleRank$CountryCode <- as.character(singleRank$CountryCode)
-    
+
     if (is.null(flat_pubs)) {
       flat_pubs <- singleRank
     } else {
       flat_pubs <- merge(flat_pubs, singleRank, by="CountryCode", all = TRUE)
     }
-  } 
+  }
   # all NA to empty string
   flat_pubs[is.na(flat_pubs)] <- ""
-  
+
   return(flat_pubs)
 }
