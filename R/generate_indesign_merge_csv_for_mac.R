@@ -101,7 +101,7 @@ print("Generating latest datasets")
 pg6RecentDatasets <- generateRecentDatasets(apiUrl,endDate)
 
 print("Generating newest publishers")
-pg6NewestPublishers <- generateNewestPublishers(apiUrl)
+pg6NewestPublishers <- generateNewestPublishers(apiUrl,endDate)
 
 print("Generating pg7 pub blob")
 pg7PubBlob <- generatePg7PubBlob()
