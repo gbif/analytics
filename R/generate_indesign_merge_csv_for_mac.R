@@ -98,7 +98,7 @@ print("Generating class/phylum bubbles")
 pg4TaxonMatrix <- generateClassPhylumMatrix("hadoop/cr_pg4_class_matrix.csv", "hadoop/cr_pg4_phylum_matrix.csv")
 
 print("Generating latest datasets")
-pg6RecentDatasets <- generateRecentDatasets(apiUrl)
+pg6RecentDatasets <- generateRecentDatasets(apiUrl,endDate)
 
 print("Generating newest publishers")
 pg6NewestPublishers <- generateNewestPublishers(apiUrl)
