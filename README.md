@@ -58,8 +58,7 @@ the InDesign bits locally.
 
 - scp the generated report/ directory from your user directory on prodgateway-vh to your analytics dir on your local machine (for this you're only really interested in directories that contain the subdir "print", so only get those if you like)
 - scp the generated indesign_merge_mac_*.csv files (the number depends on how many countries per csv you setup in the generate_indesign_merge_csv_for_mac.R script) to your local analytics dir 
-- get the InDesign template and all its dependencies by copying the whole T:/Country Reports/v.GB22 directory (some directory other than your analytics dir)
-- open the template (GBIF-Country-Report-Template.indd) in InDesign, and make sure fonts and images look good (are linked and loaded properly)
+- open the InDesign template [GBIF-Country-Report-Template.indd](indesign/GBIF-Country-Report-Template.indd) in InDesign, and make sure fonts and images look good (are linked and loaded properly)
 - in InDesign open the Data Merge window with Windows -> Utilities -> Data Merge
 - upper left button on that window let's you pick your merge source - choose the first of the indesign_merge_mac_*.csv files (ignore warnings that you'll have to replace placeholders)
 - then click bottom right button of Data Merge window and then OK to start the merge
