@@ -33,3 +33,12 @@ ps_databaseName <- "prod_b_registry"
 ps_user <- ""
 ps_password <- ""
 ```
+
+## Default encoding
+The machine that runs the R scripts must use UTF-8 or UTF-16 as the default encoding, to set the encoding and locale run the following command:
+
+```
+defaults write org.R-project.R force.LANG en_US.UTF-8
+```
+
+The locale can be different to en_US as long the encoding is set to UTF-8.

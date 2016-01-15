@@ -36,6 +36,7 @@ The project is divided into several parts:
   - how many countries per csv you want
   - the name of the root drive on the apple computer that will run the indesign merge (often "Macintosh HD" or "Macintosh SSD")
   - make sure you've read the README in the R/country-reports directory and created the Google Analytics token and database file
+- Modify the file ```build.sh``` byt setting the values for the variables ```start_date``` and ```end_date``` which are used to execute the R scrips of country reports.
 - From the root (analytics) directory you can now run the build.sh script to run all the HBase and Hive table building, build all the master csv files, which are in turn processed down to per country csvs, then generate the figures and the final json file needed by gbif.org/analytics. Note that this will take up to 48 hours and is unfortunately error prone, so all steps could also be run individually. In any case it's probably best to run all parts of this script on a machine in the secretariat and ideally in a "screen" session. To run it all do: 
 
   ```build.sh -runHbase -runHive -runHadoop -runPrepare -runFigures -runJson```

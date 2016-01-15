@@ -61,7 +61,7 @@ countryReports <- function(country, filename, macPath) {
 
 writeCsv <- function(DF, header, filecount) {
   tmpfilename <- "tmp.csv"
-  write.table(DF, tmpfilename, row.names=FALSE, fileEncoding="UTF-8", sep = "\t")
+  write.table(DF, tmpfilename, row.names=FALSE, fileEncoding="UTF-8", sep = "\t", qmethod = "double")
   # indesign needs UTF-16, and R can't do it (really, really dumb)
   filename <- paste(paste("indesign_merge_mac_", filecount, sep=""), ".csv", sep="")
   system(paste("iconv -f 'UTF-8' -t 'UTF-16LE' tmp.csv > ", filename, sep=""))
