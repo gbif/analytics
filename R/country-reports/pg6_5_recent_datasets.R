@@ -3,12 +3,12 @@ library(RPostgreSQL)
 library(dplyr)
 library(jsonlite)
 # NOTE: you need to create a db_secrets.R that contains the following variables:
-# 
+#
 # Postgres prod registry
 # ps_host
-# ps_databaseName 
-# ps_user 
-# ps_password 
+# ps_databaseName
+# ps_user
+# ps_password
 source("R/country-reports/db_secrets.R")
 
 #*This references a local credentials file used for debugging:
@@ -19,8 +19,8 @@ generateRecentDatasets <- function(apiUrl, end_date) {
 
   # TODO: this modified date is last time the registry entry was updated - we should probably show "last modified" for most recently modified record from this dataset
   ps_sql <- sprintf("SELECT * FROM (
-    SELECT o.country, d.key as key, d.title AS dataset_title, 
-    CASE 
+    SELECT o.country, d.key as key, d.title AS dataset_title,
+    CASE
     WHEN d.type = 'METADATA' THEN 'Metadata dataset'
     WHEN d.type = 'CHECKLIST' THEN 'Checklist dataset'
     WHEN d.type = 'OCCURRENCE' THEN 'Occurrence dataset'
@@ -28,7 +28,7 @@ generateRecentDatasets <- function(apiUrl, end_date) {
     END AS type,
     to_char(d.modified, 'DD Mon, YYYY') AS date, o.title AS organization_title, row_number() OVER (PARTITION BY o.country ORDER BY date(d.modified) DESC) AS rank FROM organization o
     JOIN dataset d ON o.key = d.publishing_organization_key
-    WHERE d.deleted IS NULL AND date(d.modified) < '%s'
+    WHERE d.deleted IS NULL AND date(d.modified) <= '%s'
   ) t1 WHERE rank <=5", end_date)
   ps_con <- dbConnect(RPostgreSQL::PostgreSQL(), user=ps_user, password=ps_password, dbname=ps_databaseName, host=ps_host)
   datasetsDF <- dbGetQuery(ps_con, ps_sql)
@@ -37,19 +37,19 @@ generateRecentDatasets <- function(apiUrl, end_date) {
   datasetsDF$count <- mapply(getCount, datasetsDF$type, datasetsDF$key)
   datasetsDF$count <- prettyNum(datasetsDF$count, big.mark=",", preserve.width = "individual")
   datasetsDF$count <- paste(as.character(datasetsDF$count), " records.", sep="")
-  
+
   # add styling for report use
   datasetsDF$dataset_title <- paste(datasetsDF$dataset_title, ".", sep="")
   datasetsDF$type <- paste(datasetsDF$type, ".", sep="")
   datasetsDF$date <- paste("Updated ", paste(datasetsDF$date, ".", sep=""), sep="")
   datasetsDF$organization_title <- paste("Published by ", paste(datasetsDF$organization_title, ".", sep=""), sep="")
-  
+
   # now transform into one row per country
   flat_top5 <- NULL
   for (i in 1:5) {
     singleRank <- datasetsDF[datasetsDF$rank == i,]
     # rename columns
-    header <- c("CountryCode", 
+    header <- c("CountryCode",
                 paste(paste("dataset", i, sep=""), "_key", sep=""),
                 paste(paste("dataset", i, sep=""), "_title", sep=""),
                 paste(paste("dataset", i, sep=""), "_type", sep=""),
@@ -63,12 +63,12 @@ generateRecentDatasets <- function(apiUrl, end_date) {
     } else {
       flat_top5 <- merge(flat_top5, singleRank, all = TRUE)
     }
-  } 
+  }
   # remove no country row
   flat_top5 <- flat_top5[!is.na(flat_top5$CountryCode), ]
   # all NA to empty string
   flat_top5[is.na(flat_top5)] <- ""
-  
+
   return(flat_top5)
 }
 
@@ -82,11 +82,11 @@ getCount <- function(datasetType, datasetKey) {
   occurrencePath <- "occurrence/count?datasetKey="
   checklistPathPre <- "dataset"
   checklistPathPost <- "metrics"
-  
+
   if (datasetType == "Metadata dataset") {
     return(0)
   }
-  
+
   if (datasetType == "Checklist dataset") {
     clPath <- paste(apiUrl, paste(checklistPathPre, paste(datasetKey, checklistPathPost, sep="/"), sep="/"), sep="")
     clCount = tryCatch({
@@ -101,7 +101,7 @@ getCount <- function(datasetType, datasetKey) {
     })
     return(clCount)
   }
-  
+
   # leaves occurrence
   occPath <- paste(apiUrl, paste(occurrencePath, datasetKey, sep=""), sep="")
   occCount = tryCatch({
