@@ -71,7 +71,7 @@ print("Generating kingdom matrix")
 kingdomMatrix <- generateKingdomMatrix("hadoop/cr_kingdom_matrix.csv")
 
 print("Generating publication stats")
-pg1Research <- generatePublicationStats(apiUrl)
+pg1Research <- generatePublicationStats(apiUrl,endDate)
 
 print("Generating pg1 pub blob")
 pg1PubBlob <- generatePg1PubBlob()
