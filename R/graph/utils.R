@@ -6,7 +6,7 @@ geospatialFactors <- c("Unknown", "Georeferenced", "CountryOnly")
 temporalFactors <- c("Unknown", "YearMonthDay", "YearMonth", "Year")
 
 # snapshots used in the temporal facets (e.g. collection year)
-temporalFacetSnapshots <- c("2007-12-19", "2010-11-17", "2013-09-10", "2016-01-04")
+temporalFacetSnapshots <- c("2007-12-19", "2010-11-17", "2013-09-10", "2016-01-04", "2016-04-05")
 
 # minimum year to plot of year range charts
 minPlotYear <- 1950
