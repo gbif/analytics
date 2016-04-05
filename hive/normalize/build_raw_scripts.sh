@@ -5,7 +5,7 @@ declare -a mysql_snapshots=("20071219" "20080401" "20080627" "20081010" "2008121
 declare -a hbase_v1_snapshots=("20131220" "20140328")
 declare -a hbase_v2_snapshots=("20140908" "20150119" "20150409")
 # v3 exists only because of a tiny difference in taxonomy schema (v_order_ became v_order)
-declare -a hbase_v3_snapshots=("20150703" "20151001" "20160104", "20160504")
+declare -a hbase_v3_snapshots=("20150703" "20151001" "20160104" "20160504")
 
 max=$(( ${#hbase_v3_snapshots[*]} - 1 ))
 last_modern_snapshot=${hbase_v3_snapshots[$max]}
