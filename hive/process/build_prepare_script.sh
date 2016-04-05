@@ -4,13 +4,13 @@
 
 prepare_file="$1"
 
-declare -a snapshots=("20071219" "20080401" "20080627" "20081010" "20081217" "20090406" "20090617" "20090925" "20091216" "20100401" "20100726" "20101117" "20110221" "20110610" "20110905" "20120118" "20120326" "20120713" "20121031" "20121211" "20130220" "20130521" "20130709" "20130910" "20131220" "20140328" "20140908" "20150119" "20150409" "20150703" "20151001" "20160104" "20160504")
+declare -a snapshots=("20071219" "20080401" "20080627" "20081010" "20081217" "20090406" "20090617" "20090925" "20091216" "20100401" "20100726" "20101117" "20110221" "20110610" "20110905" "20120118" "20120326" "20120713" "20121031" "20121211" "20130220" "20130521" "20130709" "20130910" "20131220" "20140328" "20140908" "20150119" "20150409" "20150703" "20151001" "20160104" "20160405")
 max=$(( ${#snapshots[*]} - 1 ))
 last_snapshot=${snapshots[$max]}
 
-echo '-- 
+echo '--
 -- Unions all the snapshots into a single table
--- 
+--
 
 -- the union all means we can run in parallel
 SET hive.exec.parallel=true;
@@ -24,7 +24,7 @@ CREATE DATABASE IF NOT EXISTS ${hiveconf:DB};
 DROP TABLE IF EXISTS ${hiveconf:DB}.snapshots;
 
 CREATE TABLE ${hiveconf:DB}.snapshots STORED AS RCFILE AS
-SELECT * FROM 
+SELECT * FROM
 (' > $prepare_file
 
 for snapshot in "${snapshots[@]}"
