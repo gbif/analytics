@@ -13,8 +13,8 @@ production_db="prod_b"
 countryreports_db="country_reports"
 
 #next 2 parameters are used for country reports
-start_date='2015-01-01'
-end_date='2015-12-31'
+start_date='2016-01-01'
+end_date='2016-04-05'
 
 [[ $* =~ (^| )"-runHbase"($| ) ]] && runHbase="true"
 [[ $* =~ (^| )"-runHive"($| ) ]] && runHive="true"
