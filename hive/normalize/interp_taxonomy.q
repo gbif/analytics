@@ -39,6 +39,6 @@ SELECT
 FROM (
   SELECT
     taxon_key,
-    nubLookup("${hiveconf:api}", kingdom, phylum, class_rank, order_rank, family, genus, scientific_name, null, null) n
+    nubLookup("${hiveconf:api}", kingdom, phylum, class_rank, order_rank, family, genus, scientific_name, specific_epithet, infra_specific_epithet, rank) n
   FROM snapshot.tmp_raw_taxonomy
 ) t1;
