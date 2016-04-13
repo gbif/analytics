@@ -37,147 +37,147 @@ SELECT
 FROM 
   (
 
-    SELECT COALESCE(kingdom,"") AS kingdom, COALESCE(phylum,"") AS phylum, COALESCE(class_rank,"") AS class_rank, COALESCE(order_rank,"") AS order_rank, COALESCE(family,"") AS family, COALESCE(genus,"") AS genus, COALESCE(scientific_name,"") AS scientific_name, "" AS specific_epithet, "" AS infra_specific_epithet, COALESCE(author,"") AS author, COALESCE(rank,"") AS rank
+    SELECT COALESCE(kingdom,"") AS kingdom, COALESCE(phylum,"") AS phylum, COALESCE(class_rank,"") AS class_rank, COALESCE(order_rank,"") AS order_rank, COALESCE(family,"") AS family, COALESCE(genus,"") AS genus, COALESCE(scientific_name,"") AS scientific_name, COALESCE(species,"") AS specific_epithet, COALESCE(subspecies,"") AS infra_specific_epithet, COALESCE(author,"") AS author, COALESCE(rank,"") AS rank
     FROM snapshot.raw_20071219
-    GROUP BY COALESCE(kingdom,""), COALESCE(phylum,""), COALESCE(class_rank,""), COALESCE(order_rank,""), COALESCE(family,""), COALESCE(genus,""), COALESCE(scientific_name,""), COALESCE(author,""), COALESCE(rank,"")
+    GROUP BY COALESCE(kingdom,""), COALESCE(phylum,""), COALESCE(class_rank,""), COALESCE(order_rank,""), COALESCE(family,""), COALESCE(genus,""), COALESCE(scientific_name,""), COALESCE(author,""), COALESCE(rank,""), COALESCE(species,""), COALESCE(subspecies,"")
     
     UNION ALL
 
-    SELECT COALESCE(kingdom,"") AS kingdom, COALESCE(phylum,"") AS phylum, COALESCE(class_rank,"") AS class_rank, COALESCE(order_rank,"") AS order_rank, COALESCE(family,"") AS family, COALESCE(genus,"") AS genus, COALESCE(scientific_name,"") AS scientific_name, "" AS specific_epithet, "" AS infra_specific_epithet, COALESCE(author,"") AS author, COALESCE(rank,"") AS rank
+    SELECT COALESCE(kingdom,"") AS kingdom, COALESCE(phylum,"") AS phylum, COALESCE(class_rank,"") AS class_rank, COALESCE(order_rank,"") AS order_rank, COALESCE(family,"") AS family, COALESCE(genus,"") AS genus, COALESCE(scientific_name,"") AS scientific_name, COALESCE(species,"") AS specific_epithet, COALESCE(subspecies,"") AS infra_specific_epithet, COALESCE(author,"") AS author, COALESCE(rank,"") AS rank
     FROM snapshot.raw_20080401
-    GROUP BY COALESCE(kingdom,""), COALESCE(phylum,""), COALESCE(class_rank,""), COALESCE(order_rank,""), COALESCE(family,""), COALESCE(genus,""), COALESCE(scientific_name,""), COALESCE(author,""), COALESCE(rank,"")
+    GROUP BY COALESCE(kingdom,""), COALESCE(phylum,""), COALESCE(class_rank,""), COALESCE(order_rank,""), COALESCE(family,""), COALESCE(genus,""), COALESCE(scientific_name,""), COALESCE(author,""), COALESCE(rank,""), COALESCE(species,""), COALESCE(subspecies,"")
     
     UNION ALL
 
-    SELECT COALESCE(kingdom,"") AS kingdom, COALESCE(phylum,"") AS phylum, COALESCE(class_rank,"") AS class_rank, COALESCE(order_rank,"") AS order_rank, COALESCE(family,"") AS family, COALESCE(genus,"") AS genus, COALESCE(scientific_name,"") AS scientific_name, "" AS specific_epithet, "" AS infra_specific_epithet, COALESCE(author,"") AS author, COALESCE(rank,"") AS rank
+    SELECT COALESCE(kingdom,"") AS kingdom, COALESCE(phylum,"") AS phylum, COALESCE(class_rank,"") AS class_rank, COALESCE(order_rank,"") AS order_rank, COALESCE(family,"") AS family, COALESCE(genus,"") AS genus, COALESCE(scientific_name,"") AS scientific_name, COALESCE(species,"") AS specific_epithet, COALESCE(subspecies,"") AS infra_specific_epithet, COALESCE(author,"") AS author, COALESCE(rank,"") AS rank
     FROM snapshot.raw_20080627
-    GROUP BY COALESCE(kingdom,""), COALESCE(phylum,""), COALESCE(class_rank,""), COALESCE(order_rank,""), COALESCE(family,""), COALESCE(genus,""), COALESCE(scientific_name,""), COALESCE(author,""), COALESCE(rank,"")
+    GROUP BY COALESCE(kingdom,""), COALESCE(phylum,""), COALESCE(class_rank,""), COALESCE(order_rank,""), COALESCE(family,""), COALESCE(genus,""), COALESCE(scientific_name,""), COALESCE(author,""), COALESCE(rank,""), COALESCE(species,""), COALESCE(subspecies,"")
     
     UNION ALL
 
-    SELECT COALESCE(kingdom,"") AS kingdom, COALESCE(phylum,"") AS phylum, COALESCE(class_rank,"") AS class_rank, COALESCE(order_rank,"") AS order_rank, COALESCE(family,"") AS family, COALESCE(genus,"") AS genus, COALESCE(scientific_name,"") AS scientific_name, "" AS specific_epithet, "" AS infra_specific_epithet, COALESCE(author,"") AS author, COALESCE(rank,"") AS rank
+    SELECT COALESCE(kingdom,"") AS kingdom, COALESCE(phylum,"") AS phylum, COALESCE(class_rank,"") AS class_rank, COALESCE(order_rank,"") AS order_rank, COALESCE(family,"") AS family, COALESCE(genus,"") AS genus, COALESCE(scientific_name,"") AS scientific_name, COALESCE(species,"") AS specific_epithet, COALESCE(subspecies,"") AS infra_specific_epithet, COALESCE(author,"") AS author, COALESCE(rank,"") AS rank
     FROM snapshot.raw_20081010
-    GROUP BY COALESCE(kingdom,""), COALESCE(phylum,""), COALESCE(class_rank,""), COALESCE(order_rank,""), COALESCE(family,""), COALESCE(genus,""), COALESCE(scientific_name,""), COALESCE(author,""), COALESCE(rank,"")
+    GROUP BY COALESCE(kingdom,""), COALESCE(phylum,""), COALESCE(class_rank,""), COALESCE(order_rank,""), COALESCE(family,""), COALESCE(genus,""), COALESCE(scientific_name,""), COALESCE(author,""), COALESCE(rank,""), COALESCE(species,""), COALESCE(subspecies,"")
     
     UNION ALL
 
-    SELECT COALESCE(kingdom,"") AS kingdom, COALESCE(phylum,"") AS phylum, COALESCE(class_rank,"") AS class_rank, COALESCE(order_rank,"") AS order_rank, COALESCE(family,"") AS family, COALESCE(genus,"") AS genus, COALESCE(scientific_name,"") AS scientific_name, "" AS specific_epithet, "" AS infra_specific_epithet, COALESCE(author,"") AS author, COALESCE(rank,"") AS rank
+    SELECT COALESCE(kingdom,"") AS kingdom, COALESCE(phylum,"") AS phylum, COALESCE(class_rank,"") AS class_rank, COALESCE(order_rank,"") AS order_rank, COALESCE(family,"") AS family, COALESCE(genus,"") AS genus, COALESCE(scientific_name,"") AS scientific_name, COALESCE(species,"") AS specific_epithet, COALESCE(subspecies,"") AS infra_specific_epithet, COALESCE(author,"") AS author, COALESCE(rank,"") AS rank
     FROM snapshot.raw_20081217
-    GROUP BY COALESCE(kingdom,""), COALESCE(phylum,""), COALESCE(class_rank,""), COALESCE(order_rank,""), COALESCE(family,""), COALESCE(genus,""), COALESCE(scientific_name,""), COALESCE(author,""), COALESCE(rank,"")
+    GROUP BY COALESCE(kingdom,""), COALESCE(phylum,""), COALESCE(class_rank,""), COALESCE(order_rank,""), COALESCE(family,""), COALESCE(genus,""), COALESCE(scientific_name,""), COALESCE(author,""), COALESCE(rank,""), COALESCE(species,""), COALESCE(subspecies,"")
     
     UNION ALL
 
-    SELECT COALESCE(kingdom,"") AS kingdom, COALESCE(phylum,"") AS phylum, COALESCE(class_rank,"") AS class_rank, COALESCE(order_rank,"") AS order_rank, COALESCE(family,"") AS family, COALESCE(genus,"") AS genus, COALESCE(scientific_name,"") AS scientific_name, "" AS specific_epithet, "" AS infra_specific_epithet, COALESCE(author,"") AS author, COALESCE(rank,"") AS rank
+    SELECT COALESCE(kingdom,"") AS kingdom, COALESCE(phylum,"") AS phylum, COALESCE(class_rank,"") AS class_rank, COALESCE(order_rank,"") AS order_rank, COALESCE(family,"") AS family, COALESCE(genus,"") AS genus, COALESCE(scientific_name,"") AS scientific_name, COALESCE(species,"") AS specific_epithet, COALESCE(subspecies,"") AS infra_specific_epithet, COALESCE(author,"") AS author, COALESCE(rank,"") AS rank
     FROM snapshot.raw_20090406
-    GROUP BY COALESCE(kingdom,""), COALESCE(phylum,""), COALESCE(class_rank,""), COALESCE(order_rank,""), COALESCE(family,""), COALESCE(genus,""), COALESCE(scientific_name,""), COALESCE(author,""), COALESCE(rank,"")
+    GROUP BY COALESCE(kingdom,""), COALESCE(phylum,""), COALESCE(class_rank,""), COALESCE(order_rank,""), COALESCE(family,""), COALESCE(genus,""), COALESCE(scientific_name,""), COALESCE(author,""), COALESCE(rank,""), COALESCE(species,""), COALESCE(subspecies,"")
     
     UNION ALL
 
-    SELECT COALESCE(kingdom,"") AS kingdom, COALESCE(phylum,"") AS phylum, COALESCE(class_rank,"") AS class_rank, COALESCE(order_rank,"") AS order_rank, COALESCE(family,"") AS family, COALESCE(genus,"") AS genus, COALESCE(scientific_name,"") AS scientific_name, "" AS specific_epithet, "" AS infra_specific_epithet, COALESCE(author,"") AS author, COALESCE(rank,"") AS rank
+    SELECT COALESCE(kingdom,"") AS kingdom, COALESCE(phylum,"") AS phylum, COALESCE(class_rank,"") AS class_rank, COALESCE(order_rank,"") AS order_rank, COALESCE(family,"") AS family, COALESCE(genus,"") AS genus, COALESCE(scientific_name,"") AS scientific_name, COALESCE(species,"") AS specific_epithet, COALESCE(subspecies,"") AS infra_specific_epithet, COALESCE(author,"") AS author, COALESCE(rank,"") AS rank
     FROM snapshot.raw_20090617
-    GROUP BY COALESCE(kingdom,""), COALESCE(phylum,""), COALESCE(class_rank,""), COALESCE(order_rank,""), COALESCE(family,""), COALESCE(genus,""), COALESCE(scientific_name,""), COALESCE(author,""), COALESCE(rank,"")
+    GROUP BY COALESCE(kingdom,""), COALESCE(phylum,""), COALESCE(class_rank,""), COALESCE(order_rank,""), COALESCE(family,""), COALESCE(genus,""), COALESCE(scientific_name,""), COALESCE(author,""), COALESCE(rank,""), COALESCE(species,""), COALESCE(subspecies,"")
     
     UNION ALL
 
-    SELECT COALESCE(kingdom,"") AS kingdom, COALESCE(phylum,"") AS phylum, COALESCE(class_rank,"") AS class_rank, COALESCE(order_rank,"") AS order_rank, COALESCE(family,"") AS family, COALESCE(genus,"") AS genus, COALESCE(scientific_name,"") AS scientific_name, "" AS specific_epithet, "" AS infra_specific_epithet, COALESCE(author,"") AS author, COALESCE(rank,"") AS rank
+    SELECT COALESCE(kingdom,"") AS kingdom, COALESCE(phylum,"") AS phylum, COALESCE(class_rank,"") AS class_rank, COALESCE(order_rank,"") AS order_rank, COALESCE(family,"") AS family, COALESCE(genus,"") AS genus, COALESCE(scientific_name,"") AS scientific_name, COALESCE(species,"") AS specific_epithet, COALESCE(subspecies,"") AS infra_specific_epithet, COALESCE(author,"") AS author, COALESCE(rank,"") AS rank
     FROM snapshot.raw_20090925
-    GROUP BY COALESCE(kingdom,""), COALESCE(phylum,""), COALESCE(class_rank,""), COALESCE(order_rank,""), COALESCE(family,""), COALESCE(genus,""), COALESCE(scientific_name,""), COALESCE(author,""), COALESCE(rank,"")
+    GROUP BY COALESCE(kingdom,""), COALESCE(phylum,""), COALESCE(class_rank,""), COALESCE(order_rank,""), COALESCE(family,""), COALESCE(genus,""), COALESCE(scientific_name,""), COALESCE(author,""), COALESCE(rank,""), COALESCE(species,""), COALESCE(subspecies,"")
     
     UNION ALL
 
-    SELECT COALESCE(kingdom,"") AS kingdom, COALESCE(phylum,"") AS phylum, COALESCE(class_rank,"") AS class_rank, COALESCE(order_rank,"") AS order_rank, COALESCE(family,"") AS family, COALESCE(genus,"") AS genus, COALESCE(scientific_name,"") AS scientific_name, "" AS specific_epithet, "" AS infra_specific_epithet, COALESCE(author,"") AS author, COALESCE(rank,"") AS rank
+    SELECT COALESCE(kingdom,"") AS kingdom, COALESCE(phylum,"") AS phylum, COALESCE(class_rank,"") AS class_rank, COALESCE(order_rank,"") AS order_rank, COALESCE(family,"") AS family, COALESCE(genus,"") AS genus, COALESCE(scientific_name,"") AS scientific_name, COALESCE(species,"") AS specific_epithet, COALESCE(subspecies,"") AS infra_specific_epithet, COALESCE(author,"") AS author, COALESCE(rank,"") AS rank
     FROM snapshot.raw_20091216
-    GROUP BY COALESCE(kingdom,""), COALESCE(phylum,""), COALESCE(class_rank,""), COALESCE(order_rank,""), COALESCE(family,""), COALESCE(genus,""), COALESCE(scientific_name,""), COALESCE(author,""), COALESCE(rank,"")
+    GROUP BY COALESCE(kingdom,""), COALESCE(phylum,""), COALESCE(class_rank,""), COALESCE(order_rank,""), COALESCE(family,""), COALESCE(genus,""), COALESCE(scientific_name,""), COALESCE(author,""), COALESCE(rank,""), COALESCE(species,""), COALESCE(subspecies,"")
     
     UNION ALL
 
-    SELECT COALESCE(kingdom,"") AS kingdom, COALESCE(phylum,"") AS phylum, COALESCE(class_rank,"") AS class_rank, COALESCE(order_rank,"") AS order_rank, COALESCE(family,"") AS family, COALESCE(genus,"") AS genus, COALESCE(scientific_name,"") AS scientific_name, "" AS specific_epithet, "" AS infra_specific_epithet, COALESCE(author,"") AS author, COALESCE(rank,"") AS rank
+    SELECT COALESCE(kingdom,"") AS kingdom, COALESCE(phylum,"") AS phylum, COALESCE(class_rank,"") AS class_rank, COALESCE(order_rank,"") AS order_rank, COALESCE(family,"") AS family, COALESCE(genus,"") AS genus, COALESCE(scientific_name,"") AS scientific_name, COALESCE(species,"") AS specific_epithet, COALESCE(subspecies,"") AS infra_specific_epithet, COALESCE(author,"") AS author, COALESCE(rank,"") AS rank
     FROM snapshot.raw_20100401
-    GROUP BY COALESCE(kingdom,""), COALESCE(phylum,""), COALESCE(class_rank,""), COALESCE(order_rank,""), COALESCE(family,""), COALESCE(genus,""), COALESCE(scientific_name,""), COALESCE(author,""), COALESCE(rank,"")
+    GROUP BY COALESCE(kingdom,""), COALESCE(phylum,""), COALESCE(class_rank,""), COALESCE(order_rank,""), COALESCE(family,""), COALESCE(genus,""), COALESCE(scientific_name,""), COALESCE(author,""), COALESCE(rank,""), COALESCE(species,""), COALESCE(subspecies,"")
     
     UNION ALL
 
-    SELECT COALESCE(kingdom,"") AS kingdom, COALESCE(phylum,"") AS phylum, COALESCE(class_rank,"") AS class_rank, COALESCE(order_rank,"") AS order_rank, COALESCE(family,"") AS family, COALESCE(genus,"") AS genus, COALESCE(scientific_name,"") AS scientific_name, "" AS specific_epithet, "" AS infra_specific_epithet, COALESCE(author,"") AS author, COALESCE(rank,"") AS rank
+    SELECT COALESCE(kingdom,"") AS kingdom, COALESCE(phylum,"") AS phylum, COALESCE(class_rank,"") AS class_rank, COALESCE(order_rank,"") AS order_rank, COALESCE(family,"") AS family, COALESCE(genus,"") AS genus, COALESCE(scientific_name,"") AS scientific_name, COALESCE(species,"") AS specific_epithet, COALESCE(subspecies,"") AS infra_specific_epithet, COALESCE(author,"") AS author, COALESCE(rank,"") AS rank
     FROM snapshot.raw_20100726
-    GROUP BY COALESCE(kingdom,""), COALESCE(phylum,""), COALESCE(class_rank,""), COALESCE(order_rank,""), COALESCE(family,""), COALESCE(genus,""), COALESCE(scientific_name,""), COALESCE(author,""), COALESCE(rank,"")
+    GROUP BY COALESCE(kingdom,""), COALESCE(phylum,""), COALESCE(class_rank,""), COALESCE(order_rank,""), COALESCE(family,""), COALESCE(genus,""), COALESCE(scientific_name,""), COALESCE(author,""), COALESCE(rank,""), COALESCE(species,""), COALESCE(subspecies,"")
     
     UNION ALL
 
-    SELECT COALESCE(kingdom,"") AS kingdom, COALESCE(phylum,"") AS phylum, COALESCE(class_rank,"") AS class_rank, COALESCE(order_rank,"") AS order_rank, COALESCE(family,"") AS family, COALESCE(genus,"") AS genus, COALESCE(scientific_name,"") AS scientific_name, "" AS specific_epithet, "" AS infra_specific_epithet, COALESCE(author,"") AS author, COALESCE(rank,"") AS rank
+    SELECT COALESCE(kingdom,"") AS kingdom, COALESCE(phylum,"") AS phylum, COALESCE(class_rank,"") AS class_rank, COALESCE(order_rank,"") AS order_rank, COALESCE(family,"") AS family, COALESCE(genus,"") AS genus, COALESCE(scientific_name,"") AS scientific_name, COALESCE(species,"") AS specific_epithet, COALESCE(subspecies,"") AS infra_specific_epithet, COALESCE(author,"") AS author, COALESCE(rank,"") AS rank
     FROM snapshot.raw_20101117
-    GROUP BY COALESCE(kingdom,""), COALESCE(phylum,""), COALESCE(class_rank,""), COALESCE(order_rank,""), COALESCE(family,""), COALESCE(genus,""), COALESCE(scientific_name,""), COALESCE(author,""), COALESCE(rank,"")
+    GROUP BY COALESCE(kingdom,""), COALESCE(phylum,""), COALESCE(class_rank,""), COALESCE(order_rank,""), COALESCE(family,""), COALESCE(genus,""), COALESCE(scientific_name,""), COALESCE(author,""), COALESCE(rank,""), COALESCE(species,""), COALESCE(subspecies,"")
     
     UNION ALL
 
-    SELECT COALESCE(kingdom,"") AS kingdom, COALESCE(phylum,"") AS phylum, COALESCE(class_rank,"") AS class_rank, COALESCE(order_rank,"") AS order_rank, COALESCE(family,"") AS family, COALESCE(genus,"") AS genus, COALESCE(scientific_name,"") AS scientific_name, "" AS specific_epithet, "" AS infra_specific_epithet, COALESCE(author,"") AS author, COALESCE(rank,"") AS rank
+    SELECT COALESCE(kingdom,"") AS kingdom, COALESCE(phylum,"") AS phylum, COALESCE(class_rank,"") AS class_rank, COALESCE(order_rank,"") AS order_rank, COALESCE(family,"") AS family, COALESCE(genus,"") AS genus, COALESCE(scientific_name,"") AS scientific_name, COALESCE(species,"") AS specific_epithet, COALESCE(subspecies,"") AS infra_specific_epithet, COALESCE(author,"") AS author, COALESCE(rank,"") AS rank
     FROM snapshot.raw_20110221
-    GROUP BY COALESCE(kingdom,""), COALESCE(phylum,""), COALESCE(class_rank,""), COALESCE(order_rank,""), COALESCE(family,""), COALESCE(genus,""), COALESCE(scientific_name,""), COALESCE(author,""), COALESCE(rank,"")
+    GROUP BY COALESCE(kingdom,""), COALESCE(phylum,""), COALESCE(class_rank,""), COALESCE(order_rank,""), COALESCE(family,""), COALESCE(genus,""), COALESCE(scientific_name,""), COALESCE(author,""), COALESCE(rank,""), COALESCE(species,""), COALESCE(subspecies,"")
     
     UNION ALL
 
-    SELECT COALESCE(kingdom,"") AS kingdom, COALESCE(phylum,"") AS phylum, COALESCE(class_rank,"") AS class_rank, COALESCE(order_rank,"") AS order_rank, COALESCE(family,"") AS family, COALESCE(genus,"") AS genus, COALESCE(scientific_name,"") AS scientific_name, "" AS specific_epithet, "" AS infra_specific_epithet, COALESCE(author,"") AS author, COALESCE(rank,"") AS rank
+    SELECT COALESCE(kingdom,"") AS kingdom, COALESCE(phylum,"") AS phylum, COALESCE(class_rank,"") AS class_rank, COALESCE(order_rank,"") AS order_rank, COALESCE(family,"") AS family, COALESCE(genus,"") AS genus, COALESCE(scientific_name,"") AS scientific_name, COALESCE(species,"") AS specific_epithet, COALESCE(subspecies,"") AS infra_specific_epithet, COALESCE(author,"") AS author, COALESCE(rank,"") AS rank
     FROM snapshot.raw_20110610
-    GROUP BY COALESCE(kingdom,""), COALESCE(phylum,""), COALESCE(class_rank,""), COALESCE(order_rank,""), COALESCE(family,""), COALESCE(genus,""), COALESCE(scientific_name,""), COALESCE(author,""), COALESCE(rank,"")
+    GROUP BY COALESCE(kingdom,""), COALESCE(phylum,""), COALESCE(class_rank,""), COALESCE(order_rank,""), COALESCE(family,""), COALESCE(genus,""), COALESCE(scientific_name,""), COALESCE(author,""), COALESCE(rank,""), COALESCE(species,""), COALESCE(subspecies,"")
     
     UNION ALL
 
-    SELECT COALESCE(kingdom,"") AS kingdom, COALESCE(phylum,"") AS phylum, COALESCE(class_rank,"") AS class_rank, COALESCE(order_rank,"") AS order_rank, COALESCE(family,"") AS family, COALESCE(genus,"") AS genus, COALESCE(scientific_name,"") AS scientific_name, "" AS specific_epithet, "" AS infra_specific_epithet, COALESCE(author,"") AS author, COALESCE(rank,"") AS rank
+    SELECT COALESCE(kingdom,"") AS kingdom, COALESCE(phylum,"") AS phylum, COALESCE(class_rank,"") AS class_rank, COALESCE(order_rank,"") AS order_rank, COALESCE(family,"") AS family, COALESCE(genus,"") AS genus, COALESCE(scientific_name,"") AS scientific_name, COALESCE(species,"") AS specific_epithet, COALESCE(subspecies,"") AS infra_specific_epithet, COALESCE(author,"") AS author, COALESCE(rank,"") AS rank
     FROM snapshot.raw_20110905
-    GROUP BY COALESCE(kingdom,""), COALESCE(phylum,""), COALESCE(class_rank,""), COALESCE(order_rank,""), COALESCE(family,""), COALESCE(genus,""), COALESCE(scientific_name,""), COALESCE(author,""), COALESCE(rank,"")
+    GROUP BY COALESCE(kingdom,""), COALESCE(phylum,""), COALESCE(class_rank,""), COALESCE(order_rank,""), COALESCE(family,""), COALESCE(genus,""), COALESCE(scientific_name,""), COALESCE(author,""), COALESCE(rank,""), COALESCE(species,""), COALESCE(subspecies,"")
     
     UNION ALL
 
-    SELECT COALESCE(kingdom,"") AS kingdom, COALESCE(phylum,"") AS phylum, COALESCE(class_rank,"") AS class_rank, COALESCE(order_rank,"") AS order_rank, COALESCE(family,"") AS family, COALESCE(genus,"") AS genus, COALESCE(scientific_name,"") AS scientific_name, "" AS specific_epithet, "" AS infra_specific_epithet, COALESCE(author,"") AS author, COALESCE(rank,"") AS rank
+    SELECT COALESCE(kingdom,"") AS kingdom, COALESCE(phylum,"") AS phylum, COALESCE(class_rank,"") AS class_rank, COALESCE(order_rank,"") AS order_rank, COALESCE(family,"") AS family, COALESCE(genus,"") AS genus, COALESCE(scientific_name,"") AS scientific_name, COALESCE(species,"") AS specific_epithet, COALESCE(subspecies,"") AS infra_specific_epithet, COALESCE(author,"") AS author, COALESCE(rank,"") AS rank
     FROM snapshot.raw_20120118
-    GROUP BY COALESCE(kingdom,""), COALESCE(phylum,""), COALESCE(class_rank,""), COALESCE(order_rank,""), COALESCE(family,""), COALESCE(genus,""), COALESCE(scientific_name,""), COALESCE(author,""), COALESCE(rank,"")
+    GROUP BY COALESCE(kingdom,""), COALESCE(phylum,""), COALESCE(class_rank,""), COALESCE(order_rank,""), COALESCE(family,""), COALESCE(genus,""), COALESCE(scientific_name,""), COALESCE(author,""), COALESCE(rank,""), COALESCE(species,""), COALESCE(subspecies,"")
     
     UNION ALL
 
-    SELECT COALESCE(kingdom,"") AS kingdom, COALESCE(phylum,"") AS phylum, COALESCE(class_rank,"") AS class_rank, COALESCE(order_rank,"") AS order_rank, COALESCE(family,"") AS family, COALESCE(genus,"") AS genus, COALESCE(scientific_name,"") AS scientific_name, "" AS specific_epithet, "" AS infra_specific_epithet, COALESCE(author,"") AS author, COALESCE(rank,"") AS rank
+    SELECT COALESCE(kingdom,"") AS kingdom, COALESCE(phylum,"") AS phylum, COALESCE(class_rank,"") AS class_rank, COALESCE(order_rank,"") AS order_rank, COALESCE(family,"") AS family, COALESCE(genus,"") AS genus, COALESCE(scientific_name,"") AS scientific_name, COALESCE(species,"") AS specific_epithet, COALESCE(subspecies,"") AS infra_specific_epithet, COALESCE(author,"") AS author, COALESCE(rank,"") AS rank
     FROM snapshot.raw_20120326
-    GROUP BY COALESCE(kingdom,""), COALESCE(phylum,""), COALESCE(class_rank,""), COALESCE(order_rank,""), COALESCE(family,""), COALESCE(genus,""), COALESCE(scientific_name,""), COALESCE(author,""), COALESCE(rank,"")
+    GROUP BY COALESCE(kingdom,""), COALESCE(phylum,""), COALESCE(class_rank,""), COALESCE(order_rank,""), COALESCE(family,""), COALESCE(genus,""), COALESCE(scientific_name,""), COALESCE(author,""), COALESCE(rank,""), COALESCE(species,""), COALESCE(subspecies,"")
     
     UNION ALL
 
-    SELECT COALESCE(kingdom,"") AS kingdom, COALESCE(phylum,"") AS phylum, COALESCE(class_rank,"") AS class_rank, COALESCE(order_rank,"") AS order_rank, COALESCE(family,"") AS family, COALESCE(genus,"") AS genus, COALESCE(scientific_name,"") AS scientific_name, "" AS specific_epithet, "" AS infra_specific_epithet, COALESCE(author,"") AS author, COALESCE(rank,"") AS rank
+    SELECT COALESCE(kingdom,"") AS kingdom, COALESCE(phylum,"") AS phylum, COALESCE(class_rank,"") AS class_rank, COALESCE(order_rank,"") AS order_rank, COALESCE(family,"") AS family, COALESCE(genus,"") AS genus, COALESCE(scientific_name,"") AS scientific_name, COALESCE(species,"") AS specific_epithet, COALESCE(subspecies,"") AS infra_specific_epithet, COALESCE(author,"") AS author, COALESCE(rank,"") AS rank
     FROM snapshot.raw_20120713
-    GROUP BY COALESCE(kingdom,""), COALESCE(phylum,""), COALESCE(class_rank,""), COALESCE(order_rank,""), COALESCE(family,""), COALESCE(genus,""), COALESCE(scientific_name,""), COALESCE(author,""), COALESCE(rank,"")
+    GROUP BY COALESCE(kingdom,""), COALESCE(phylum,""), COALESCE(class_rank,""), COALESCE(order_rank,""), COALESCE(family,""), COALESCE(genus,""), COALESCE(scientific_name,""), COALESCE(author,""), COALESCE(rank,""), COALESCE(species,""), COALESCE(subspecies,"")
     
     UNION ALL
 
-    SELECT COALESCE(kingdom,"") AS kingdom, COALESCE(phylum,"") AS phylum, COALESCE(class_rank,"") AS class_rank, COALESCE(order_rank,"") AS order_rank, COALESCE(family,"") AS family, COALESCE(genus,"") AS genus, COALESCE(scientific_name,"") AS scientific_name, "" AS specific_epithet, "" AS infra_specific_epithet, COALESCE(author,"") AS author, COALESCE(rank,"") AS rank
+    SELECT COALESCE(kingdom,"") AS kingdom, COALESCE(phylum,"") AS phylum, COALESCE(class_rank,"") AS class_rank, COALESCE(order_rank,"") AS order_rank, COALESCE(family,"") AS family, COALESCE(genus,"") AS genus, COALESCE(scientific_name,"") AS scientific_name, COALESCE(species,"") AS specific_epithet, COALESCE(subspecies,"") AS infra_specific_epithet, COALESCE(author,"") AS author, COALESCE(rank,"") AS rank
     FROM snapshot.raw_20121031
-    GROUP BY COALESCE(kingdom,""), COALESCE(phylum,""), COALESCE(class_rank,""), COALESCE(order_rank,""), COALESCE(family,""), COALESCE(genus,""), COALESCE(scientific_name,""), COALESCE(author,""), COALESCE(rank,"")
+    GROUP BY COALESCE(kingdom,""), COALESCE(phylum,""), COALESCE(class_rank,""), COALESCE(order_rank,""), COALESCE(family,""), COALESCE(genus,""), COALESCE(scientific_name,""), COALESCE(author,""), COALESCE(rank,""), COALESCE(species,""), COALESCE(subspecies,"")
     
     UNION ALL
 
-    SELECT COALESCE(kingdom,"") AS kingdom, COALESCE(phylum,"") AS phylum, COALESCE(class_rank,"") AS class_rank, COALESCE(order_rank,"") AS order_rank, COALESCE(family,"") AS family, COALESCE(genus,"") AS genus, COALESCE(scientific_name,"") AS scientific_name, "" AS specific_epithet, "" AS infra_specific_epithet, COALESCE(author,"") AS author, COALESCE(rank,"") AS rank
+    SELECT COALESCE(kingdom,"") AS kingdom, COALESCE(phylum,"") AS phylum, COALESCE(class_rank,"") AS class_rank, COALESCE(order_rank,"") AS order_rank, COALESCE(family,"") AS family, COALESCE(genus,"") AS genus, COALESCE(scientific_name,"") AS scientific_name, COALESCE(species,"") AS specific_epithet, COALESCE(subspecies,"") AS infra_specific_epithet, COALESCE(author,"") AS author, COALESCE(rank,"") AS rank
     FROM snapshot.raw_20121211
-    GROUP BY COALESCE(kingdom,""), COALESCE(phylum,""), COALESCE(class_rank,""), COALESCE(order_rank,""), COALESCE(family,""), COALESCE(genus,""), COALESCE(scientific_name,""), COALESCE(author,""), COALESCE(rank,"")
+    GROUP BY COALESCE(kingdom,""), COALESCE(phylum,""), COALESCE(class_rank,""), COALESCE(order_rank,""), COALESCE(family,""), COALESCE(genus,""), COALESCE(scientific_name,""), COALESCE(author,""), COALESCE(rank,""), COALESCE(species,""), COALESCE(subspecies,"")
     
     UNION ALL
 
-    SELECT COALESCE(kingdom,"") AS kingdom, COALESCE(phylum,"") AS phylum, COALESCE(class_rank,"") AS class_rank, COALESCE(order_rank,"") AS order_rank, COALESCE(family,"") AS family, COALESCE(genus,"") AS genus, COALESCE(scientific_name,"") AS scientific_name, "" AS specific_epithet, "" AS infra_specific_epithet, COALESCE(author,"") AS author, COALESCE(rank,"") AS rank
+    SELECT COALESCE(kingdom,"") AS kingdom, COALESCE(phylum,"") AS phylum, COALESCE(class_rank,"") AS class_rank, COALESCE(order_rank,"") AS order_rank, COALESCE(family,"") AS family, COALESCE(genus,"") AS genus, COALESCE(scientific_name,"") AS scientific_name, COALESCE(species,"") AS specific_epithet, COALESCE(subspecies,"") AS infra_specific_epithet, COALESCE(author,"") AS author, COALESCE(rank,"") AS rank
     FROM snapshot.raw_20130220
-    GROUP BY COALESCE(kingdom,""), COALESCE(phylum,""), COALESCE(class_rank,""), COALESCE(order_rank,""), COALESCE(family,""), COALESCE(genus,""), COALESCE(scientific_name,""), COALESCE(author,""), COALESCE(rank,"")
+    GROUP BY COALESCE(kingdom,""), COALESCE(phylum,""), COALESCE(class_rank,""), COALESCE(order_rank,""), COALESCE(family,""), COALESCE(genus,""), COALESCE(scientific_name,""), COALESCE(author,""), COALESCE(rank,""), COALESCE(species,""), COALESCE(subspecies,"")
     
     UNION ALL
 
-    SELECT COALESCE(kingdom,"") AS kingdom, COALESCE(phylum,"") AS phylum, COALESCE(class_rank,"") AS class_rank, COALESCE(order_rank,"") AS order_rank, COALESCE(family,"") AS family, COALESCE(genus,"") AS genus, COALESCE(scientific_name,"") AS scientific_name, "" AS specific_epithet, "" AS infra_specific_epithet, COALESCE(author,"") AS author, COALESCE(rank,"") AS rank
+    SELECT COALESCE(kingdom,"") AS kingdom, COALESCE(phylum,"") AS phylum, COALESCE(class_rank,"") AS class_rank, COALESCE(order_rank,"") AS order_rank, COALESCE(family,"") AS family, COALESCE(genus,"") AS genus, COALESCE(scientific_name,"") AS scientific_name, COALESCE(species,"") AS specific_epithet, COALESCE(subspecies,"") AS infra_specific_epithet, COALESCE(author,"") AS author, COALESCE(rank,"") AS rank
     FROM snapshot.raw_20130521
-    GROUP BY COALESCE(kingdom,""), COALESCE(phylum,""), COALESCE(class_rank,""), COALESCE(order_rank,""), COALESCE(family,""), COALESCE(genus,""), COALESCE(scientific_name,""), COALESCE(author,""), COALESCE(rank,"")
+    GROUP BY COALESCE(kingdom,""), COALESCE(phylum,""), COALESCE(class_rank,""), COALESCE(order_rank,""), COALESCE(family,""), COALESCE(genus,""), COALESCE(scientific_name,""), COALESCE(author,""), COALESCE(rank,""), COALESCE(species,""), COALESCE(subspecies,"")
     
     UNION ALL
 
-    SELECT COALESCE(kingdom,"") AS kingdom, COALESCE(phylum,"") AS phylum, COALESCE(class_rank,"") AS class_rank, COALESCE(order_rank,"") AS order_rank, COALESCE(family,"") AS family, COALESCE(genus,"") AS genus, COALESCE(scientific_name,"") AS scientific_name, "" AS specific_epithet, "" AS infra_specific_epithet, COALESCE(author,"") AS author, COALESCE(rank,"") AS rank
+    SELECT COALESCE(kingdom,"") AS kingdom, COALESCE(phylum,"") AS phylum, COALESCE(class_rank,"") AS class_rank, COALESCE(order_rank,"") AS order_rank, COALESCE(family,"") AS family, COALESCE(genus,"") AS genus, COALESCE(scientific_name,"") AS scientific_name, COALESCE(species,"") AS specific_epithet, COALESCE(subspecies,"") AS infra_specific_epithet, COALESCE(author,"") AS author, COALESCE(rank,"") AS rank
     FROM snapshot.raw_20130709
-    GROUP BY COALESCE(kingdom,""), COALESCE(phylum,""), COALESCE(class_rank,""), COALESCE(order_rank,""), COALESCE(family,""), COALESCE(genus,""), COALESCE(scientific_name,""), COALESCE(author,""), COALESCE(rank,"")
+    GROUP BY COALESCE(kingdom,""), COALESCE(phylum,""), COALESCE(class_rank,""), COALESCE(order_rank,""), COALESCE(family,""), COALESCE(genus,""), COALESCE(scientific_name,""), COALESCE(author,""), COALESCE(rank,""), COALESCE(species,""), COALESCE(subspecies,"")
     
     UNION ALL
 
-    SELECT COALESCE(kingdom,"") AS kingdom, COALESCE(phylum,"") AS phylum, COALESCE(class_rank,"") AS class_rank, COALESCE(order_rank,"") AS order_rank, COALESCE(family,"") AS family, COALESCE(genus,"") AS genus, COALESCE(scientific_name,"") AS scientific_name, "" AS specific_epithet, "" AS infra_specific_epithet, COALESCE(author,"") AS author, COALESCE(rank,"") AS rank
+    SELECT COALESCE(kingdom,"") AS kingdom, COALESCE(phylum,"") AS phylum, COALESCE(class_rank,"") AS class_rank, COALESCE(order_rank,"") AS order_rank, COALESCE(family,"") AS family, COALESCE(genus,"") AS genus, COALESCE(scientific_name,"") AS scientific_name, COALESCE(species,"") AS specific_epithet, COALESCE(subspecies,"") AS infra_specific_epithet, COALESCE(author,"") AS author, COALESCE(rank,"") AS rank
     FROM snapshot.raw_20130910
-    GROUP BY COALESCE(kingdom,""), COALESCE(phylum,""), COALESCE(class_rank,""), COALESCE(order_rank,""), COALESCE(family,""), COALESCE(genus,""), COALESCE(scientific_name,""), COALESCE(author,""), COALESCE(rank,"")
+    GROUP BY COALESCE(kingdom,""), COALESCE(phylum,""), COALESCE(class_rank,""), COALESCE(order_rank,""), COALESCE(family,""), COALESCE(genus,""), COALESCE(scientific_name,""), COALESCE(author,""), COALESCE(rank,""), COALESCE(species,""), COALESCE(subspecies,"")
     
     UNION ALL
 
