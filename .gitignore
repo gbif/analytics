@@ -5,3 +5,4 @@ raw_taxonomy.q
 .RData
 .DS_Store
 *.Rproj
+nohup.out
