@@ -4,7 +4,7 @@
 --SET mapreduce.task.classpath.user.precedence=true;
 --SET mapreduce.user.classpath.first=true;
 SET mapreduce.job.user.classpath.first=true;
-  
+
 -- Use Snappy
 SET hive.exec.compress.output=true;
 SET mapred.output.compressiot.type=BLOCK;
@@ -21,7 +21,7 @@ CREATE TABLE snapshot.occurrence_${hiveconf:snapshot} STORED AS rcfile AS
 SELECT
   r.id,
   r.dataset_id,
-  r.publisher_id,  
+  r.publisher_id,
   r.publisher_country,
   t.kingdom,
   t.phylum,
@@ -40,19 +40,19 @@ SELECT
   t.species_id,
   t.taxon_id,
   r.basis_of_record,
-  g.latitude, 
-  g.longitude, 
+  g.latitude,
+  g.longitude,
   g.country,
   d.day,
   d.month,
   d.year
-  FROM 
-  (SELECT 
-   id, 
+  FROM
+  (SELECT
+   id,
    dataset_id,
    publisher_id,
    publisher_country,
-   CONCAT_WS("|", 
+   CONCAT_WS("|",
              COALESCE(v_kingdom, ""),
              COALESCE(v_phylum, ""),
              COALESCE(v_class, ""),
@@ -60,12 +60,13 @@ SELECT
              COALESCE(v_family, ""),
              COALESCE(v_genus, ""),
              COALESCE(v_scientificname, ""),
-             COALESCE(v_scientificnameauthorship, "")  
+             COALESCE(v_scientificnameauthorship, ""),
+             COALESCE(v_taxonrank,"")
    ) as taxon_key,
-   CONCAT_WS("|", 
+   CONCAT_WS("|",
              COALESCE(v_decimallatitude,v_verbatimlatitude,""),
              COALESCE(v_decimallongitude,v_verbatimlongitude,""),
-             COALESCE(v_country, "") 
+             COALESCE(v_country, "")
    ) as geo_key,
    parseDate(v_year,v_month,v_day,v_eventdate) d,
    parseBoR(v_basisofrecord) as basis_of_record

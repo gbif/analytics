@@ -1,5 +1,5 @@
 -- This script requires three parameters to be passed in the command line: mapcount (# of mappers), occjar (the occurrence-hive.jar to use), and snapshot (e.g. 20071219)
-  
+
 -- Fix UDF classpath issues
 SET mapreduce.task.classpath.user.precedence = true;
 SET mapreduce.user.classpath.first=true;
@@ -21,7 +21,7 @@ CREATE TABLE snapshot.occurrence_${hiveconf:snapshot} STORED AS rcfile AS
 SELECT
   r.id,
   r.dataset_id,
-  r.publisher_id,	
+  r.publisher_id,
   r.publisher_country,
   t.kingdom,
   t.phylum,
@@ -40,19 +40,19 @@ SELECT
   t.species_id,
   t.taxon_id,
   r.basis_of_record,
-  g.latitude, 
-  g.longitude, 
+  g.latitude,
+  g.longitude,
   g.country,
   d.day,
   d.month,
   d.year
-  FROM 
-  (SELECT 
-   id, 
+  FROM
+  (SELECT
+   id,
    dataset_id,
    publisher_id,
    publisher_country,
-   CONCAT_WS("|", 
+   CONCAT_WS("|",
              COALESCE(kingdom, ""),
              COALESCE(phylum, ""),
              COALESCE(class_rank, ""),
@@ -60,12 +60,13 @@ SELECT
              COALESCE(family, ""),
              COALESCE(genus, ""),
              COALESCE(scientific_name, ""),
-             COALESCE(author, "")  
+             COALESCE(author, ""),
+             COALESCE(taxon_rank,"")
    ) as taxon_key,
-   CONCAT_WS("|", 
+   CONCAT_WS("|",
              COALESCE(latitude, ""),
              COALESCE(longitude, ""),
-             COALESCE(country, "") 
+             COALESCE(country, "")
    ) as geo_key,
    parseDate(year,month,day,event_date) d,
    parseBoR(basis_of_record) as basis_of_record
