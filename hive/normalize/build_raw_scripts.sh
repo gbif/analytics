@@ -67,9 +67,9 @@ done
 for snapshot in "${hbase_v1_snapshots[@]}"
 do
   echo '
-    SELECT COALESCE(kingdom,"") AS kingdom, COALESCE(phylum,"") AS phylum, COALESCE(class_rank,"") AS class_rank, COALESCE(order_rank,"") AS order_rank, COALESCE(family,"") AS family, COALESCE(genus,"") AS genus, COALESCE(scientific_name,"") AS scientific_name, COALESCE(specific_epithet,"") AS specific_epithet, COALESCE(infraspecific_epithet,"") AS infra_specific_epithet, COALESCE(author,"") AS author, "" AS rank
+    SELECT COALESCE(kingdom,"") AS kingdom, COALESCE(phylum,"") AS phylum, COALESCE(class_rank,"") AS class_rank, COALESCE(order_rank,"") AS order_rank, COALESCE(family,"") AS family, COALESCE(genus,"") AS genus, COALESCE(scientific_name,"") AS scientific_name, COALESCE(specific_epithet,"") AS specific_epithet, COALESCE(infraspecific_epithet,"") AS infra_specific_epithet, COALESCE(author,"") AS author, COALESCE(taxon_rank,"") AS rank
     FROM snapshot.raw_'"$snapshot"'
-    GROUP BY COALESCE(kingdom,""), COALESCE(phylum,""), COALESCE(class_rank,""), COALESCE(order_rank,""), COALESCE(family,""), COALESCE(genus,""), COALESCE(scientific_name,""), COALESCE(author,""), COALESCE(specific_epithet,""), COALESCE(infraspecific_epithet,"")
+    GROUP BY COALESCE(kingdom,""), COALESCE(phylum,""), COALESCE(class_rank,""), COALESCE(order_rank,""), COALESCE(family,""), COALESCE(genus,""), COALESCE(scientific_name,""), COALESCE(author,""), COALESCE(specific_epithet,""), COALESCE(infraspecific_epithet,""), COALESCE(taxon_rank,"")
 
     UNION ALL' >> "$taxonomy_file"
 done
@@ -79,7 +79,7 @@ do
   echo '
     SELECT COALESCE(v_kingdom,"") AS kingdom, COALESCE(v_phylum,"") AS phylum, COALESCE(v_class,"") AS class_rank, COALESCE(v_order_,"") AS order_rank, COALESCE(v_family,"") AS family, COALESCE(v_genus,"") AS genus, COALESCE(v_scientificname,"") AS scientific_name, COALESCE(v_specificepithet,"") AS specific_epithet, COALESCE(v_infraspecificepithet,"") AS infra_specific_epithet, COALESCE(v_scientificnameauthorship,"") AS author, COALESCE(v_taxonrank,"") AS rank
     FROM snapshot.raw_'"$snapshot"'
-    GROUP BY COALESCE(v_kingdom,""), COALESCE(v_phylum,""), COALESCE(v_class,""), COALESCE(v_order_,""), COALESCE(v_family,""), COALESCE(v_genus,""), COALESCE(v_scientificname,""), COALESCE(v_scientificnameauthorship,""), COALESCE(v_taxonrank,"")
+    GROUP BY COALESCE(v_kingdom,""), COALESCE(v_phylum,""), COALESCE(v_class,""), COALESCE(v_order_,""), COALESCE(v_family,""), COALESCE(v_genus,""), COALESCE(v_scientificname,""), COALESCE(v_scientificnameauthorship,""), COALESCE(v_specificepithet,""), COALESCE(v_infraspecificepithet,""), COALESCE(v_taxonrank,"")
 
     UNION ALL' >> $taxonomy_file
 done
@@ -89,7 +89,7 @@ do
   echo '
     SELECT COALESCE(v_kingdom,"") AS kingdom, COALESCE(v_phylum,"") AS phylum, COALESCE(v_class,"") AS class_rank, COALESCE(v_order,"") AS order_rank, COALESCE(v_family,"") AS family, COALESCE(v_genus,"") AS genus, COALESCE(v_scientificname,"") AS scientific_name, COALESCE(v_specificepithet,"") AS specific_epithet, COALESCE(v_infraspecificepithet,"") AS infra_specific_epithet, COALESCE(v_scientificnameauthorship,"") AS author, COALESCE(v_taxonrank,"") AS rank
     FROM snapshot.raw_'"$snapshot"'
-    GROUP BY COALESCE(v_kingdom,""), COALESCE(v_phylum,""), COALESCE(v_class,""), COALESCE(v_order,""), COALESCE(v_family,""), COALESCE(v_genus,""), COALESCE(v_scientificname,""), COALESCE(v_scientificnameauthorship,""), COALESCE(v_taxonrank,"")' >> $taxonomy_file
+    GROUP BY COALESCE(v_kingdom,""), COALESCE(v_phylum,""), COALESCE(v_class,""), COALESCE(v_order,""), COALESCE(v_family,""), COALESCE(v_genus,""), COALESCE(v_scientificname,""), COALESCE(v_scientificnameauthorship,""), COALESCE(v_specificepithet,""), COALESCE(v_infraspecificepithet,""), COALESCE(v_taxonrank,"")' >> $taxonomy_file
 
   if [[ $snapshot != $last_modern_snapshot ]]; then
     echo "UNION ALL" >> $taxonomy_file
