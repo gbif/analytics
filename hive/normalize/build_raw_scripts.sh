@@ -25,34 +25,49 @@ SET hive.exec.parallel=true;
 DROP TABLE IF EXISTS snapshot.tmp_raw_taxonomy;
 CREATE TABLE snapshot.tmp_raw_taxonomy STORED AS RCFILE AS
 SELECT
-  CONCAT_WS("|",
-    t1.kingdom,
-    t1.phylum,
+  CONCAT_WS("|", 
+    t1.kingdom, 
+    t1.phylum, 
     t1.class_rank,
     t1.order_rank,
     t1.family,
     t1.genus,
     t1.scientific_name,
-    t1.author
+    t1.specific_epithet,
+    t1.infra_specific_epithet,
+    t1.author,
+    t1.rank
   ) AS taxon_key,
-  t1.kingdom,
-  t1.phylum,
-  t1.class_rank,
-  t1.order_rank,
-  t1.family,
-  t1.genus,
-  t1.scientific_name,
-  t1.author
-FROM
+  t1.kingdom, 
+  t1.phylum, 
+  t1.class_rank, 
+  t1.order_rank, 
+  t1.family, 
+  t1.genus, 
+  t1.scientific_name, 
+  t1.specific_epithet,
+  t1.infra_specific_epithet,
+  t1.author,
+  t1.rank
+FROM 
   (' > $taxonomy_file
 
-old_snapshots=( ${mysql_snapshots[@]} ${hbase_v1_snapshots[@]} )
-for snapshot in "${old_snapshots[@]}"
+for snapshot in "${mysql_snapshots[@]}"
 do
   echo '
-    SELECT COALESCE(kingdom,"") AS kingdom, COALESCE(phylum,"") AS phylum, COALESCE(class_rank,"") AS class_rank, COALESCE(order_rank,"") AS order_rank, COALESCE(family,"") AS family, COALESCE(genus,"") AS genus, COALESCE(scientific_name,"") AS scientific_name, COALESCE(author,"") AS author
+    SELECT COALESCE(kingdom,"") AS kingdom, COALESCE(phylum,"") AS phylum, COALESCE(class_rank,"") AS class_rank, COALESCE(order_rank,"") AS order_rank, COALESCE(family,"") AS family, COALESCE(genus,"") AS genus, COALESCE(scientific_name,"") AS scientific_name, COALESCE(species,"") AS specific_epithet, COALESCE(subspecies,"") AS infra_specific_epithet, COALESCE(author,"") AS author, COALESCE(rank,"") AS rank
     FROM snapshot.raw_'"$snapshot"'
-    GROUP BY COALESCE(kingdom,""), COALESCE(phylum,""), COALESCE(class_rank,""), COALESCE(order_rank,""), COALESCE(family,""), COALESCE(genus,""), COALESCE(scientific_name,""), COALESCE(author,"")
+    GROUP BY COALESCE(kingdom,""), COALESCE(phylum,""), COALESCE(class_rank,""), COALESCE(order_rank,""), COALESCE(family,""), COALESCE(genus,""), COALESCE(scientific_name,""), COALESCE(author,""), COALESCE(rank,""), COALESCE(species,""), COALESCE(subspecies,"")
+
+    UNION ALL' >> "$taxonomy_file"
+done
+
+for snapshot in "${hbase_v1_snapshots[@]}"
+do
+  echo '
+    SELECT COALESCE(kingdom,"") AS kingdom, COALESCE(phylum,"") AS phylum, COALESCE(class_rank,"") AS class_rank, COALESCE(order_rank,"") AS order_rank, COALESCE(family,"") AS family, COALESCE(genus,"") AS genus, COALESCE(scientific_name,"") AS scientific_name, COALESCE(specific_epithet,"") AS specific_epithet, COALESCE(infraspecific_epithet,"") AS infra_specific_epithet, COALESCE(author,"") AS author, "" AS rank
+    FROM snapshot.raw_'"$snapshot"'
+    GROUP BY COALESCE(kingdom,""), COALESCE(phylum,""), COALESCE(class_rank,""), COALESCE(order_rank,""), COALESCE(family,""), COALESCE(genus,""), COALESCE(scientific_name,""), COALESCE(author,""), COALESCE(specific_epithet,""), COALESCE(infraspecific_epithet,"")
 
     UNION ALL' >> "$taxonomy_file"
 done
@@ -60,9 +75,9 @@ done
 for snapshot in "${hbase_v2_snapshots[@]}"
 do
   echo '
-    SELECT COALESCE(v_kingdom,"") AS kingdom, COALESCE(v_phylum,"") AS phylum, COALESCE(v_class,"") AS class_rank, COALESCE(v_order_,"") AS order_rank, COALESCE(v_family,"") AS family, COALESCE(v_genus,"") AS genus, COALESCE(v_scientificname,"") AS scientific_name, COALESCE(v_scientificnameauthorship,"") AS author
+    SELECT COALESCE(v_kingdom,"") AS kingdom, COALESCE(v_phylum,"") AS phylum, COALESCE(v_class,"") AS class_rank, COALESCE(v_order_,"") AS order_rank, COALESCE(v_family,"") AS family, COALESCE(v_genus,"") AS genus, COALESCE(v_scientificname,"") AS scientific_name, COALESCE(v_specificepithet,"") AS specific_epithet, COALESCE(v_infraspecificepithet,"") AS infra_specific_epithet, COALESCE(v_scientificnameauthorship,"") AS author, COALESCE(v_taxonrank,"") AS rank
     FROM snapshot.raw_'"$snapshot"'
-    GROUP BY COALESCE(v_kingdom,""), COALESCE(v_phylum,""), COALESCE(v_class,""), COALESCE(v_order_,""), COALESCE(v_family,""), COALESCE(v_genus,""), COALESCE(v_scientificname,""), COALESCE(v_scientificnameauthorship,"")
+    GROUP BY COALESCE(v_kingdom,""), COALESCE(v_phylum,""), COALESCE(v_class,""), COALESCE(v_order_,""), COALESCE(v_family,""), COALESCE(v_genus,""), COALESCE(v_scientificname,""), COALESCE(v_scientificnameauthorship,""), COALESCE(v_taxonrank,"")
 
     UNION ALL' >> $taxonomy_file
 done
@@ -70,9 +85,9 @@ done
 for snapshot in "${hbase_v3_snapshots[@]}"
 do
   echo '
-    SELECT COALESCE(v_kingdom,"") AS kingdom, COALESCE(v_phylum,"") AS phylum, COALESCE(v_class,"") AS class_rank, COALESCE(v_order,"") AS order_rank, COALESCE(v_family,"") AS family, COALESCE(v_genus,"") AS genus, COALESCE(v_scientificname,"") AS scientific_name, COALESCE(v_scientificnameauthorship,"") AS author
+    SELECT COALESCE(v_kingdom,"") AS kingdom, COALESCE(v_phylum,"") AS phylum, COALESCE(v_class,"") AS class_rank, COALESCE(v_order,"") AS order_rank, COALESCE(v_family,"") AS family, COALESCE(v_genus,"") AS genus, COALESCE(v_scientificname,"") AS scientific_name, COALESCE(v_specificepithet,"") AS specific_epithet, COALESCE(v_infraspecificepithet,"") AS infra_specific_epithet, COALESCE(v_scientificnameauthorship,"") AS author, COALESCE(v_taxonrank,"") AS rank
     FROM snapshot.raw_'"$snapshot"'
-    GROUP BY COALESCE(v_kingdom,""), COALESCE(v_phylum,""), COALESCE(v_class,""), COALESCE(v_order,""), COALESCE(v_family,""), COALESCE(v_genus,""), COALESCE(v_scientificname,""), COALESCE(v_scientificnameauthorship,"")' >> $taxonomy_file
+    GROUP BY COALESCE(v_kingdom,""), COALESCE(v_phylum,""), COALESCE(v_class,""), COALESCE(v_order,""), COALESCE(v_family,""), COALESCE(v_genus,""), COALESCE(v_scientificname,""), COALESCE(v_scientificnameauthorship,""), COALESCE(v_taxonrank,"")' >> $taxonomy_file
 
   if [[ $snapshot != $last_modern_snapshot ]]; then
     echo "UNION ALL" >> $taxonomy_file
@@ -82,14 +97,17 @@ done
 echo '
 ) t1
 GROUP BY
-  t1.kingdom,
+  t1.kingdom, 
   t1.phylum,
   t1.class_rank,
   t1.order_rank,
-  t1.family,
-  t1.genus,
+  t1.family, 
+  t1.genus, 
   t1.scientific_name,
-  t1.author;' >> "$taxonomy_file"
+  t1.specific_epithet,
+  t1.infra_specific_epithet,
+  t1.author,
+  t1.rank;' >> "$taxonomy_file"
 
 
 ################ RAW GEO SCRIPT
