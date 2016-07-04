@@ -6,7 +6,7 @@ geospatialFactors <- c("Unknown", "Georeferenced", "CountryOnly")
 temporalFactors <- c("Unknown", "YearMonthDay", "YearMonth", "Year")
 
 # snapshots used in the temporal facets (e.g. collection year)
-temporalFacetSnapshots <- c("2007-12-19", "2010-11-17", "2013-09-10", "2016-01-04", "2016-04-05")
+temporalFacetSnapshots <- c("2007-12-19", "2010-11-17", "2013-09-10", "2016-07-04")
 
 # minimum year to plot of year range charts
 minPlotYear <- 1950
@@ -14,13 +14,13 @@ minPlotYear <- 1950
 # used to reduce record counts to counts per million, thousand etc
 mill_formatter <- function(x) {
   lab <- x / 1000000
-}  
+}
 kilo_formatter <- function(x) {
   lab <- x / 1000
-}  
+}
 
 savePng <- function(plot, file) {
-  ggsave(filename=file, plot=plot, width=8, height=6);  
+  ggsave(filename=file, plot=plot, width=8, height=6);
 }
 
 # rewrite kingdom
@@ -55,8 +55,8 @@ interpBasisOfRecord <- function(bor) {
   } else if (bor %in% c("UNKNOWN")) {
     return("Unknown")
   } else {
-    return("Other")  
-  }    
+    return("Other")
+  }
 }
 
 # inserts a 0 count for every combination of missing factors at every timestamp
@@ -67,10 +67,10 @@ populate_factors <- function(fileData, columnsToCheck) {
   doGeo <- 'georeferenced' %in% columnsToCheck
   doTemporal <- 'temporal' %in% columnsToCheck
   doKingdom <- 'kingdom' %in% columnsToCheck
-  
+
   for (targetSnapshot in unique(fileData$snapshot)) {
     snapshotData <- fileData[ which(fileData$snapshot==targetSnapshot), ]
-    
+
     # check if a "count" column needs adding in
     if ("occurrenceCount" %in% colnames(fileData)) {
       facetsData <- data.frame(snapshot=as.Date(targetSnapshot, origin = "1970-01-01"), occurrenceCount=0)
@@ -80,7 +80,7 @@ populate_factors <- function(fileData, columnsToCheck) {
       # don't think this path is ever used
       facetsData <- data.frame(snapshot=as.Date(targetSnapshot, origin = "1970-01-01"))
     }
-    
+
     if (doBor) {
       missingBorFactors <- setdiff(borFactors, unique(snapshotData$basisOfRecord))
       bor <- if (length(missingBorFactors) > 0) missingBorFactors else borFactors[1]
@@ -106,10 +106,10 @@ populate_factors <- function(fileData, columnsToCheck) {
       kingdom <- if (length(missingKingdomFactors) > 0) missingKingdomFactors else kingdomFactors[1]
       facetsData <- combine_factors(facetsData, kingdom, "kingdom")
     }
-    
-    finalData <- rbind(facetsData, finalData)  
+
+    finalData <- rbind(facetsData, finalData)
   }
-  
+
   return(finalData)
 }
 
