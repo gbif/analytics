@@ -7,8 +7,8 @@ SET mapreduce.job.user.classpath.first=true;
 
 -- Use Snappy
 SET hive.exec.compress.output=true;
-SET mapred.output.compressiot.type=BLOCK;
-SET mapred.output.compressiot.codec=org.apache.hadoop.io.compress.SnappyCodec;
+SET mapred.output.compression.type=BLOCK;
+SET mapred.output.compression.codec=org.apache.hadoop.io.compress.SnappyCodec;
 
 SET mapred.map.tasks = ${hiveconf:mapcount};
 

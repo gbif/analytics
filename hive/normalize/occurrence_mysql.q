@@ -7,8 +7,8 @@ SET mapreduce.job.user.classpath.first=true;
 
 -- Use Snappy
 SET hive.exec.compress.output=true;
-SET mapred.output.compressiot.type=BLOCK;
-SET mapred.output.compressiot.codec=org.apache.hadoop.io.compress.SnappyCodec;
+SET mapred.output.compression.type=BLOCK;
+SET mapred.output.compression.codec=org.apache.hadoop.io.compress.SnappyCodec;
 
 -- Do not allow Hive to run things locally as we don't control the environment.
 -- Rationale: we don't control the environment (e.g. can blow memory, might miss Snappy etc.)
