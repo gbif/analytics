@@ -14,6 +14,8 @@ last_modern_snapshot=${hbase_v3_snapshots[$max]}
 taxonomy_file="hive/normalize/raw_taxonomy.q"
 
 echo '
+-- THIS FILE IS GENERATED.  DO NOT EDIT BY HAND !!!
+
 -- Use Snappy
 SET hive.exec.compress.output=true;
 SET mapred.output.compression.type=BLOCK;
@@ -114,6 +116,8 @@ GROUP BY
 geo_file="hive/normalize/raw_geo.q"
 
 echo '
+-- THIS FILE IS GENERATED.  DO NOT EDIT BY HAND !!!
+
 -- Use Snappy
 SET hive.exec.compress.output=true;
 SET mapred.output.compression.type=BLOCK;
