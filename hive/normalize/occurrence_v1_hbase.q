@@ -60,6 +60,8 @@ SELECT
              COALESCE(family, ""),
              COALESCE(genus, ""),
              COALESCE(scientific_name, ""),
+             COALESCE(specific_epithet,""),
+             COALESCE(infraspecific_epithet, ""),
              COALESCE(author, ""),
              COALESCE(taxon_rank,"")
    ) as taxon_key,

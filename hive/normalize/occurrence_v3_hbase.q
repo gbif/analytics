@@ -58,6 +58,8 @@ SELECT
              COALESCE(v_family, ""),
              COALESCE(v_genus, ""),
              COALESCE(v_scientificname, ""),
+             COALESCE(v_specificepithet, ""),
+             COALESCE(v_infraspecificepithet, ""),
              COALESCE(v_scientificnameauthorship, ""),
              COALESCE(v_taxonrank,"")
    ) as taxon_key,

@@ -71,6 +71,8 @@ FROM
       COALESCE(family, ""),
       COALESCE(genus, ""),
       COALESCE(scientific_name, ""),
+      COALESCE(species,""),
+      COALESCE(subspecies,""),
       COALESCE(author, ""),
       COALESCE(rank,"")
     ) as taxon_key,
