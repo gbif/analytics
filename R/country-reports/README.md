@@ -40,11 +40,3 @@ The machine that runs the R scripts must use UTF-8 or UTF-16 as the default enco
 ```
 defaults write org.R-project.R force.LANG en_US.UTF-8
 ```
-
-or using 
-
-```
-system("defaults write org.R-project.R force.LANG en_US.UTF-8")
-```
-
-The locale can be different to en_US as long the encoding is set to UTF-8.
