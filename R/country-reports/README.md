@@ -35,8 +35,10 @@ ps_password <- ""
 ```
 
 ## Default encoding
-The machine that runs the R scripts must use UTF-8 or UTF-16 as the default encoding, to set the encoding and locale run the following command:
+If you are running the country_report scripts on a Mac, must use UTF-8 as the default encoding, to set the encoding and locale run the following command:
 
 ```
 defaults write org.R-project.R force.LANG en_US.UTF-8
 ```
+
+See the README in the project root for the instructions for linux, which is the recommended place (prodgateway-vh) to run this section.
