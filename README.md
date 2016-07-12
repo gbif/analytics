@@ -45,6 +45,49 @@ The project is divided into several parts:
 
   ```nohup build.sh -runHbase -runHive -runHadoop -runPrepare -runFigures -runJson &```
 
+If you wish to run country reports, continue by:
+    ```nohup build.sh -runCountryReports &```
+
+NOTE: before running, check your locale.  It should look like this on prodgateway-vh:
+```
+[root@prodgateway-vh analytics]# locale
+locale: Cannot set LC_CTYPE to default locale: No such file or directory
+locale: Cannot set LC_ALL to default locale: No such file or directory
+LANG=en_US.UTF-8
+LC_CTYPE="en_US.UTF-8"
+LC_NUMERIC="en_US.UTF-8"
+LC_TIME="en_US.UTF-8"
+LC_COLLATE="en_US.UTF-8"
+LC_MONETARY="en_US.UTF-8"
+LC_MESSAGES="en_US.UTF-8"
+LC_PAPER="en_US.UTF-8"
+LC_NAME="en_US.UTF-8"
+LC_ADDRESS="en_US.UTF-8"
+LC_TELEPHONE="en_US.UTF-8"
+LC_MEASUREMENT="en_US.UTF-8"
+LC_IDENTIFICATION="en_US.UTF-8"
+LC_ALL=
+```
+If you see any that have e.g. ```LC_CTYPE=UTF-8``` or  ```C``` it *WILL* fail and you will come back to this step.  If in doubt ask Tim or Matt.  If you do see any like this, issue the following:
+```
+[root@prodgateway-vh analytics]# export LANG=en_US.UTF-8
+[root@prodgateway-vh analytics]# locale
+LANG=en_US.UTF-8
+LC_CTYPE="en_US.UTF-8"
+LC_NUMERIC="en_US.UTF-8"
+LC_TIME="en_US.UTF-8"
+LC_COLLATE="en_US.UTF-8"
+LC_MONETARY="en_US.UTF-8"
+LC_MESSAGES="en_US.UTF-8"
+LC_PAPER="en_US.UTF-8"
+LC_NAME="en_US.UTF-8"
+LC_ADDRESS="en_US.UTF-8"
+LC_TELEPHONE="en_US.UTF-8"
+LC_MEASUREMENT="en_US.UTF-8"
+LC_IDENTIFICATION="en_US.UTF-8"
+LC_ALL=
+```
+
 ### Notes for country report producers
 - Arial and Arial Narrow will be required on the machine from which the runFigures command is run. For linux that means a new dir under /usr/share/fonts with
 the .ttf files from this project's fonts/ dir copied in (the provisioning project's ansible scripts take care of this).
