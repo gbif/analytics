@@ -116,8 +116,8 @@ the InDesign bits locally.
 - on prodgateway-vh run the distribute-country-pdfs.sh from the analytics dir to copy the pdfs into their respective country directories
 - now you've got all the content needed to update gbif.org/analytics
 - I suggest making a copy of the reports dir called reports_for_export, which you can then clean up a bit as follows:
-  - if you ran the -runHtml step you have unneeded html which you can delete with ```find reports_for_export/ -name '*.html' -exec -rm {} \;```
-  - you don't want the print directories and pdfs so again ```find reports_for_export/ -name 'print' -exec -rm -Rf {} \;```
+  - if you ran the -runHtml step you have unneeded html which you can delete with ```find reports_for_export/ -name '*.html' -exec rm {} \;```
+  - you don't want the print directories and pdfs so again ```find reports_for_export/ -name 'print' -exec rm -Rf {} \;```
 - scp the reports_for_export to root@prodapps-vh:/var/www/html/drupal/sites/default/files/gbif_analytics_new
 - ```chown -R apache.apache /var/www/html/drupal/sites/default/files/gbif_analytics_new```
 - ```mv gbif_analytics gbif_analytics_old && mv gbif_analytics_new gbif_analytics```
