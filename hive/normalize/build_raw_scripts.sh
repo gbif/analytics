@@ -5,7 +5,7 @@ declare -a mysql_snapshots=("20071219" "20080401" "20080627" "20081010" "2008121
 declare -a hbase_v1_snapshots=("20131220" "20140328")
 declare -a hbase_v2_snapshots=("20140908" "20150119" "20150409")
 # v3 exists only because of a tiny difference in taxonomy schema (v_order_ became v_order)
-declare -a hbase_v3_snapshots=("20150703" "20151001" "20160104" "20160405" "20160704")
+declare -a hbase_v3_snapshots=("20150703" "20151001" "20160104" "20160405" "20160704" "20161007")
 
 max=$(( ${#hbase_v3_snapshots[*]} - 1 ))
 last_modern_snapshot=${hbase_v3_snapshots[$max]}
@@ -27,9 +27,9 @@ SET hive.exec.parallel=true;
 DROP TABLE IF EXISTS snapshot.tmp_raw_taxonomy;
 CREATE TABLE snapshot.tmp_raw_taxonomy STORED AS RCFILE AS
 SELECT
-  CONCAT_WS("|", 
-    t1.kingdom, 
-    t1.phylum, 
+  CONCAT_WS("|",
+    t1.kingdom,
+    t1.phylum,
     t1.class_rank,
     t1.order_rank,
     t1.family,
@@ -40,18 +40,18 @@ SELECT
     t1.author,
     t1.rank
   ) AS taxon_key,
-  t1.kingdom, 
-  t1.phylum, 
-  t1.class_rank, 
-  t1.order_rank, 
-  t1.family, 
-  t1.genus, 
-  t1.scientific_name, 
+  t1.kingdom,
+  t1.phylum,
+  t1.class_rank,
+  t1.order_rank,
+  t1.family,
+  t1.genus,
+  t1.scientific_name,
   t1.specific_epithet,
   t1.infra_specific_epithet,
   t1.author,
   t1.rank
-FROM 
+FROM
   (' > $taxonomy_file
 
 for snapshot in "${mysql_snapshots[@]}"
@@ -99,12 +99,12 @@ done
 echo '
 ) t1
 GROUP BY
-  t1.kingdom, 
+  t1.kingdom,
   t1.phylum,
   t1.class_rank,
   t1.order_rank,
-  t1.family, 
-  t1.genus, 
+  t1.family,
+  t1.genus,
   t1.scientific_name,
   t1.specific_epithet,
   t1.infra_specific_epithet,
