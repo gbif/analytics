@@ -23,6 +23,13 @@ SET mapreduce.reduce.shuffle.parallelcopies=5;
 
 SET mapred.map.tasks = ${hiveconf:mapcount};
 
+-- Set up memory for YARN
+SET mapreduce.map.memory.mb = 4096;
+SET mapreduce.reduce.memory.mb = 4096;
+SET mapreduce.map.java.opts = -Xmx3072m;
+SET mapreduce.reduce.java.opts = -Xmx3072m;
+
+
 ADD JAR ${hiveconf:occjar};
 CREATE TEMPORARY FUNCTION parseDate AS 'org.gbif.occurrence.hive.udf.DateParseUDF';
 CREATE TEMPORARY FUNCTION parseBoR AS 'org.gbif.occurrence.hive.udf.BasisOfRecordParseUDF';
