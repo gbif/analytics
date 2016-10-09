@@ -81,10 +81,6 @@ if [ $runHadoop == "true" ];then
   hdfs dfs -getmerge /user/hive/warehouse/"$destination_db".db/occ_publishercountry_yearcollected hadoop/occ_publisherCountry_yearCollected.csv
   hdfs dfs -getmerge /user/hive/warehouse/"$destination_db".db/occ_yearcollected hadoop/occ_yearCollected.csv
 
-#  hdfs dfs -getmerge /user/hive/warehouse/"$destination_db".db/occ_country_basisofrecord_complete hadoop/occ_country_basisOfRecord_complete.csv
-#  hdfs dfs -getmerge /user/hive/warehouse/"$destination_db".db/occ_publishercountry_basisofrecord_complete hadoop/occ_publisherCountry_basisOfRecord_complete.csv
-#  hdfs dfs -getmerge /user/hive/warehouse/"$destination_db".db/occ_basisofrecord_complete hadoop/occ_basisOfRecord_complete.csv
-
   hdfs dfs -getmerge /user/hive/warehouse/"$destination_db".db/occ_country_complete hadoop/occ_country_complete.csv
   hdfs dfs -getmerge /user/hive/warehouse/"$destination_db".db/occ_publishercountry_complete hadoop/occ_publisherCountry_complete.csv
   hdfs dfs -getmerge /user/hive/warehouse/"$destination_db".db/occ_complete hadoop/occ_complete.csv
