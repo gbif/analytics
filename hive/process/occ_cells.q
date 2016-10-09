@@ -1,11 +1,17 @@
 CREATE DATABASE IF NOT EXISTS ${hiveconf:DB};
 
+-- Set up memory for YARN
+SET mapreduce.map.memory.mb = 4096;
+SET mapreduce.reduce.memory.mb = 4096;
+SET mapreduce.map.java.opts = -Xmx3072m;
+SET mapreduce.reduce.java.opts = -Xmx3072m;
+
 DROP TABLE IF EXISTS ${hiveconf:DB}.occ_country_cell_one_deg;
 CREATE TABLE ${hiveconf:DB}.occ_country_cell_one_deg
-ROW FORMAT DELIMITED FIELDS TERMINATED BY ',' STORED AS TEXTFILE 
-AS SELECT 
-  t1.snapshot, 
-  t1.country, 
+ROW FORMAT DELIMITED FIELDS TERMINATED BY ',' STORED AS TEXTFILE
+AS SELECT
+  t1.snapshot,
+  t1.country,
   SUM( CASE WHEN t1.num_cells=1 THEN 1 ELSE 0 END ) AS one_cell,
   SUM( CASE WHEN t1.num_cells>1 AND num_cells<=19 THEN 1 ELSE 0 END ) AS under_twenty_cells,
   SUM( CASE WHEN t1.num_cells>=20 AND num_cells<=99 THEN 1 ELSE 0 END ) AS under_hundred_cells,
@@ -16,14 +22,14 @@ FROM
     snapshot,
     country,
     species_id,
-    COUNT(DISTINCT 
+    COUNT(DISTINCT
       CONCAT(
         CAST(floor(latitude) AS STRING),
         ",",
         CAST(floor(longitude) AS STRING)
       )
     ) AS num_cells
-  FROM 
+  FROM
     ${hiveconf:DB}.snapshots
   WHERE
     species_id IS NOT NULL AND
@@ -36,13 +42,13 @@ FROM
 GROUP BY
   t1.snapshot,
   t1.country;
-  
+
 DROP TABLE IF EXISTS ${hiveconf:DB}.occ_publisherCountry_cell_one_deg;
 CREATE TABLE ${hiveconf:DB}.occ_publisherCountry_cell_one_deg
-ROW FORMAT DELIMITED FIELDS TERMINATED BY ',' STORED AS TEXTFILE 
-AS SELECT 
-  t1.snapshot, 
-  t1.publisher_country, 
+ROW FORMAT DELIMITED FIELDS TERMINATED BY ',' STORED AS TEXTFILE
+AS SELECT
+  t1.snapshot,
+  t1.publisher_country,
   SUM( CASE WHEN t1.num_cells=1 THEN 1 ELSE 0 END ) AS one_cell,
   SUM( CASE WHEN t1.num_cells>1 AND num_cells<=19 THEN 1 ELSE 0 END ) AS under_twenty_cells,
   SUM( CASE WHEN t1.num_cells>=20 AND num_cells<=99 THEN 1 ELSE 0 END ) AS under_hundred_cells,
@@ -53,14 +59,14 @@ FROM
     snapshot,
     publisher_country,
     species_id,
-    COUNT(DISTINCT 
+    COUNT(DISTINCT
       CONCAT(
         CAST(floor(latitude) AS STRING),
         ",",
         CAST(floor(longitude) AS STRING)
       )
     ) AS num_cells
-  FROM 
+  FROM
     ${hiveconf:DB}.snapshots
   WHERE
     species_id IS NOT NULL AND
@@ -73,12 +79,12 @@ FROM
 GROUP BY
   t1.snapshot,
   t1.publisher_country;
-  
+
 DROP TABLE IF EXISTS ${hiveconf:DB}.occ_cell_one_deg;
 CREATE TABLE ${hiveconf:DB}.occ_cell_one_deg
-ROW FORMAT DELIMITED FIELDS TERMINATED BY ',' STORED AS TEXTFILE 
-AS SELECT 
-  t1.snapshot, 
+ROW FORMAT DELIMITED FIELDS TERMINATED BY ',' STORED AS TEXTFILE
+AS SELECT
+  t1.snapshot,
   SUM( CASE WHEN t1.num_cells=1 THEN 1 ELSE 0 END ) AS one_cell,
   SUM( CASE WHEN t1.num_cells>1 AND num_cells<=19 THEN 1 ELSE 0 END ) AS under_twenty_cells,
   SUM( CASE WHEN t1.num_cells>=20 AND num_cells<=99 THEN 1 ELSE 0 END ) AS under_hundred_cells,
@@ -88,14 +94,14 @@ FROM
   (SELECT
     snapshot,
     species_id,
-    COUNT(DISTINCT 
+    COUNT(DISTINCT
       CONCAT(
         CAST(floor(latitude) AS STRING),
         ",",
         CAST(floor(longitude) AS STRING)
       )
     ) AS num_cells
-  FROM 
+  FROM
     ${hiveconf:DB}.snapshots
   WHERE
     species_id IS NOT NULL AND
@@ -105,14 +111,14 @@ FROM
     snapshot,
     species_id) t1
 GROUP BY
-  t1.snapshot;  
-  
+  t1.snapshot;
+
 DROP TABLE IF EXISTS ${hiveconf:DB}.occ_country_cell_point_one_deg;
 CREATE TABLE ${hiveconf:DB}.occ_country_cell_point_one_deg
-ROW FORMAT DELIMITED FIELDS TERMINATED BY ',' STORED AS TEXTFILE 
-AS SELECT 
-  t1.snapshot, 
-  t1.country, 
+ROW FORMAT DELIMITED FIELDS TERMINATED BY ',' STORED AS TEXTFILE
+AS SELECT
+  t1.snapshot,
+  t1.country,
   SUM( CASE WHEN t1.num_cells=1 THEN 1 ELSE 0 END ) AS one_cell,
   SUM( CASE WHEN t1.num_cells>1 AND num_cells<=19 THEN 1 ELSE 0 END ) AS under_twenty_cells,
   SUM( CASE WHEN t1.num_cells>=20 AND num_cells<=99 THEN 1 ELSE 0 END ) AS under_hundred_cells,
@@ -123,14 +129,14 @@ FROM
     snapshot,
     country,
     species_id,
-    COUNT(DISTINCT 
+    COUNT(DISTINCT
       CONCAT(
         CAST(floor(10*latitude) AS STRING),
         ",",
         CAST(floor(10*longitude) AS STRING)
       )
     ) AS num_cells
-  FROM 
+  FROM
     ${hiveconf:DB}.snapshots
   WHERE
     species_id IS NOT NULL AND
@@ -143,13 +149,13 @@ FROM
 GROUP BY
   t1.snapshot,
   t1.country;
-  
+
 DROP TABLE IF EXISTS ${hiveconf:DB}.occ_publisherCountry_cell_point_one_deg;
 CREATE TABLE ${hiveconf:DB}.occ_publisherCountry_cell_point_one_deg
-ROW FORMAT DELIMITED FIELDS TERMINATED BY ',' STORED AS TEXTFILE 
-AS SELECT 
-  t1.snapshot, 
-  t1.publisher_country, 
+ROW FORMAT DELIMITED FIELDS TERMINATED BY ',' STORED AS TEXTFILE
+AS SELECT
+  t1.snapshot,
+  t1.publisher_country,
   SUM( CASE WHEN t1.num_cells=1 THEN 1 ELSE 0 END ) AS one_cell,
   SUM( CASE WHEN t1.num_cells>1 AND num_cells<=19 THEN 1 ELSE 0 END ) AS under_twenty_cells,
   SUM( CASE WHEN t1.num_cells>=20 AND num_cells<=99 THEN 1 ELSE 0 END ) AS under_hundred_cells,
@@ -160,14 +166,14 @@ FROM
     snapshot,
     publisher_country,
     species_id,
-    COUNT(DISTINCT 
+    COUNT(DISTINCT
       CONCAT(
         CAST(floor(10*latitude) AS STRING),
         ",",
         CAST(floor(10*longitude) AS STRING)
       )
     ) AS num_cells
-  FROM 
+  FROM
     ${hiveconf:DB}.snapshots
   WHERE
     species_id IS NOT NULL AND
@@ -180,12 +186,12 @@ FROM
 GROUP BY
   t1.snapshot,
   t1.publisher_country;
-  
+
 DROP TABLE IF EXISTS ${hiveconf:DB}.occ_cell_point_one_deg;
 CREATE TABLE ${hiveconf:DB}.occ_cell_point_one_deg
-ROW FORMAT DELIMITED FIELDS TERMINATED BY ',' STORED AS TEXTFILE 
-AS SELECT 
-  t1.snapshot, 
+ROW FORMAT DELIMITED FIELDS TERMINATED BY ',' STORED AS TEXTFILE
+AS SELECT
+  t1.snapshot,
   SUM( CASE WHEN t1.num_cells=1 THEN 1 ELSE 0 END ) AS one_cell,
   SUM( CASE WHEN t1.num_cells>1 AND num_cells<=19 THEN 1 ELSE 0 END ) AS under_twenty_cells,
   SUM( CASE WHEN t1.num_cells>=20 AND num_cells<=99 THEN 1 ELSE 0 END ) AS under_hundred_cells,
@@ -195,14 +201,14 @@ FROM
   (SELECT
     snapshot,
     species_id,
-    COUNT(DISTINCT 
+    COUNT(DISTINCT
       CONCAT(
         CAST(floor(10*latitude) AS STRING),
         ",",
         CAST(floor(10*longitude) AS STRING)
       )
     ) AS num_cells
-  FROM 
+  FROM
     ${hiveconf:DB}.snapshots
   WHERE
     species_id IS NOT NULL AND
@@ -212,14 +218,14 @@ FROM
     snapshot,
     species_id) t1
 GROUP BY
-  t1.snapshot;  
-  
+  t1.snapshot;
+
 DROP TABLE IF EXISTS ${hiveconf:DB}.occ_country_cell_half_deg;
 CREATE TABLE ${hiveconf:DB}.occ_country_cell_half_deg
-ROW FORMAT DELIMITED FIELDS TERMINATED BY ',' STORED AS TEXTFILE 
-AS SELECT 
-  t1.snapshot, 
-  t1.country, 
+ROW FORMAT DELIMITED FIELDS TERMINATED BY ',' STORED AS TEXTFILE
+AS SELECT
+  t1.snapshot,
+  t1.country,
   SUM( CASE WHEN t1.num_cells=1 THEN 1 ELSE 0 END ) AS one_cell,
   SUM( CASE WHEN t1.num_cells>1 AND num_cells<=19 THEN 1 ELSE 0 END ) AS under_twenty_cells,
   SUM( CASE WHEN t1.num_cells>=20 AND num_cells<=99 THEN 1 ELSE 0 END ) AS under_hundred_cells,
@@ -230,14 +236,14 @@ FROM
     snapshot,
     country,
     species_id,
-    COUNT(DISTINCT 
+    COUNT(DISTINCT
       CONCAT(
         CAST(floor(2*latitude) AS STRING),
         ",",
         CAST(floor(2*longitude) AS STRING)
       )
     ) AS num_cells
-  FROM 
+  FROM
     ${hiveconf:DB}.snapshots
   WHERE
     species_id IS NOT NULL AND
@@ -250,13 +256,13 @@ FROM
 GROUP BY
   t1.snapshot,
   t1.country;
-  
+
 DROP TABLE IF EXISTS ${hiveconf:DB}.occ_publisherCountry_cell_half_deg;
 CREATE TABLE ${hiveconf:DB}.occ_publisherCountry_cell_half_deg
-ROW FORMAT DELIMITED FIELDS TERMINATED BY ',' STORED AS TEXTFILE 
-AS SELECT 
-  t1.snapshot, 
-  t1.publisher_country, 
+ROW FORMAT DELIMITED FIELDS TERMINATED BY ',' STORED AS TEXTFILE
+AS SELECT
+  t1.snapshot,
+  t1.publisher_country,
   SUM( CASE WHEN t1.num_cells=1 THEN 1 ELSE 0 END ) AS one_cell,
   SUM( CASE WHEN t1.num_cells>1 AND num_cells<=19 THEN 1 ELSE 0 END ) AS under_twenty_cells,
   SUM( CASE WHEN t1.num_cells>=20 AND num_cells<=99 THEN 1 ELSE 0 END ) AS under_hundred_cells,
@@ -267,14 +273,14 @@ FROM
     snapshot,
     publisher_country,
     species_id,
-    COUNT(DISTINCT 
+    COUNT(DISTINCT
       CONCAT(
         CAST(floor(2*latitude) AS STRING),
         ",",
         CAST(floor(2*longitude) AS STRING)
       )
     ) AS num_cells
-  FROM 
+  FROM
     ${hiveconf:DB}.snapshots
   WHERE
     species_id IS NOT NULL AND
@@ -287,12 +293,12 @@ FROM
 GROUP BY
   t1.snapshot,
   t1.publisher_country;
-  
+
 DROP TABLE IF EXISTS ${hiveconf:DB}.occ_cell_half_deg;
 CREATE TABLE ${hiveconf:DB}.occ_cell_half_deg
-ROW FORMAT DELIMITED FIELDS TERMINATED BY ',' STORED AS TEXTFILE 
-AS SELECT 
-  t1.snapshot, 
+ROW FORMAT DELIMITED FIELDS TERMINATED BY ',' STORED AS TEXTFILE
+AS SELECT
+  t1.snapshot,
   SUM( CASE WHEN t1.num_cells=1 THEN 1 ELSE 0 END ) AS one_cell,
   SUM( CASE WHEN t1.num_cells>1 AND num_cells<=19 THEN 1 ELSE 0 END ) AS under_twenty_cells,
   SUM( CASE WHEN t1.num_cells>=20 AND num_cells<=99 THEN 1 ELSE 0 END ) AS under_hundred_cells,
@@ -302,14 +308,14 @@ FROM
   (SELECT
     snapshot,
     species_id,
-    COUNT(DISTINCT 
+    COUNT(DISTINCT
       CONCAT(
         CAST(floor(2*latitude) AS STRING),
         ",",
         CAST(floor(2*longitude) AS STRING)
       )
     ) AS num_cells
-  FROM 
+  FROM
     ${hiveconf:DB}.snapshots
   WHERE
     species_id IS NOT NULL AND
@@ -319,4 +325,4 @@ FROM
     snapshot,
     species_id) t1
 GROUP BY
-  t1.snapshot;    
+  t1.snapshot;

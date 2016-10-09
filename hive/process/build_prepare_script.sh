@@ -20,6 +20,12 @@ SET hive.exec.compress.output=true;
 SET mapred.output.compressiot.type=BLOCK;
 SET mapred.output.compressiot.codec=org.apache.hadoop.io.compress.SnappyCodec;
 
+-- Set up memory for YARN
+SET mapreduce.map.memory.mb = 4096;
+SET mapreduce.reduce.memory.mb = 4096;
+SET mapreduce.map.java.opts = -Xmx3072m;
+SET mapreduce.reduce.java.opts = -Xmx3072m;
+
 CREATE DATABASE IF NOT EXISTS ${hiveconf:DB};
 DROP TABLE IF EXISTS ${hiveconf:DB}.snapshots;
 

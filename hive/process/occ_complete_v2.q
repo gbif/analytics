@@ -1,11 +1,18 @@
 CREATE DATABASE IF NOT EXISTS ${hiveconf:DB};
 
+-- Set up memory for YARN
+SET mapreduce.map.memory.mb = 4096;
+SET mapreduce.reduce.memory.mb = 4096;
+SET mapreduce.map.java.opts = -Xmx3072m;
+SET mapreduce.reduce.java.opts = -Xmx3072m;
+
+
 DROP TABLE IF EXISTS ${hiveconf:DB}.occ_country_complete;
 CREATE TABLE ${hiveconf:DB}.occ_country_complete
-ROW FORMAT DELIMITED FIELDS TERMINATED BY ',' STORED AS TEXTFILE 
-AS SELECT 
-  snapshot, 
-  country, 
+ROW FORMAT DELIMITED FIELDS TERMINATED BY ',' STORED AS TEXTFILE
+AS SELECT
+  snapshot,
+  country,
   basis_of_record,
   COALESCE(
     CASE WHEN species_id IS NOT NULL AND species_id != taxon_id THEN 'Infraspecies' ELSE NULL END,
@@ -31,9 +38,9 @@ AS SELECT
   ) AS temporal,
   COUNT(*) AS count
 FROM ${hiveconf:DB}.snapshots
-GROUP BY 
-  snapshot, 
-  country, 
+GROUP BY
+  snapshot,
+  country,
   basis_of_record,
   COALESCE(
     CASE WHEN species_id IS NOT NULL AND species_id != taxon_id THEN 'Infraspecies' ELSE NULL END,
@@ -61,10 +68,10 @@ GROUP BY
 
 DROP TABLE IF EXISTS ${hiveconf:DB}.occ_publisherCountry_complete;
 CREATE TABLE ${hiveconf:DB}.occ_publisherCountry_complete
-ROW FORMAT DELIMITED FIELDS TERMINATED BY ',' STORED AS TEXTFILE 
-AS SELECT 
-  snapshot, 
-  publisher_country, 
+ROW FORMAT DELIMITED FIELDS TERMINATED BY ',' STORED AS TEXTFILE
+AS SELECT
+  snapshot,
+  publisher_country,
   basis_of_record,
   COALESCE(
     CASE WHEN species_id IS NOT NULL AND species_id != taxon_id THEN 'Infraspecies' ELSE NULL END,
@@ -90,9 +97,9 @@ AS SELECT
   ) AS temporal,
   COUNT(*) AS count
 FROM ${hiveconf:DB}.snapshots
-GROUP BY 
-  snapshot, 
-  publisher_country, 
+GROUP BY
+  snapshot,
+  publisher_country,
   basis_of_record,
   COALESCE(
     CASE WHEN species_id IS NOT NULL AND species_id != taxon_id THEN 'Infraspecies' ELSE NULL END,
@@ -119,9 +126,9 @@ GROUP BY
 
 DROP TABLE IF EXISTS ${hiveconf:DB}.occ_complete;
 CREATE TABLE ${hiveconf:DB}.occ_complete
-ROW FORMAT DELIMITED FIELDS TERMINATED BY ',' STORED AS TEXTFILE 
-AS SELECT 
-  snapshot, 
+ROW FORMAT DELIMITED FIELDS TERMINATED BY ',' STORED AS TEXTFILE
+AS SELECT
+  snapshot,
   basis_of_record,
   COALESCE(
     CASE WHEN species_id IS NOT NULL AND species_id != taxon_id THEN 'Infraspecies' ELSE NULL END,
@@ -147,8 +154,8 @@ AS SELECT
   ) AS temporal,
   COUNT(*) AS count
 FROM ${hiveconf:DB}.snapshots
-GROUP BY 
-  snapshot, 
+GROUP BY
+  snapshot,
   basis_of_record,
   COALESCE(
     CASE WHEN species_id IS NOT NULL AND species_id != taxon_id THEN 'Infraspecies' ELSE NULL END,

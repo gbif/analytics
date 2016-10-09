@@ -1,17 +1,24 @@
 -- Static variables
 CREATE DATABASE IF NOT EXISTS ${hiveconf:DB};
 
+-- Set up memory for YARN
+SET mapreduce.map.memory.mb = 4096;
+SET mapreduce.reduce.memory.mb = 4096;
+SET mapreduce.map.java.opts = -Xmx3072m;
+SET mapreduce.reduce.java.opts = -Xmx3072m;
+
+
 DROP TABLE IF EXISTS ${hiveconf:DB}.occ_country_kingdom_basisOfRecord;
 CREATE TABLE ${hiveconf:DB}.occ_country_kingdom_basisOfRecord
-ROW FORMAT DELIMITED FIELDS TERMINATED BY ',' STORED AS TEXTFILE 
-AS SELECT 
-  snapshot, 
-  country, 
+ROW FORMAT DELIMITED FIELDS TERMINATED BY ',' STORED AS TEXTFILE
+AS SELECT
+  snapshot,
+  country,
   COALESCE(kingdom_id, 0) AS kingdom_id,
   COALESCE(basis_of_record, "UNKNOWN") AS basis_of_record,
   COUNT(*) AS occurrence_count
 FROM ${hiveconf:DB}.snapshots
-GROUP BY 
+GROUP BY
   snapshot,
   country,
   COALESCE(kingdom_id, 0),
@@ -19,15 +26,15 @@ GROUP BY
 
 DROP TABLE IF EXISTS ${hiveconf:DB}.occ_publisherCountry_kingdom_basisOfRecord;
 CREATE TABLE ${hiveconf:DB}.occ_publisherCountry_kingdom_basisOfRecord
-ROW FORMAT DELIMITED FIELDS TERMINATED BY ',' STORED AS TEXTFILE 
-AS SELECT 
-  snapshot, 
-  publisher_country, 
+ROW FORMAT DELIMITED FIELDS TERMINATED BY ',' STORED AS TEXTFILE
+AS SELECT
+  snapshot,
+  publisher_country,
   COALESCE(kingdom_id, 0) AS kingdom_id,
   COALESCE(basis_of_record, "UNKNOWN") AS basis_of_record,
   COUNT(*) AS occurrence_count
 FROM ${hiveconf:DB}.snapshots
-GROUP BY 
+GROUP BY
   snapshot,
   publisher_country,
   COALESCE(kingdom_id, 0),
@@ -35,12 +42,12 @@ GROUP BY
 
 DROP TABLE IF EXISTS ${hiveconf:DB}.occ_kingdom_basisOfRecord;
 CREATE TABLE ${hiveconf:DB}.occ_kingdom_basisOfRecord
-ROW FORMAT DELIMITED FIELDS TERMINATED BY ',' STORED AS TEXTFILE 
-AS SELECT 
-  snapshot, 
+ROW FORMAT DELIMITED FIELDS TERMINATED BY ',' STORED AS TEXTFILE
+AS SELECT
+  snapshot,
   kingdom_id,
   basis_of_record,
   SUM(occurrence_count) AS occurrence_count
 FROM ${hiveconf:DB}.occ_country_kingdom_basisOfRecord
-GROUP BY 
+GROUP BY
   snapshot, kingdom_id, basis_of_record;

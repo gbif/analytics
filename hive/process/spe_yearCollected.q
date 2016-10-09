@@ -1,5 +1,8 @@
--- spe_yearCollected needs more heap
-SET mapreduce.map.memory.mb=2048;
+-- Set up memory for YARN
+SET mapreduce.map.memory.mb = 4096;
+SET mapreduce.reduce.memory.mb = 4096;
+SET mapreduce.map.java.opts = -Xmx3072m;
+SET mapreduce.reduce.java.opts = -Xmx3072m;
 
 CREATE DATABASE IF NOT EXISTS ${hiveconf:DB};
 
@@ -14,22 +17,22 @@ SET mapreduce.map.java.opts=-Djava.net.preferIPv4Stack=true -Xmx1700M;
 
 DROP TABLE IF EXISTS ${hiveconf:DB}.spe_country_yearCollected;
 CREATE TABLE ${hiveconf:DB}.spe_country_yearCollected
-ROW FORMAT DELIMITED FIELDS TERMINATED BY ',' STORED AS TEXTFILE 
-AS SELECT 
-  snapshot, 
-  country, 
+ROW FORMAT DELIMITED FIELDS TERMINATED BY ',' STORED AS TEXTFILE
+AS SELECT
+  snapshot,
+  country,
   year,
   COUNT(DISTINCT species_id) AS count
 FROM ${hiveconf:DB}.snapshots
-WHERE year IS NOT NULL AND species_id IS NOT NULL 
+WHERE year IS NOT NULL AND species_id IS NOT NULL
 GROUP BY snapshot,country,year;
 
 DROP TABLE IF EXISTS ${hiveconf:DB}.spe_publisherCountry_yearCollected;
 CREATE TABLE ${hiveconf:DB}.spe_publisherCountry_yearCollected
-ROW FORMAT DELIMITED FIELDS TERMINATED BY ',' STORED AS TEXTFILE 
-AS SELECT 
-  snapshot, 
-  publisher_country, 
+ROW FORMAT DELIMITED FIELDS TERMINATED BY ',' STORED AS TEXTFILE
+AS SELECT
+  snapshot,
+  publisher_country,
   year,
   COUNT(DISTINCT species_id) AS count
 FROM ${hiveconf:DB}.snapshots
@@ -39,9 +42,9 @@ GROUP BY snapshot,publisher_country,year;
 -- Various occurrence counts rolled up as global country
 DROP TABLE IF EXISTS ${hiveconf:DB}.spe_yearCollected;
 CREATE TABLE ${hiveconf:DB}.spe_yearCollected
-ROW FORMAT DELIMITED FIELDS TERMINATED BY ',' STORED AS TEXTFILE 
-AS SELECT 
-  snapshot, 
+ROW FORMAT DELIMITED FIELDS TERMINATED BY ',' STORED AS TEXTFILE
+AS SELECT
+  snapshot,
   year,
   COUNT(DISTINCT species_id) AS count
 FROM ${hiveconf:DB}.snapshots

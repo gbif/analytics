@@ -1,11 +1,18 @@
 CREATE DATABASE IF NOT EXISTS ${hiveconf:DB};
 
+-- Set up memory for YARN
+SET mapreduce.map.memory.mb = 4096;
+SET mapreduce.reduce.memory.mb = 4096;
+SET mapreduce.map.java.opts = -Xmx3072m;
+SET mapreduce.reduce.java.opts = -Xmx3072m;
+
+
 DROP TABLE IF EXISTS ${hiveconf:DB}.occ_country_basisOfRecord_complete;
 CREATE TABLE ${hiveconf:DB}.occ_country_basisOfRecord_complete
-ROW FORMAT DELIMITED FIELDS TERMINATED BY ',' STORED AS TEXTFILE 
-AS SELECT 
-  snapshot, 
-  country, 
+ROW FORMAT DELIMITED FIELDS TERMINATED BY ',' STORED AS TEXTFILE
+AS SELECT
+  snapshot,
+  country,
   basis_of_record,
   SUM(
     CASE WHEN
@@ -14,7 +21,7 @@ AS SELECT
       longitude IS NOT NULL AND
       year IS NOT NULL AND
       month IS NOT NULL AND
-      day IS NOT NULL AND 
+      day IS NOT NULL AND
       basis_of_record IS NOT NULL AND
       basis_of_record != "UNKNOWN"
     THEN 1 ELSE 0 END
@@ -25,10 +32,10 @@ GROUP BY snapshot,country,basis_of_record;
 
 DROP TABLE IF EXISTS ${hiveconf:DB}.occ_publisherCountry_basisOfRecord_complete;
 CREATE TABLE ${hiveconf:DB}.occ_publisherCountry_basisOfRecord_complete
-ROW FORMAT DELIMITED FIELDS TERMINATED BY ',' STORED AS TEXTFILE 
-AS SELECT 
-  snapshot, 
-  publisher_country, 
+ROW FORMAT DELIMITED FIELDS TERMINATED BY ',' STORED AS TEXTFILE
+AS SELECT
+  snapshot,
+  publisher_country,
   basis_of_record,
   SUM(
     CASE WHEN
@@ -37,7 +44,7 @@ AS SELECT
       longitude IS NOT NULL AND
       year IS NOT NULL AND
       month IS NOT NULL AND
-      day IS NOT NULL AND 
+      day IS NOT NULL AND
       basis_of_record IS NOT NULL AND
       basis_of_record != "UNKNOWN"
     THEN 1 ELSE 0 END
@@ -49,9 +56,9 @@ GROUP BY snapshot,publisher_country,basis_of_record;
 -- Various occurrence counts rolled up as global country
 DROP TABLE IF EXISTS ${hiveconf:DB}.occ_basisOfRecord_complete;
 CREATE TABLE ${hiveconf:DB}.occ_basisOfRecord_complete
-ROW FORMAT DELIMITED FIELDS TERMINATED BY ',' STORED AS TEXTFILE 
-AS SELECT 
-  snapshot, 
+ROW FORMAT DELIMITED FIELDS TERMINATED BY ',' STORED AS TEXTFILE
+AS SELECT
+  snapshot,
   basis_of_record,
   SUM(complete) AS complete,
   SUM(total) AS total
