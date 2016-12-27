@@ -35,7 +35,7 @@ source("R/html-json/utils.R")
 #########
 # reporting period
 startDate <- "2016-01-01"
-endDate <- "2016-07-04"
+endDate <- "2016-12-27"
 # on a mid-2014 MacBook Pro with 16GB RAM, 140 countries is a reasonable limit for the merge step in indesign (lots of beachballs, but still works in the end). All countries has worked, just requires patience.
 countriesPerCsv=140
 countryPath <- "report/country"

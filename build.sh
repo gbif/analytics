@@ -14,7 +14,7 @@ countryreports_db="country_reports"
 
 #next 2 parameters are used for country reports
 start_date='2016-01-01'
-end_date='2016-04-05'
+end_date='2016-12-27'
 
 [[ $* =~ (^| )"-runHbase"($| ) ]] && runHbase="true"
 [[ $* =~ (^| )"-runHive"($| ) ]] && runHive="true"
