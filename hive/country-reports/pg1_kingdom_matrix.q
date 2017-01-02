@@ -27,7 +27,7 @@ GROUP BY t1.country, t1.kingdom
 UNION ALL
 
 SELECT t1.country,
-CASE WHEN t1.kingdom = '' THEN 'Unknown' ELSE t1.kingdom END AS kingdom,
+CASE WHEN (t1.kingdom = '' OR t1.kingdom IS NULL) THEN 'Unknown' ELSE t1.kingdom END AS kingdom,
 sum(`_c2`)+sum(`_c3`),
 CASE WHEN round((sum(`_c2`)/sum(`_c3`))*100) IS NULL THEN '-' ELSE round((sum(`_c2`)/sum(`_c3`))*100) END AS increase
 
