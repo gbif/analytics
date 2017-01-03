@@ -44,7 +44,7 @@ sum(if(to_date(from_unixtime(cast(o2.fragmentcreated/1000 AS int))) < '${hivecon
 
 FROM ${hiveconf:PROD_DB}.occurrence_hdfs o1 JOIN ${hiveconf:PROD_DB}.occurrence_hdfs o2 ON o1.gbifid = o2.gbifid
 WHERE to_date(from_unixtime(cast(o1.fragmentcreated/1000 AS int))) <= '${hiveconf:END_DATE}'
-AND (o1.phylumkey IN (11, 78, 101, 103, 49, 52, 59, 35, 95, 34))
+AND (o1.phylumkey IN (52, 35, 95, 34, 7707728))
 GROUP BY o1.countrycode, o1.phylum,
 year(to_date(from_unixtime(cast(o1.fragmentcreated/1000 AS int)))),year(to_date(from_unixtime(cast(o2.fragmentcreated/1000 AS int))))
 )t1
