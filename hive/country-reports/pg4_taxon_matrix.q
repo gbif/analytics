@@ -10,14 +10,17 @@ AS SELECT t1.country, t1.class_, sum(`_c2`)+sum(`_c3`),
 CASE WHEN round((sum(`_c2`)/sum(`_c3`))*100) IS NULL THEN 'No prior occurrences' ELSE round((sum(`_c2`)/sum(`_c3`))*100) END AS increase
 FROM
 (
-SELECT o1.countrycode AS country,
-  CASE WHEN o1.class IN ('Actinopterygii', 'Sarcopterygii') THEN 'Bony fish' ELSE o1.class END AS class_,
+SELECT o1.countrycode AS country,  
+  CASE WHEN o1.class IN ('Actinopterygii', 'Sarcopterygii') THEN 'Bony fish' 
+       WHEN o1.class IN ('Ginkgoopsida','Pinopsida','Cycadopsida','Gnetopsida') THEN 'Conifers/cycads'
+       WHEN o1.class IN ('Lycopodiopsida', 'Polypodiopsida') THEN 'Ferns'
+  ELSE o1.class END AS class_,     
 sum(if(to_date(from_unixtime(cast(o1.fragmentcreated/1000 AS int))) BETWEEN '${hiveconf:START_DATE}' AND '${hiveconf:END_DATE}',1,0)) ,
 sum(if(to_date(from_unixtime(cast(o2.fragmentcreated/1000 AS int))) < '${hiveconf:START_DATE}',1,0))
 
 FROM ${hiveconf:PROD_DB}.occurrence_hdfs o1 JOIN ${hiveconf:PROD_DB}.occurrence_hdfs o2 ON o1.gbifid = o2.gbifid
 WHERE to_date(from_unixtime(cast(o1.fragmentcreated/1000 AS int))) <= '${hiveconf:END_DATE}'
-AND (o1.classkey IN (359, 212, 204, 238, 131, 216, 358, 367))
+AND (o1.classkey IN (359, 212, 204, 238, 131, 216, 358, 367, 245, 7228684, 228, 194, 282, 244))
 GROUP BY o1.countrycode, o1.class,
 year(to_date(from_unixtime(cast(o1.fragmentcreated/1000 AS int)))),year(to_date(from_unixtime(cast(o2.fragmentcreated/1000 AS int))))
   )t1
@@ -35,8 +38,7 @@ CASE WHEN round((sum(`_c2`)/sum(`_c3`))*100) IS NULL THEN 'No prior occurrences'
 FROM
 (
 SELECT o1.countrycode AS country,
-CASE WHEN o1.phylum IN ('Gnetophyta','Pinophyta','Cycadophyta','Ginkgophyta') THEN 'Conifers/cycads'
-ELSE o1.phylum END AS phylum,
+o1.phylum AS phylum,
 sum(if(to_date(from_unixtime(cast(o1.fragmentcreated/1000 AS int))) BETWEEN '${hiveconf:START_DATE}' AND '${hiveconf:END_DATE}',1,0)) ,
 sum(if(to_date(from_unixtime(cast(o2.fragmentcreated/1000 AS int))) < '${hiveconf:START_DATE}',1,0))
 
