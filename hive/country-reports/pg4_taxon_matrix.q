@@ -17,7 +17,7 @@ sum(if(to_date(from_unixtime(cast(o2.fragmentcreated/1000 AS int))) < '${hivecon
 
 FROM ${hiveconf:PROD_DB}.occurrence_hdfs o1 JOIN ${hiveconf:PROD_DB}.occurrence_hdfs o2 ON o1.gbifid = o2.gbifid
 WHERE to_date(from_unixtime(cast(o1.fragmentcreated/1000 AS int))) <= '${hiveconf:END_DATE}'
-AND (o1.classkey IN (359, 212, 204, 238, 131, 216, 358, 52, 367))
+AND (o1.classkey IN (359, 212, 204, 238, 131, 216, 358, 367))
 GROUP BY o1.countrycode, o1.class,
 year(to_date(from_unixtime(cast(o1.fragmentcreated/1000 AS int)))),year(to_date(from_unixtime(cast(o2.fragmentcreated/1000 AS int))))
   )t1
