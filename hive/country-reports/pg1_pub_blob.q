@@ -6,7 +6,7 @@ DROP TABLE IF EXISTS ${hiveconf:CR_DB}.pg1_pub_blob;
 CREATE TABLE ${hiveconf:CR_DB}.pg1_pub_blob
 ROW FORMAT DELIMITED FIELDS TERMINATED BY ',' STORED AS TEXTFILE
 AS SELECT o1.publishingcountry,
-sum(if(to_date(from_unixtime(cast(o1.fragmentcreated/1000 AS int))) BETWEEN '${hiveconf:STAR_DATE}' AND '${hiveconf:END_DATE}',1,0)) ,
+sum(if(to_date(from_unixtime(cast(o1.fragmentcreated/1000 AS int))) BETWEEN '${hiveconf:START_DATE}' AND '${hiveconf:END_DATE}',1,0)) ,
 sum(if(to_date(from_unixtime(cast(o2.fragmentcreated/1000 AS int))) <= '${hiveconf:END_DATE}',1,0))
 
 FROM ${hiveconf:PROD_DB}.occurrence_hdfs o1 JOIN ${hiveconf:PROD_DB}.occurrence_hdfs o2 ON o1.gbifid = o2.gbifid
