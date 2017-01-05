@@ -2,7 +2,7 @@
 
 > This is the source repository for the site http://gbif.org/analytics.
 
-[![DOI](https://zenodo.org/badge/7464/gbif/analytics.svg)](http://dx.doi.org/10.5281/zenodo.14181)
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.231055.svg)](https://doi.org/10.5281/zenodo.231055)
 
 ### What are the analytics?
 GBIF are capturing various metrics to enable monitoring of data trends.
