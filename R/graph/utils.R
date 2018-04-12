@@ -124,3 +124,7 @@ combine_factors <- function(facetsData, missingFactors, colName) {
   names(newFacets)[ncol(newFacets)] <- colName
   return(newFacets)
 }
+
+
+
+

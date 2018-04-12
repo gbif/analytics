@@ -1,3 +1,6 @@
+file.copy(from="R/html-json/assets", to="report", recursive=TRUE)
+
+
 # install.packages("jsonlite", repos="http://cran.r-project.org")
 library(jsonlite)
 source("R/html-json/utils.R")

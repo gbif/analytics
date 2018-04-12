@@ -6,3 +6,6 @@ raw_taxonomy.q
 .DS_Store
 *.Rproj
 nohup.out
+hadoop/
+report/
+
