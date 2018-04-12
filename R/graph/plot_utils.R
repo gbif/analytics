@@ -13,25 +13,27 @@ webTheme <- theme(
   legend.justification=c(0,1), 
   legend.position=c(0.05,0.95),
   legend.background=element_rect(size=2, color='white'),
-  legend.margin=unit(-1,"lines"),
+  legend.spacing=unit(-1,"lines"),
   panel.background=element_rect(fill = "#e8e8e8"),
-  panel.margin=unit(c(0,0,0,0), "lines"),
+  panel.spacing=unit(c(0,0,0,0), "lines"),
   plot.title=element_text(size=14, face="bold", vjust=1.5),
   axis.title.x=element_text(vjust=0.2),
-  axis.title.y=element_text(vjust=1.1)
-)
+  axis.title.y=element_text(vjust=1.1),
+  plot.margin = unit(c(0.1, 0.35, 0.1, 0.1), "cm") # added plot margin to see 2018
+  )
 
 printTheme <- theme(
   legend.justification=c(0,1), 
   legend.position=c(0.10,0.85),
   legend.background=element_rect(size=10, color='white'),
-  legend.margin=unit(-1,"lines"),
+  legend.spacing=unit(-1,"lines"),
   text=element_text(family="Arial Narrow", size=20),
   panel.background=element_rect(fill = "#e8e8e8"),
-  panel.margin=unit(c(0,0,0,0), "lines"),
+  panel.spacing=unit(c(0,0,0,0), "lines"),
   plot.title=element_text(size=24, face="bold", vjust=1.5),
   axis.title.x=element_text(vjust=0.2),
-  axis.title.y=element_text(vjust=1.1)
+  axis.title.y=element_text(vjust=1.1),
+  plot.margin = unit(c(0.1, 0.45, 0.1, 0.1), "cm") # added plot margin to see 2018
 )
 
 #############
@@ -83,7 +85,7 @@ generatePlots <- function(doWeb=TRUE, doPrint=TRUE, df, totalDf, plotsDir, targe
 ###########
 createPlot <- function(plotTheme, df, totalDf, plotTitle, dataCol, xCol, yCol, xTitle, yTitle, yFormatter, legendTitle, seriesColours, seriesValues, seriesTitles) {
   minXAxis <- as.Date(min(df[[xCol]]))-20
-  maxXAxis <- as.Date(max(df[[xCol]]))+20
+  maxXAxis <- as.Date(max(df[[xCol]]))+20 # increased margins to fit 2018
   maxYAxis <- 1.04*max(totalDf[[yCol]])
   
   seriesColours <- rev(seriesColours)
@@ -93,11 +95,12 @@ createPlot <- function(plotTheme, df, totalDf, plotTitle, dataCol, xCol, yCol, x
   if (!is.null(seriesTitles)) {
     legend <- scale_fill_manual(values=seriesColours, name=legendTitle, labels=seriesTitles)
   }
-
+  
+  
   plot <- 
     ggplot(df, aes_string(x=xCol, y=yCol)) +
     scale_x_date(expand=c(0,0),limits=c(minXAxis,maxXAxis)) +
-    geom_area(aes_q(fill=as.name(dataCol), group=as.name(dataCol), order=factor(df[[dataCol]], seriesValues, ordered=TRUE)), position='stack', linetype=0, alpha=0.8) +
+    geom_area(aes_q(fill=as.name(dataCol), group=as.name(dataCol)), position='stack', linetype=0, alpha=0.8) +
     geom_line(data=totalDf, colour="black", size=1) +
     geom_point(data=totalDf, colour="black") +
     plotTheme + 

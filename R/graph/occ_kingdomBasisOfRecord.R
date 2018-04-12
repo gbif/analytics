@@ -8,12 +8,15 @@ occ_kingdomBasisOfRecord <- function(plotsDir, sourceFile) {
   print(paste("Processing kingdomBasisOfRecord graphs for: ", sourceFile))
 
   DF <- read.table(sourceFile, header=T, sep=",")
+  
+  DF$snapshot <- as.character(DF$snapshot)
   DF$snapshot <- as.Date(DF$snapshot)
+
   DF$kingdom <- sapply(DF$kingdom, interpKingdom)
   DF$basisOfRecord <- sapply(DF$basisOfRecord, interpBasisOfRecord)
   DF <- populate_factors(DF, c("kingdom", "basisOfRecord"))
-
   # group by kingdom, totaling the counts
+
   kingdom <- ddply(DF, .(snapshot,kingdom), summarize, occurrenceCount=sum(occurrenceCount), .drop=FALSE)
   total <- ddply(DF, .(snapshot), summarize, occurrenceCount=sum(occurrenceCount), .drop=FALSE)
   displayOrder = c("Animalia", "Plantae", "Other", "Unknown")
@@ -21,6 +24,7 @@ occ_kingdomBasisOfRecord <- function(plotsDir, sourceFile) {
   # rev() here priorities the first one highest
   kingdom$kingdom <- factor(kingdom$kingdom, rev(displayOrder))
 
+  # save(kingdom,file="C:/Users/ftw712/Desktop/kingdom.rda")
   # don't plot if only a single point
   if (length(unique(DF$snapshot)) > 1 && sum(kingdom$occurrenceCount) > 0) {
     cbPalette <- c("#005397", "#b2df8a", "#984ea3", "#FFFFE0")
