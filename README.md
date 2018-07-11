@@ -26,6 +26,7 @@ The project is divided into several parts:
 - Make sure hadoop libraries and binaries (e.g. hive) are on your path
 - The snapshot name will be the date as ```yyyyMMdd``` so e.g. ```20140923```.
 - Create new "raw" table from either live hbase or from a restored occurrence backup using ```hive/import/hbase/create_new_snapshot.sh```. Pass in snapshot db, snapshot name, source hive db and source hive table e.g. ```hive/import/hbase/create_new_snapshot.sh snapshot 20150409 prod_b occurrence_hbase```
+- Tell Matt he can run the backup script, which backs up these snapshots to external storage.
 - Add the new snapshot name to the ```hive/normalize/build_raw_scripts.sh``` script, to the array hbase_v3_snapshots. If the hbase schema has changed you'll have to add a new array called e.g. hbase_v4_snapshots and add logic to process that array at the bottom of the script (another loop).
 - Add the new snapshot name to ```hive/normalize/create_occurrence_tables.sh``` in the same way as above.
 - Add the new snapshot name to ```hive/process/build_prepare_script.sh``` in the same way as above.
@@ -129,6 +130,3 @@ the InDesign bits locally.
 
 ### Acknowledgements
 The work presented here is not new, and builds on ideas already published.  In particular the work of Javier Otegui, Arturo H. Ariño, María A. Encinas, Francisco Pando (http://www.plosone.org/article/info%3Adoi%2F10.1371%2Fjournal.pone.0055144) was used as inspiration during the first development iteration, and Javier Otegui kindly provided a crash course in R to kickstart the development.  
-
-
-
