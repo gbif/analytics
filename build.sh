@@ -9,7 +9,7 @@ runHtml="false"
 
 destination_db="analytics"
 snapshot_db="snapshot"
-production_db="prod_b"
+production_db="prod_f"
 countryreports_db="country_reports"
 
 #next 2 parameters are used for country reports
