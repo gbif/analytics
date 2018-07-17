@@ -8,7 +8,7 @@ This is the source repository for the site https://www.gbif.org/analytics.
 GBIF capture various metrics to enable monitoring of data trends.
 The development is being done in an open manner, to enable others to verify procedures, contribute, or fork the project for their own purposes.  The results are visible on https://www.gbif.org/analytics/global and show global and country specific charts illustrating the changes observed in the GBIF index since 2007.
 
-Please note that all samples of the index have been reprocessed to **consistent quality control** and to the **same taxonomic backbone** to enable comparisons over time.  This is the first time this analysis has been possible, and is thanks to the adoption of the Hadoop environment at GBIF which enables the large scale analysis.  In total there are approximately 8 billion records being analysed for these reports.
+Please note that all samples of the index have been reprocessed to **consistent quality control** and to the **same taxonomic backbone** to enable comparisons over time.  This is the first time this analysis has been possible, and is thanks to the adoption of the Hadoop environment at GBIF which enables the large scale analysis.  In total there are approximately 19 billion (to summer 2018) records being analysed for these reports.
 
 ### Project structure
 The project is divided into several parts:
@@ -102,29 +102,28 @@ The R part of country reports is finished after all the steps in the build.sh sc
 of time of writing (October 2015) the InDesign work has to be done on an Apple computer because of how the CSVs are written. For the sake of example I'll assume you're running build.sh on prodgateway-vh and are building
 the InDesign bits locally.
 
-- scp the generated report/ directory from your user directory on prodgateway-vh to your analytics dir on your local machine (for this you're only really interested in directories that contain the subdir "print", so only get those if you like)
-- scp the generated indesign_merge_mac_*.csv files (the number depends on how many countries per csv you setup in the generate_indesign_merge_csv_for_mac.R script) to your local analytics dir
+- scp the generated report/ directory from your user directory on the gateway to your analytics dir on your local machine (for this you're only really interested in directories that contain the subdir "print", so only get those if you like)
+- scp the generated indesign_merge_mac_*.csv files (the number depends on how many countries per CSV you setup in the generate_indesign_merge_csv_for_mac.R script) to your local analytics dir
 - open the InDesign template [GBIF-Country-Report-Template.indd](indesign/GBIF-Country-Report-Template.indd) in InDesign, and make sure fonts and images look good (are linked and loaded properly)
-- in InDesign open the Data Merge window with Windows -> Utilities -> Data Merge
+- in InDesign open the Data Merge window with Windows → Utilities → Data Merge
 - upper left button on that window let's you pick your merge source - choose the first of the indesign_merge_mac_*.csv files (ignore warnings that you'll have to replace placeholders)
 - then click bottom right button of Data Merge window and then OK to start the merge
 - get a coffee, maybe two
 - once the merge is completed switch to the merged tab (probably called GBIF-Country-Report-Template-1)
-- now add a table of contents using the window Layout -> Table of Contents. This dictates the names of the final country report PDFs. From the Other Styles window choose either CountryName (if you want the full country name as it appears at the top of the country report, e.g. Denmark.pdf) or CountryCode (if you want just the code, e.g. DK.pdf). To use the script that distributes the country reports back into the report structure for later upload to gbif.org, you want the CountryCode version. (Note that the InDesign template has a placeholder at the end of the very first paragraph that is in the Paragraph Style CountryCode, which is what is used for this process. That style makes the text 6pt and white, so should be invisible.) Make sure the Generate PDF Bookmarks checkbox is selected. Place the table of contents off the visible pages (off to the right has worked best for me).
-- now you can export the merged InDesign document as a PDF. File -> Export... and then choose PDF (Print) as the type. Name it whatever you like and make sure Include Bookmarks and Hyperlinks is checked. This takes a deceptively long time where you get no feedback from InDesign. Check the filesize of the PDF you are creating and you'll see it grow over 5-10 minutes of exporting.  Note: IT WILL FAIL WITH NO EXPLANATION IF YOU EXPORT TO ```/tmp```.  It does work if you export to the same folder as the template.
+- now add a table of contents using the window Layout → Table of Contents. This dictates the names of the final country report PDFs. From the Other Styles window choose either CountryName (if you want the full country name as it appears at the top of the country report, e.g. Denmark.pdf) or CountryCode (if you want just the code, e.g. DK.pdf). To use the script that distributes the country reports back into the report structure for later upload to gbif.org, you want the CountryCode version. (Note that the InDesign template has a placeholder at the end of the very first paragraph that is in the Paragraph Style CountryCode, which is what is used for this process. That style makes the text 6pt and white, so should be invisible.) Make sure the Generate PDF Bookmarks checkbox is selected. Place the table of contents off the visible pages (off to the right has worked best for me).
+- now you can export the merged InDesign document as a PDF. File → Export... and then choose PDF (Print) as the type. Name it whatever you like and make sure Include Bookmarks and Hyperlinks is checked. This takes a deceptively long time where you get no feedback from InDesign. Check the filesize of the PDF you are creating and you'll see it grow over 5-10 minutes of exporting.  Note: IT WILL FAIL WITH NO EXPLANATION IF YOU EXPORT TO ```/tmp```.  It does work if you export to the same folder as the template.
 - next comes Adobe Acrobat to split the big PDF into individual countries. Open Acrobat (not just Acrobat Reader) and open the PDF you just created
 - from the menu icons on the right choose Organize Pages, then at the top choose Split, and in the Split By dropdown choose Top level bookmarks. Click Output options and pick a destination for the split files, and make sure "Use bookmark names for file names" is selected. Then press the Split button and your PDFs will be created reasonably quickly.
 - repeat that process until you've done all the indesign_merge_mac_*.csv files, and you therefore have all the country reports as PDFs
-- now scp your PDFs directory back to prodgateway-vh and put it in your analytics directory (at same level as report)
-- on prodgateway-vh run the distribute-country-pdfs.sh from the analytics dir to copy the PDFs into their respective country directories
+- now scp your PDFs directory back to the gateway and put it in your analytics directory (at same level as report)
+- on the gateway run the distribute-country-pdfs.sh from the analytics dir to copy the PDFs into their respective country directories
 - now you've got all the content needed to update gbif.org/analytics
 - I suggest making a copy of the reports dir called reports_for_export, which you can then clean up a bit as follows:
-  - if you ran the -runHtml step you have unneeded html which you can delete with ```find reports_for_export/ -name '*.html' -exec rm {} \;```
+  - if you ran the -runHtml step you have unneeded HTML which you can delete with ```find reports_for_export/ -name '*.html' -exec rm {} \;```
   - you don't want the print directories and PDFs so again ```find reports_for_export/ -name 'print' -exec rm -Rf {} \;```
-- scp the reports_for_export to root@prodapps-vh:/var/www/html/drupal/sites/default/files/gbif_analytics_new
-- ```chown -R apache.apache /var/www/html/drupal/sites/default/files/gbif_analytics_new```
-- ```mv gbif_analytics gbif_analytics_old && mv gbif_analytics_new gbif_analytics```
-- then make a backup of the old analytics, just in case something gets spotted in the new run that looks wrong, but make the backup in /root (e.g. ```cd /root``` and ```tar czvf gbif_analytics_old.tar.gz /var/www/html/drupal/sites/default/files/gbif_analytics_old``` and then delete the old dir to free up space (```rm -Rf /var/www/html/drupal/sites/default/files/gbif_analytics_old```)
+- rsync the reports_for_export to root@analytics-files.gbif-uat.org:/var/www/html/analytics-files/ and check (this server is also used for gbif-dev.org).
+- make a backup of the old analytics, TODO give command, and put it in Box. The old analytics files have been used several times by the communications team.
+- rsync the reports_for_export to root@analytics-files.gbif.org:/var/www/html/analytics-files/
 - check http://gbif.org/analytics, write an email to staff@gbif.org giving heads up on the new data, and accept the many accolades due your outstanding achievement in the field of excellence!
 
 ### Acknowledgements
