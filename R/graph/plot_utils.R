@@ -57,7 +57,7 @@ printTheme <- theme(
 # seriesValues - the distinct values in the plotted column (factor values) 
 # seriesTitles - default is null, but supply a named vector matching seriesValues to override the legend entries (e.g. seriesValues is c("constant1","constant2") and seriesTitles could be c("constant1"="Nice Name","constant2"="Pretty Name")
 #############
-generatePlots <- function(doWeb=TRUE, doPrint=TRUE, df, totalDf, plotsDir, targetFilePattern, plotTitle, dataCol, xCol, yCol, xTitle, yTitle, yFormatter, legendTitle, seriesColours, seriesValues, seriesTitles=NULL) {
+generatePlots <- function(doWeb=TRUE, doPrint=FALSE, df, totalDf, plotsDir, targetFilePattern, plotTitle, dataCol, xCol, yCol, xTitle, yTitle, yFormatter, legendTitle, seriesColours, seriesValues, seriesTitles=NULL) {
   if (doWeb) {
     #png
     webPlot <- createPlot(webTheme, df, totalDf, plotTitle, dataCol, xCol, yCol, xTitle, yTitle, yFormatter, legendTitle, seriesColours, seriesValues, seriesTitles)
@@ -66,6 +66,12 @@ generatePlots <- function(doWeb=TRUE, doPrint=TRUE, df, totalDf, plotsDir, targe
     webFile <- paste(webDir, paste(targetFilePattern, ".png", sep=""), sep="/")
     print(paste("Writing web plot: ", webFile))
     savePng(file=webFile, plot=webPlot)
+
+    #svg
+    svgPlot <- createPlot(webTheme, df, totalDf, plotTitle, dataCol, xCol, yCol, xTitle, yTitle, yFormatter, legendTitle, seriesColours, seriesValues, seriesTitles)
+    svgFile <- paste(webDir, paste(targetFilePattern, ".svg", sep=""), sep="/")
+    print(paste("Writing svg plot: ", svgFile))
+    ggsave(filename=svgFile, plot=svgPlot, device='svg', width=21, height=11, scale=0.75)
   }
   if (doPrint) {
     #pdf

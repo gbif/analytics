@@ -5,6 +5,7 @@ install.packages("Rcppr", repos="http://cran.rstudio.com/")
 install.packages("dplyr", repos="http://cran.rstudio.com/")
 
 install.packages("ggplot2", repos="http://cran.rstudio.com/") #  2.2.1
+install.packages("svglite", repos="http://cran.r-project.org")
 install.packages("proto", repos="http://cran.rstudio.com/")
 # install.packages("http://cran.r-project.org/src/contrib/Archive/ggplot2/ggplot2_1.0.1.tar.gz", repos=NULL, type="source")
 
