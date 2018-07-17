@@ -18,8 +18,6 @@ The project is divided into several parts:
 - Hive scripts that digest the data into specific views suitable for download from Hadoop and further processing
 - R scripts that process the data into views per country
 - R scripts that produce the static charts for each country
-- R scripts that produce the JSON files used by the gbif.org/analytics
-- R scripts that use moustache templating to produce the old static site
 
 ### Steps for adding a new snapshot and then re-running the processing
 - This will only work on a Cloudera Manager managed gateway such as ```c5gateway-vh``` on which you should be able to `sudo su - hdfs` and find the code in `/home/hdfs/analytics/` (do a `git pull`)
@@ -32,98 +30,28 @@ The project is divided into several parts:
 - Add the new snapshot name to ```hive/process/build_prepare_script.sh``` in the same way as above.
 - Replace the last element of `temporalFacetSnapshots` in ```R/graph/utils.R``` with your new snapshot. Follow the formatting in use, e.g. `2015-01-19`
 - Make sure the version of EPSG used in the latest occurrence project pom.xml is the same as the one that the script ```hive/normalize/create_tmp_interp_tables.sh``` fetches. Do that by checking the pom.xml (hopefully still at: https://github.com/gbif/occurrence/blob/master/pom.xml) for the geotools.version. That version should be the same as what's in the shell script (at time of writing the geotools.version was 12.1 and the script line was ```curl -L 'http://download.osgeo.org/webdav/geotools/org/geotools/gt-epsg-hsql/12.1/gt-epsg-hsql-12.1.jar' > /tmp/gt-epsg-hsql.jar```)
-- If you're planning on using the country report results generated during the build.sh run, you have to update the ```R/generate_indesign_merge_csv_for_mac.R``` script with:
-  - the start and end dates of your report
-  - how many countries per CSV you want
-  - the name of the root drive on the apple computer that will run the InDesign merge (often "Macintosh HD" or "Macintosh SSD")
-  - make sure you've read the README in the R/country-reports directory and created the Google Analytics token and database file
-- Modify the file ```build.sh``` by setting the values for the variables ```start_date``` and ```end_date``` which are used to execute the R scrips of country reports.
-- From the root (analytics) directory you can now run the build.sh script to run all the HBase and Hive table building, build all the master CSV files, which are in turn processed down to per country CSVs, then generate the figures and the final JSON file needed by gbif.org/analytics. Note that this will take up to 48 hours and is unfortunately error prone, so all steps could also be run individually. In any case it's probably best to run all parts of this script on a machine in the secretariat and ideally in a "screen" session. To run it all do:
+- From the root (analytics) directory you can now run the build.sh script to run all the HBase and Hive table building, build all the master CSV files, which are in turn processed down to per country CSVs, then generate the figures needed for gbif.org/analytics and the country reports. Note that this will take up to 48 hours and is unfortunately error prone, so all steps could also be run individually. In any case it's probably best to run all parts of this script on a machine in the secretariat and ideally in a "screen" session. To run it all do:
 
   ```screen -L -S analytics```
-  ```./build.sh -runHbase -runHive -runHadoop -runPrepare -runFigures -runJson```
+  ```./build.sh -runHbase -runHive -runHadoop -runPrepare -runFigures```
 
   (Detach from the screen with "^A d", reattach with `screen -x`.)
 
   or without a screen session and in the background:
 
-  ```nohup ./build.sh -runHbase -runHive -runHadoop -runPrepare -runFigures -runJson &```
+  ```nohup ./build.sh -runHbase -runHive -runHadoop -runPrepare -runFigures &```
 
-If you wish to run country reports, continue by:
-    ```nohup build.sh -runCountryReports &```
-
-NOTE: before running, check your locale.  It should look like this: (`en_GB` or `da_DK` would be fine, it's the general structure and the `UTF-8` that's important)
-```
-[root@prodgateway-vh analytics]# locale
-locale: Cannot set LC_CTYPE to default locale: No such file or directory
-locale: Cannot set LC_ALL to default locale: No such file or directory
-LANG=en_US.UTF-8
-LC_CTYPE="en_US.UTF-8"
-LC_NUMERIC="en_US.UTF-8"
-LC_TIME="en_US.UTF-8"
-LC_COLLATE="en_US.UTF-8"
-LC_MONETARY="en_US.UTF-8"
-LC_MESSAGES="en_US.UTF-8"
-LC_PAPER="en_US.UTF-8"
-LC_NAME="en_US.UTF-8"
-LC_ADDRESS="en_US.UTF-8"
-LC_TELEPHONE="en_US.UTF-8"
-LC_MEASUREMENT="en_US.UTF-8"
-LC_IDENTIFICATION="en_US.UTF-8"
-LC_ALL=
-```
-If you see any that have e.g. ```LC_CTYPE=UTF-8``` or  ```C``` it *WILL* fail and you will come back to this step.  If in doubt ask Tim or Matt.  If you do see any like this, issue the following:
-```
-[root@prodgateway-vh analytics]# export LANG=en_US.UTF-8
-[root@prodgateway-vh analytics]# locale
-LANG=en_US.UTF-8
-LC_CTYPE="en_US.UTF-8"
-LC_NUMERIC="en_US.UTF-8"
-LC_TIME="en_US.UTF-8"
-LC_COLLATE="en_US.UTF-8"
-LC_MONETARY="en_US.UTF-8"
-LC_MESSAGES="en_US.UTF-8"
-LC_PAPER="en_US.UTF-8"
-LC_NAME="en_US.UTF-8"
-LC_ADDRESS="en_US.UTF-8"
-LC_TELEPHONE="en_US.UTF-8"
-LC_MEASUREMENT="en_US.UTF-8"
-LC_IDENTIFICATION="en_US.UTF-8"
-LC_ALL=
-```
-
-### Notes for country report producers
+### Notes for figure produces (for country reports)
 - Arial and Arial Narrow will be required on the machine from which the runFigures command is run. For Linux that means a new dir under /usr/share/fonts with the .ttf files from this project's fonts/ dir copied in (the provisioning project's Ansible scripts take care of this).
 - the /usr/lib64/R/library/extrafontdb dir must be writeable by the user running the runFigures command because font stuff will be written there on first load
-- create the files described in https://github.com/gbif/analytics/blob/master/R/country-reports/README.md
 
 ### Steps to build country reports after the R part is done
-The R part of country reports is finished after all the steps in the build.sh script are done. Then you need to take the created CSVs and charts in order to populate an InDesign template and from there make PDFs. As
-of time of writing (October 2015) the InDesign work has to be done on an Apple computer because of how the CSVs are written. For the sake of example I'll assume you're running build.sh on prodgateway-vh and are building
-the InDesign bits locally.
-
-- scp the generated report/ directory from your user directory on the gateway to your analytics dir on your local machine (for this you're only really interested in directories that contain the subdir "print", so only get those if you like)
-- scp the generated indesign_merge_mac_*.csv files (the number depends on how many countries per CSV you setup in the generate_indesign_merge_csv_for_mac.R script) to your local analytics dir
-- open the InDesign template [GBIF-Country-Report-Template.indd](indesign/GBIF-Country-Report-Template.indd) in InDesign, and make sure fonts and images look good (are linked and loaded properly)
-- in InDesign open the Data Merge window with Windows → Utilities → Data Merge
-- upper left button on that window let's you pick your merge source - choose the first of the indesign_merge_mac_*.csv files (ignore warnings that you'll have to replace placeholders)
-- then click bottom right button of Data Merge window and then OK to start the merge
-- get a coffee, maybe two
-- once the merge is completed switch to the merged tab (probably called GBIF-Country-Report-Template-1)
-- now add a table of contents using the window Layout → Table of Contents. This dictates the names of the final country report PDFs. From the Other Styles window choose either CountryName (if you want the full country name as it appears at the top of the country report, e.g. Denmark.pdf) or CountryCode (if you want just the code, e.g. DK.pdf). To use the script that distributes the country reports back into the report structure for later upload to gbif.org, you want the CountryCode version. (Note that the InDesign template has a placeholder at the end of the very first paragraph that is in the Paragraph Style CountryCode, which is what is used for this process. That style makes the text 6pt and white, so should be invisible.) Make sure the Generate PDF Bookmarks checkbox is selected. Place the table of contents off the visible pages (off to the right has worked best for me).
-- now you can export the merged InDesign document as a PDF. File → Export... and then choose PDF (Print) as the type. Name it whatever you like and make sure Include Bookmarks and Hyperlinks is checked. This takes a deceptively long time where you get no feedback from InDesign. Check the filesize of the PDF you are creating and you'll see it grow over 5-10 minutes of exporting.  Note: IT WILL FAIL WITH NO EXPLANATION IF YOU EXPORT TO ```/tmp```.  It does work if you export to the same folder as the template.
-- next comes Adobe Acrobat to split the big PDF into individual countries. Open Acrobat (not just Acrobat Reader) and open the PDF you just created
-- from the menu icons on the right choose Organize Pages, then at the top choose Split, and in the Split By dropdown choose Top level bookmarks. Click Output options and pick a destination for the split files, and make sure "Use bookmark names for file names" is selected. Then press the Split button and your PDFs will be created reasonably quickly.
-- repeat that process until you've done all the indesign_merge_mac_*.csv files, and you therefore have all the country reports as PDFs
-- now scp your PDFs directory back to the gateway and put it in your analytics directory (at same level as report)
-- on the gateway run the distribute-country-pdfs.sh from the analytics dir to copy the PDFs into their respective country directories
-- now you've got all the content needed to update gbif.org/analytics
-- I suggest making a copy of the reports dir called reports_for_export, which you can then clean up a bit as follows:
-  - if you ran the -runHtml step you have unneeded HTML which you can delete with ```find reports_for_export/ -name '*.html' -exec rm {} \;```
-  - you don't want the print directories and PDFs so again ```find reports_for_export/ -name 'print' -exec rm -Rf {} \;```
-- rsync the reports_for_export to root@analytics-files.gbif-uat.org:/var/www/html/analytics-files/ and check (this server is also used for gbif-dev.org).
+TODO update.
+- rsync the reports to root@analytics-files.gbif-uat.org:/var/www/html/analytics-files/ and check (this server is also used for gbif-dev.org).
+- Generate the country reports — check you are using correct APIs!
+- Country reports are now run using https://github.com/gbif/country-reports.
 - make a backup of the old analytics, TODO give command, and put it in Box. The old analytics files have been used several times by the communications team.
-- rsync the reports_for_export to root@analytics-files.gbif.org:/var/www/html/analytics-files/
+- rsync the reports to root@analytics-files.gbif.org:/var/www/html/analytics-files/
 - check http://gbif.org/analytics, write an email to staff@gbif.org giving heads up on the new data, and accept the many accolades due your outstanding achievement in the field of excellence!
 
 ### Acknowledgements
