@@ -41,6 +41,8 @@ The project is divided into several parts:
 
   ```nohup ./build.sh -runHbase -runHive -runHadoop -runPrepare -runFigures &```
 
+- Run the `country_reports/copy_placeholders.sh` script, which creates missing graphs (e.g. where a country does not publish any occurrences).
+
 ### Notes for figure produces (for country reports)
 - Arial and Arial Narrow will be required on the machine from which the runFigures command is run. For Linux that means a new dir under /usr/share/fonts with the .ttf files from this project's fonts/ dir copied in (the provisioning project's Ansible scripts take care of this).
 - the /usr/lib64/R/library/extrafontdb dir must be writeable by the user running the runFigures command because font stuff will be written there on first load
