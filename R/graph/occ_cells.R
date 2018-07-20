@@ -27,7 +27,7 @@ occ_cells <- function(sourceFile, plotsDir, targetFilePattern, title, palette) {
       xCol="snapshot", 
       yCol="speciesCount", 
       xTitle="Date",
-      yTitle="Cell count", 
+      yTitle="Number of species (thousands)",
       yFormatter=kilo_formatter, 
       legendTitle="Cell count", 
       seriesColours=palette, 
