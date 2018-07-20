@@ -48,13 +48,12 @@ The project is divided into several parts:
 - the /usr/lib64/R/library/extrafontdb dir must be writeable by the user running the runFigures command because font stuff will be written there on first load
 
 ### Steps to build country reports after the R part is done
-TODO update.
-- rsync the reports to root@analytics-files.gbif-uat.org:/var/www/html/analytics-files/ and check (this server is also used for gbif-dev.org).
-- Generate the country reports — check you are using correct APIs!
-- Country reports are now run using https://github.com/gbif/country-reports.
-- make a backup of the old analytics, TODO give command, and put it in Box. The old analytics files have been used several times by the communications team.
-- rsync the reports to root@analytics-files.gbif.org:/var/www/html/analytics-files/
-- check http://gbif.org/analytics, write an email to staff@gbif.org giving heads up on the new data, and accept the many accolades due your outstanding achievement in the field of excellence!
+- rsync the CSVs and figures to root@analytics-files.gbif-uat.org:/var/www/html/analytics-files/ and check (this server is also used for gbif-dev.org); rsync to prod also.
+- Clear the Thumbor cache, see the [flush_analytics_urls](https://github.com/gbif/infrastructure/blob/master/roles/gbif.thumbor/files/flush_analytics_urls) script on the Thumbor server.
+- Generate the country reports — check you are using correct APIs!  Instructions are in the [country-reports](https://github.org/gbif/country-reports) project.
+- rsync the reports to root@analytics-files.gbif-uat.org:/var/www/html/analytics-files/ and after checking to prod also.
+- Check https://www.gbif.org/analytics, write an email to staff@gbif.org giving heads up on the new data, and accept the many accolades due your outstanding achievement in the field of excellence!
+- Archive the new analytics in Box.  The old analytics files have been used several times by the communications team. `tar cvJf gbif_analytics_2018-07-11.tar.xz analytics-files`
 
 ### Acknowledgements
 The work presented here is not new, and builds on ideas already published.  In particular the work of Javier Otegui, Arturo H. Ariño, María A. Encinas, Francisco Pando (http://www.plosone.org/article/info%3Adoi%2F10.1371%2Fjournal.pone.0055144) was used as inspiration during the first development iteration, and Javier Otegui kindly provided a crash course in R to kickstart the development.
