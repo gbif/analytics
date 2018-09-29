@@ -23,6 +23,10 @@ if [ $runHbase == "true" ];then
   ./hive/normalize/create_tmp_interp_tables.sh
   echo 'Creating occurrence tables'
   ./hive/normalize/create_occurrence_tables.sh
+
+  echo '#####################'
+  echo 'HBASE STAGE COMPLETED'
+  echo '#####################'
 else
   echo 'Skipping hbase stage (add -runHbase to command to run it)'
 fi
@@ -44,6 +48,9 @@ if [ $runHive == "true" ];then
   hive --hiveconf DB="$destination_db" -f hive/process/spe_yearCollected.q
 
   hive --hiveconf DB="$destination_db" -f hive/process/repatriation.q
+  echo '####################'
+  echo 'HIVE STAGE COMPLETED'
+  echo '####################'
 else
   echo 'Skipping hive stage (add -runHive to command to run it)'
 fi
@@ -105,6 +112,9 @@ if [ $runHadoop == "true" ];then
   hdfs dfs -getmerge /user/hive/warehouse/"$destination_db".db/spe_country_repatriation hadoop/spe_country_repatriation.csv
   hdfs dfs -getmerge /user/hive/warehouse/"$destination_db".db/spe_publishercountry_repatriation hadoop/spe_publisherCountry_repatriation.csv
   hdfs dfs -getmerge /user/hive/warehouse/"$destination_db".db/spe_repatriation hadoop/spe_repatriation.csv
+  echo '######################'
+  echo 'HADOOP STAGE COMPLETED'
+  echo '######################'
 else
   echo 'Skipping hadoop copy stage (add -runHadoop to command to run it)'
 fi
@@ -127,6 +137,9 @@ if [ $runPrepare == "true" ];then
 
   # this should be removed when http://dev.gbif.org/issues/browse/POR-2455 is fixed
   rm -Rf report/country/UK
+  echo '#######################'
+  echo 'PREPARE STAGE COMPLETED'
+  echo '#######################'
 else
   echo 'Skipping prepare CSV stage (add -runPrepare to command to run it)'
 fi
@@ -140,6 +153,9 @@ if [ $runFigures == "true" ];then
   # ./embed_dingbats_mac.sh report /System/Library/Fonts
   # linux specific, paths as per readme
   # ./embed_dingbats_linux.sh report /usr/share/fonts
+  echo '#######################'
+  echo 'FIGURES STAGE COMPLETED'
+  echo '#######################'
 else
   echo 'Skipping create figures stage (add -runFigures to command to run it)'
 fi
