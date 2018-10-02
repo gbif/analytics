@@ -23,7 +23,7 @@ The project is divided into several parts:
 - This will only work on a Cloudera Manager managed gateway such as ```c5gateway-vh``` on which you should be able to `sudo su - hdfs` and find the code in `/home/hdfs/analytics/` (do a `git pull`)
 - Make sure Hadoop libraries and binaries (e.g. hive) are on your path
 - The snapshot name will be the date as ```YYYYMMDD``` so e.g. ```20140923```.
-- Create new "raw" table from either live HBase or from a restored occurrence backup using ```hive/import/hbase/create_new_snapshot.sh```. Pass in snapshot database, snapshot name, source Hive database and source Hive table e.g. ```hive/import/hbase/create_new_snapshot.sh snapshot 20150409 prod_b occurrence_hbase```
+- Create new "raw" table from either live HBase or from a restored occurrence backup using ```hive/import/hbase/create_new_snapshot.sh```. Pass in snapshot database, snapshot name, source Hive database and source Hive table e.g. ```cd hive/import/hbase; ./create_new_snapshot.sh snapshot 20150409 prod_b occurrence_hbase```
 - Tell Matt he can run the backup script, which exports these snapshots to external storage.
 - Add the new snapshot name to the ```hive/normalize/build_raw_scripts.sh``` script, to the array hbase_v3_snapshots. If the HBase schema has changed you'll have to add a new array called e.g. hbase_v4_snapshots and add logic to process that array at the bottom of the script (another loop).
 - Add the new snapshot name to ```hive/normalize/create_occurrence_tables.sh``` in the same way as above.
@@ -37,13 +37,9 @@ The project is divided into several parts:
 
   (Detach from the screen with "^A d", reattach with `screen -x`.)
 
-  or without a screen session and in the background:
-
-  ```nohup ./build.sh -runHbase -runHive -runHadoop -runPrepare -runFigures &```
-
 - Run the `country_reports/copy_placeholders.sh` script, which creates missing graphs (e.g. where a country does not publish any occurrences).
 
-### Notes for figure produces (for country reports)
+### Notes for figure producers (for country reports)
 - Arial and Arial Narrow will be required on the machine from which the runFigures command is run. For Linux that means a new dir under /usr/share/fonts with the .ttf files from this project's fonts/ dir copied in (the provisioning project's Ansible scripts take care of this).
 - the /usr/lib64/R/library/extrafontdb dir must be writeable by the user running the runFigures command because font stuff will be written there on first load
 
@@ -53,7 +49,13 @@ The project is divided into several parts:
 - Generate the country reports — check you are using correct APIs!  Instructions are in the [country-reports](https://github.org/gbif/country-reports) project.
 - rsync the reports to root@analytics-files.gbif-uat.org:/var/www/html/analytics-files/ and after checking to prod also.
 - Check https://www.gbif.org/analytics, write an email to staff@gbif.org giving heads up on the new data, and accept the many accolades due your outstanding achievement in the field of excellence!
-- Archive the new analytics in Box.  The old analytics files have been used several times by the communications team. `tar cvJf gbif_analytics_2018-07-11.tar.xz analytics-files`
+- Archive the new analytics in Box.  The old analytics files have been used several times by the communications team:
+```
+cd /var/www/html/
+tar -cvJf gbif_analytics_2018-09-28.tar.xz --exclude assets --exclude '*.pdf' analytics-files
+# or
+tar -cvJf gbif_analytics_2018-09-28.tar.xz --exclude assets analytics-files
+```
 
 ### Acknowledgements
 The work presented here is not new, and builds on ideas already published.  In particular the work of Javier Otegui, Arturo H. Ariño, María A. Encinas, Francisco Pando (http://www.plosone.org/article/info%3Adoi%2F10.1371%2Fjournal.pone.0055144) was used as inspiration during the first development iteration, and Javier Otegui kindly provided a crash course in R to kickstart the development.
