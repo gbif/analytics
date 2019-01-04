@@ -10,6 +10,16 @@ source("R/graph/spe_dayCollected.R")
 source("R/graph/spe_yearCollected.R")
 source("R/graph/spe_repatriation.R")
 
+library(doParallel)
+
+if (Sys.info()[['sysname']] == "Windows") {
+    print("Cannot run in parallel on Windows.")
+    cores <- 1
+} else {
+    cores <- detectCores()
+    print(sprintf("Will run in parallel on %d cores.", cores))
+}
+
 path <- "report"
 # useful to speed up development, to only use the global directory
 # path <- "report/global"
@@ -18,123 +28,123 @@ path <- "report"
 # path <- "report/country/AX/publishedBy"
 
 csvs <- list.files(path=path, pattern="occ_kingdom_basisOfRecord.csv", full.names=TRUE, recursive=TRUE, include.dirs=TRUE)
-for (csv in csvs) {
-  plotsDir <- gsub("/csv", "", dirname(csv))
-  occ_kingdomBasisOfRecord(sourceFile=csv, plotsDir=plotsDir) 
-}
+mclapply(csvs, function(csv) {
+    plotsDir <- gsub("/csv", "", dirname(csv))
+    occ_kingdomBasisOfRecord(sourceFile=csv, plotsDir=plotsDir)
+}, mc.cores = cores)
 
 csvs <- list.files(path=path, pattern="spe_kingdom.csv", full.names=TRUE, recursive=TRUE, include.dirs=TRUE)
-for (csv in csvs) {
+mclapply(csvs, function(csv) {
   plotsDir <- gsub("/csv", "", dirname(csv))
-  spe_kingdom(sourceFile=csv, 
+  spe_kingdom(sourceFile=csv,
               plotsDir=plotsDir,
               targetFilePattern='spe_kingdom',
               palette = c("#005397", "#b2df8a", "#984ea3", "#FFFFE0"),
               title='Number of species having occurrence records accessible through GBIF over time')
-}
+}, mc.cores = cores)
 
 csvs <- list.files(path=path, pattern="spe_kingdom_observation.csv", full.names=TRUE, recursive=TRUE, include.dirs=TRUE)
-for (csv in csvs) {
+mclapply(csvs, function(csv) {
   plotsDir <- gsub("/csv", "", dirname(csv))
-  spe_kingdom(sourceFile=csv, 
+  spe_kingdom(sourceFile=csv,
               plotsDir=plotsDir,
               targetFilePattern='spe_kingdom_observation',
               palette = c("#005397", "#b2df8a", "#984ea3", "#FFFFE0"),
               title='Number of species from observation records accessible through GBIF over time')
-}
+}, mc.cores = cores)
 
 csvs <- list.files(path=path, pattern="spe_kingdom_specimen.csv", full.names=TRUE, recursive=TRUE, include.dirs=TRUE)
-for (csv in csvs) {
+mclapply(csvs, function(csv) {
   plotsDir <- gsub("/csv", "", dirname(csv))
-  spe_kingdom(sourceFile=csv, 
+  spe_kingdom(sourceFile=csv,
               plotsDir=plotsDir,
               targetFilePattern='spe_kingdom_specimen',
               palette = c("#005397", "#b2df8a", "#984ea3", "#FFFFE0"),
               title='Number of species having specimen records accessible through GBIF over time')
-}
+}, mc.cores = cores)
 
 csvs <- list.files(path=path, pattern="occ_complete.csv", full.names=TRUE, recursive=TRUE, include.dirs=TRUE)
-for (csv in csvs) {
+mclapply(csvs, function(csv) {
   plotsDir <- gsub("/csv", "", dirname(csv))
-  occ_complete(sourceFile=csv, plotsDir=plotsDir) 
-}
+  occ_complete(sourceFile=csv, plotsDir=plotsDir)
+}, mc.cores = cores)
 
 csvs <- list.files(path=path, pattern="occ_repatriation.csv", full.names=TRUE, recursive=TRUE, include.dirs=TRUE)
-for (csv in csvs) {
+mclapply(csvs, function(csv) {
   plotsDir <- gsub("/csv", "", dirname(csv))
-  occ_repatriation(sourceFile=csv, plotsDir=plotsDir) 
-}
+  occ_repatriation(sourceFile=csv, plotsDir=plotsDir)
+}, mc.cores = cores)
 
 csvs <- list.files(path=path, pattern="spe_repatriation.csv", full.names=TRUE, recursive=TRUE, include.dirs=TRUE)
-for (csv in csvs) {
+mclapply(csvs, function(csv) {
   plotsDir <- gsub("/csv", "", dirname(csv))
-  spe_repatriation(sourceFile=csv, plotsDir=plotsDir) 
-}
+  spe_repatriation(sourceFile=csv, plotsDir=plotsDir)
+}, mc.cores = cores)
 
 # TODO: could be rewritten to use plot_utils, but requires new method
 csvs <- list.files(path=path, pattern="occ_dayCollected.csv", full.names=TRUE, recursive=TRUE, include.dirs=TRUE)
-for (csv in csvs) {
+mclapply(csvs, function(csv) {
   figureDir <- gsub("csv","figure", dirname(csv))
-  occ_dayCollected(sourceFile=csv, targetDir=figureDir) 
-}
+  occ_dayCollected(sourceFile=csv, targetDir=figureDir)
+}, mc.cores = cores)
 
-# TODO: could be rewritten to use plot_utils, but requires new method 
+# TODO: could be rewritten to use plot_utils, but requires new method
 csvs <- list.files(path=path, pattern="occ_yearCollected.csv", full.names=TRUE, recursive=TRUE, include.dirs=TRUE)
-for (csv in csvs) {
+mclapply(csvs, function(csv) {
   figureDir <- gsub("csv","figure", dirname(csv))
-  occ_yearCollected(sourceFile=csv, targetDir=figureDir) 
-}
+  occ_yearCollected(sourceFile=csv, targetDir=figureDir)
+}, mc.cores = cores)
 
-# TODO: could be rewritten to use plot_utils, but requires new method 
+# TODO: could be rewritten to use plot_utils, but requires new method
 csvs <- list.files(path=path, pattern="spe_dayCollected.csv", full.names=TRUE, recursive=TRUE, include.dirs=TRUE)
-for (csv in csvs) {
+mclapply(csvs, function(csv) {
   figureDir <- gsub("csv","figure", dirname(csv))
-  spe_dayCollected(sourceFile=csv, targetDir=figureDir) 
-}
+  spe_dayCollected(sourceFile=csv, targetDir=figureDir)
+}, mc.cores = cores)
 
-# TODO: could be rewritten to use plot_utils, but requires new method 
+# TODO: could be rewritten to use plot_utils, but requires new method
 csvs <- list.files(path=path, pattern="spe_yearCollected.csv", full.names=TRUE, recursive=TRUE, include.dirs=TRUE)
-for (csv in csvs) {
+mclapply(csvs, function(csv) {
   figureDir <- gsub("csv","figure", dirname(csv))
-  spe_yearCollected(sourceFile=csv, targetDir=figureDir) 
-}
+  spe_yearCollected(sourceFile=csv, targetDir=figureDir)
+}, mc.cores = cores)
 
 csvs <- list.files(path=path, pattern="occ_cell_one_deg.csv", full.names=TRUE, recursive=TRUE, include.dirs=TRUE)
-for (csv in csvs) {
+mclapply(csvs, function(csv) {
   plotsDir <- gsub("/csv", "", dirname(csv))
   occ_cells(
-    sourceFile=csv, 
+    sourceFile=csv,
     plotsDir=plotsDir,
     targetFilePattern="occ_cells_one_deg",
     title = "Number of species with presence in cells (1 degree)",
-    palette <- c("#a6611a", "#dfc27d", "#f5f5f5", "#80cdc1", "#018571")) 
-}
+    palette <- c("#a6611a", "#dfc27d", "#f5f5f5", "#80cdc1", "#018571"))
+}, mc.cores = cores)
 
 csvs <- list.files(path=path, pattern="occ_cell_point_one_deg.csv", full.names=TRUE, recursive=TRUE, include.dirs=TRUE)
-for (csv in csvs) {
+mclapply(csvs, function(csv) {
   plotsDir <- gsub("/csv", "", dirname(csv))
   occ_cells(
-    sourceFile=csv, 
+    sourceFile=csv,
     plotsDir=plotsDir,
     targetFilePattern="occ_cells_point_one_deg",
     title = "Number of species with presence in cells (0.1 degree)",
     palette <- c("#a6611a", "#dfc27d", "#f5f5f5", "#80cdc1", "#018571"))
-}
+}, mc.cores = cores)
 
 csvs <- list.files(path=path, pattern="occ_cell_half_deg.csv", full.names=TRUE, recursive=TRUE, include.dirs=TRUE)
-for (csv in csvs) {
+mclapply(csvs, function(csv) {
   plotsDir <- gsub("/csv", "", dirname(csv))
   occ_cells(
-    sourceFile=csv, 
+    sourceFile=csv,
     plotsDir=plotsDir,
     targetFilePattern="occ_cells_half_deg",
     title = "Number of species with presence in cells (0.5 degree)",
     palette <- c("#a6611a", "#dfc27d", "#f5f5f5", "#80cdc1", "#018571"))
-}
+}, mc.cores = cores)
 
 # unused
 # csvs <- list.files(path=path, pattern="occ_basisOfRecord_complete.csv", full.names=TRUE, recursive=TRUE, include.dirs=TRUE)
-# for (csv in csvs) {
+# mclapply(csvs, function(csv) {
 #   figureDir <- gsub("csv","figure", dirname(csv))
-#   occ_basisOfRecordComplete(sourceFile=csv, targetDir=figureDir) 
-# }
+#   occ_basisOfRecordComplete(sourceFile=csv, targetDir=figureDir)
+# }, mc.cores = cores)
