@@ -34,6 +34,8 @@ ADD JAR ${hiveconf:occjar};
 CREATE TEMPORARY FUNCTION parseDate AS 'org.gbif.occurrence.hive.udf.DateParseUDF';
 CREATE TEMPORARY FUNCTION parseBoR AS 'org.gbif.occurrence.hive.udf.BasisOfRecordParseUDF';
 
+-- Converting UK→GB is done to resolve https://dev.gbif.org/issues/browse/POR-2455/
+-- Snapshots 2010-04-01 and 2010-07-26 contain UK values.
 DROP TABLE IF EXISTS snapshot.occurrence_${hiveconf:snapshot};
 CREATE TABLE snapshot.occurrence_${hiveconf:snapshot} STORED AS rcfile AS
 SELECT
@@ -60,11 +62,11 @@ SELECT
   r.basis_of_record,
   g.latitude,
   g.longitude,
-  g.country,
+  CASE WHEN g.country = 'UK' THEN 'GB' ELSE g.country END AS country
   d.day,
   d.month,
   d.year,
-  p.iso_country_code as publisher_country
+  CASE WHEN p.iso_country_code = 'UK' THEN 'GB' ELSE p.iso_country_code END AS publisher_country
 FROM
   (SELECT
     id,

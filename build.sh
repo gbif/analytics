@@ -135,8 +135,6 @@ if [ $runPrepare == "true" ];then
   Rscript R/csv/spe_yearCollected.R
   Rscript R/csv/spe_repatriation.R
 
-  # this should be removed when http://dev.gbif.org/issues/browse/POR-2455 is fixed
-  rm -Rf report/country/UK
   echo '#######################'
   echo 'PREPARE STAGE COMPLETED'
   echo '#######################'
