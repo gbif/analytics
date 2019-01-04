@@ -19,21 +19,28 @@ The project is divided into several parts:
 - R scripts that process the data into views per country
 - R scripts that produce the static charts for each country
 
-### Steps for adding a new snapshot and then re-running the processing
-- This will only work on a Cloudera Manager managed gateway such as ```c5gateway-vh``` on which you should be able to `sudo su - hdfs` and find the code in `/home/hdfs/analytics/` (do a `git pull`)
-- Make sure Hadoop libraries and binaries (e.g. hive) are on your path
-- The snapshot name will be the date as ```YYYYMMDD``` so e.g. ```20140923```.
-- Create new "raw" table from either live HBase or from a restored occurrence backup using ```hive/import/hbase/create_new_snapshot.sh```. Pass in snapshot database, snapshot name, source Hive database and source Hive table e.g. ```cd hive/import/hbase; ./create_new_snapshot.sh snapshot 20150409 prod_b occurrence_hbase```
-- Tell Matt he can run the backup script, which exports these snapshots to external storage.
-- Add the new snapshot name to the ```hive/normalize/build_raw_scripts.sh``` script, to the array hbase_v3_snapshots. If the HBase schema has changed you'll have to add a new array called e.g. hbase_v4_snapshots and add logic to process that array at the bottom of the script (another loop).
-- Add the new snapshot name to ```hive/normalize/create_occurrence_tables.sh``` in the same way as above.
-- Add the new snapshot name to ```hive/process/build_prepare_script.sh``` in the same way as above.
-- Replace the last element of `temporalFacetSnapshots` in ```R/graph/utils.R``` with your new snapshot. Follow the formatting in use, e.g. `2015-01-19`
-- Make sure the version of EPSG used in the latest occurrence project pom.xml is the same as the one that the script ```hive/normalize/create_tmp_interp_tables.sh``` fetches. Do that by checking the pom.xml (hopefully still at: https://github.com/gbif/occurrence/blob/master/pom.xml) for the geotools.version. That version should be the same as what's in the shell script (at time of writing the geotools.version was 12.1 and the script line was ```curl -L 'http://download.osgeo.org/webdav/geotools/org/geotools/gt-epsg-hsql/12.1/gt-epsg-hsql-12.1.jar' > /tmp/gt-epsg-hsql.jar```)
-- From the root (analytics) directory you can now run the build.sh script to run all the HBase and Hive table building, build all the master CSV files, which are in turn processed down to per country CSVs, then generate the figures needed for gbif.org/analytics and the country reports. Note that this will take up to 48 hours and is unfortunately error prone, so all steps could also be run individually. In any case it's probably best to run all parts of this script on a machine in the secretariat and ideally in a "screen" session. To run it all do:
+### Setup
+These steps are required for a new environment
+- Install the yum packages R, cairo, cairo-devel
+- Run `Rscript R/install-packages.R` (Possibly it is necessary to set the `R_LIBS_USER` environment variable.)
 
-  ```screen -L -S analytics```
-  ```./build.sh -runHbase -runHive -runHadoop -runPrepare -runFigures```
+### Steps for adding a new snapshot and then re-running the processing
+- This will only work on a Cloudera Manager managed gateway such as `c5gateway-vh` on which you should be able to `sudo su - hdfs` and find the code in `/home/hdfs/analytics/` (do a `git pull`)
+- Make sure Hadoop libraries and binaries (e.g. hive) are on your path
+- The snapshot name will be the date as `YYYYMMDD` so e.g. `20140923`.
+- Create new "raw" table from either live HBase or from a restored occurrence backup using `hive/import/hbase/create_new_snapshot.sh`. Pass in snapshot database, snapshot name, source Hive database and source Hive table e.g. `cd hive/import/hbase; ./create_new_snapshot.sh snapshot 20150409 prod_b occurrence_hbase`
+- Tell Matt he can run the backup script, which exports these snapshots to external storage.
+- Add the new snapshot name to the `hive/normalize/build_raw_scripts.sh` script, to the array hbase_v3_snapshots. If the HBase schema has changed you'll have to add a new array called e.g. hbase_v4_snapshots and add logic to process that array at the bottom of the script (another loop).
+- Add the new snapshot name to `hive/normalize/create_occurrence_tables.sh` in the same way as above.
+- Add the new snapshot name to `hive/process/build_prepare_script.sh` in the same way as above.
+- Replace the last element of `temporalFacetSnapshots` in `R/graph/utils.R` with your new snapshot. Follow the formatting in use, e.g. `2015-01-19`
+- Make sure the version of EPSG used in the latest occurrence project pom.xml is the same as the one that the script `hive/normalize/create_tmp_interp_tables.sh` fetches. Do that by checking the pom.xml (hopefully still at: https://github.com/gbif/occurrence/blob/master/pom.xml) for the geotools.version. That version should be the same as what's in the shell script (at time of writing the geotools.version was 12.1 and the script line was `curl -L 'http://download.osgeo.org/webdav/geotools/org/geotools/gt-epsg-hsql/12.1/gt-epsg-hsql-12.1.jar' > /tmp/gt-epsg-hsql.jar`)
+- From the root (analytics) directory you can now run the `build.sh` script to run all the HBase and Hive table building, build all the master CSV files, which are in turn processed down to per country CSVs, then generate the figures needed for the website and the country reports. Note that this will take up to 48 hours and is unfortunately error prone, so all steps could also be run individually. In any case it's probably best to run all parts of this script on a machine in the secretariat and ideally in a "screen" session. To run it all do:
+
+```
+screen -L -S analytics
+./build.sh -runHbase -runHive -runHadoop -runPrepare -runFigures
+```
 
   (Detach from the screen with "^A d", reattach with `screen -x`.)
 
@@ -44,10 +51,15 @@ The project is divided into several parts:
 - the /usr/lib64/R/library/extrafontdb dir must be writeable by the user running the runFigures command because font stuff will be written there on first load
 
 ### Steps to build country reports after the R part is done
-- rsync the CSVs and figures to root@analytics-files.gbif-uat.org:/var/www/html/analytics-files/ and check (this server is also used for gbif-dev.org); rsync to prod also.
-- Clear the Thumbor cache, see the [flush_analytics_urls](https://github.com/gbif/infrastructure/blob/master/roles/gbif.thumbor/files/flush_analytics_urls) script on the Thumbor server.
-- Generate the country reports — check you are using correct APIs!  Instructions are in the [country-reports](https://github.org/gbif/country-reports) project.
-- rsync the reports to root@analytics-files.gbif-uat.org:/var/www/html/analytics-files/ and after checking to prod also.
+- rsync the CSVs and figures to root@analytics-files.gbif-uat.org:/var/www/html/analytics-files/ and check (this server is also used for gbif-dev.org)
+- Check the download statistics are up-to-date, e.g. with https://github.com/gbif/registry/blob/master/populate_downloaded_records_statistics.sh
+- Generate the country reports — check you are using correct APIs! (Normally prod but UAT analytics assets.)  Instructions are in the [country-reports](https://github.org/gbif/country-reports) project.
+- rsync the reports to root@analytics-files.gbif-uat.org:/var/www/html/analytics-files/
+
+### Steps to deploy to production
+- rsync the CSVs and figures to root@analytics-files.gbif.org:/var/www/html/analytics-files/
+- Clear the Thumbor caches, see the [flush_analytics_urls](https://github.com/gbif/infrastructure/blob/master/roles/gbif.thumbor/files/flush_analytics_urls) script on the Thumbor server.
+- rsync the reports to root@analytics-files.gbif.org:/var/www/html/analytics-files/
 - Check https://www.gbif.org/analytics, write an email to staff@gbif.org giving heads up on the new data, and accept the many accolades due your outstanding achievement in the field of excellence!
 - Archive the new analytics in Box.  The old analytics files have been used several times by the communications team:
 ```
