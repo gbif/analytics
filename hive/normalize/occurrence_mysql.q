@@ -62,7 +62,7 @@ SELECT
   r.basis_of_record,
   g.latitude,
   g.longitude,
-  CASE WHEN g.country = 'UK' THEN 'GB' ELSE g.country END AS country
+  CASE WHEN g.country = 'UK' THEN 'GB' ELSE g.country END AS country,
   d.day,
   d.month,
   d.year,

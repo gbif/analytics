@@ -6,7 +6,7 @@ runFigures="false"
 
 destination_db="analytics"
 snapshot_db="snapshot"
-production_db="prod_f"
+production_db="prod_g"
 
 [[ $* =~ (^| )"-runHbase"($| ) ]] && runHbase="true"
 [[ $* =~ (^| )"-runHive"($| ) ]] && runHive="true"
