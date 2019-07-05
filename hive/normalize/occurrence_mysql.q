@@ -23,6 +23,8 @@ SET mapreduce.reduce.shuffle.parallelcopies=5;
 
 SET mapred.map.tasks = ${hiveconf:mapcount};
 
+SET mapred.job.queue.name = root.default;
+
 -- Set up memory for YARN
 SET mapreduce.map.memory.mb = 4096;
 SET mapreduce.reduce.memory.mb = 4096;
