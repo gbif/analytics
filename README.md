@@ -52,12 +52,14 @@ screen -L -S analytics
 
 ### Steps to build country reports after the R part is done
 - rsync the CSVs and figures to root@analytics-files.gbif-uat.org:/var/www/html/analytics-files/ and check (this server is also used for gbif-dev.org)
+  rsync -avn report/ root@analytics-files.gbif-uat.org:/var/www/html/analytics-files/
 - Check the download statistics are up-to-date, e.g. with https://github.com/gbif/registry/blob/master/populate_downloaded_records_statistics.sh
 - Generate the country reports — check you are using correct APIs! (Normally prod but UAT analytics assets.)  Instructions are in the [country-reports](https://github.org/gbif/country-reports) project.
 - rsync the reports to root@analytics-files.gbif-uat.org:/var/www/html/analytics-files/
 
 ### Steps to deploy to production
 - rsync the CSVs and figures to root@analytics-files.gbif.org:/var/www/html/analytics-files/
+  rsync -avn report/ root@analytics-files.gbif.org:/var/www/html/analytics-files/
 - Clear the Thumbor caches, see the [flush_analytics_urls](https://github.com/gbif/infrastructure/blob/master/roles/gbif.thumbor/files/flush_analytics_urls) script on the Thumbor server.
 - rsync the reports to root@analytics-files.gbif.org:/var/www/html/analytics-files/
 - Check https://www.gbif.org/analytics, write an email to staff@gbif.org giving heads up on the new data, and accept the many accolades due your outstanding achievement in the field of excellence!
