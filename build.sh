@@ -6,7 +6,6 @@ runFigures="false"
 
 destination_db="analytics"
 snapshot_db="snapshot"
-production_db="prod_g"
 
 [[ $* =~ (^| )"-runHbase"($| ) ]] && runHbase="true"
 [[ $* =~ (^| )"-runHive"($| ) ]] && runHive="true"
@@ -16,47 +15,66 @@ production_db="prod_g"
 
 export LANG=en_GB.UTF-8
 
+log () {
+  echo $(tput setaf 3)$(date '+%Y-%m-%d %H:%M:%S ')$(tput setaf 11)$1$(tput sgr0)
+}
+
 if [ $runHbase == "true" ];then
-  echo 'Running hbase stages (import and geo/taxonomy table creation)'
+  log 'Running HBase stages (import and geo/taxonomy table creation)'
+  log 'HBase stage: build_raw_scripts.sh'
   ./hive/normalize/build_raw_scripts.sh
+  log 'HBase stage: create_tmp_raw_tables.sh'
   ./hive/normalize/create_tmp_raw_tables.sh
+  log 'HBase stage: create_tmp_interp_tables.sh'
   ./hive/normalize/create_tmp_interp_tables.sh
-  echo 'Creating occurrence tables'
+  log 'HBase stage: create_occurrence_tables.sh'
   ./hive/normalize/create_occurrence_tables.sh
 
-  echo '#####################'
-  echo 'HBASE STAGE COMPLETED'
-  echo '#####################'
+  log '#####################'
+  log 'HBASE STAGE COMPLETED'
+  log '#####################'
 else
-  echo 'Skipping hbase stage (add -runHbase to command to run it)'
+  log 'Skipping hbase stage (add -runHbase to command to run it)'
 fi
 
 if [ $runHive == "true" ];then
-  echo 'Running hive stages (Existing tables are replaced)'
+  log 'Running Hive stages (Existing tables are replaced)'
   prepare_file="hive/process/prepare.q"
   ./hive/process/build_prepare_script.sh $prepare_file
+  log 'Hive stage: Union all snapshots into a table'
   hive --hiveconf DB="$destination_db" --hiveconf SNAPSHOT_DB="$snapshot_db" -f $prepare_file
+  log 'Hive stage: Process occ_kingdom_basisOfRecord.q'
   hive --hiveconf DB="$destination_db" -f hive/process/occ_kingdom_basisOfRecord.q
+  log 'Hive stage: Process occ_dayCollected.q'
   hive --hiveconf DB="$destination_db" -f hive/process/occ_dayCollected.q
+  log 'Hive stage: Process occ_yearCollected.q'
   hive --hiveconf DB="$destination_db" -f hive/process/occ_yearCollected.q
+  log 'Hive stage: Process occ_complete.q'
   hive --hiveconf DB="$destination_db" -f hive/process/occ_complete.q
+  log 'Hive stage: Process occ_complete_v2.q'
   hive --hiveconf DB="$destination_db" -f hive/process/occ_complete_v2.q
+  log 'Hive stage: Process occ_cells.q'
   hive --hiveconf DB="$destination_db" -f hive/process/occ_cells.q
 
+  log 'Hive stage: Process spe_kingdom.q'
   hive --hiveconf DB="$destination_db" -f hive/process/spe_kingdom.q
+  log 'Hive stage: Process spe_dayCollected.q'
   hive --hiveconf DB="$destination_db" -f hive/process/spe_dayCollected.q
+  log 'Hive stage: Process spe_yearCollected.q'
   hive --hiveconf DB="$destination_db" -f hive/process/spe_yearCollected.q
 
+  log 'Hive stage: Process repatriation.q'
   hive --hiveconf DB="$destination_db" -f hive/process/repatriation.q
-  echo '####################'
-  echo 'HIVE STAGE COMPLETED'
-  echo '####################'
+  log '####################'
+  log 'HIVE STAGE COMPLETED'
+  log '####################'
 else
-  echo 'Skipping hive stage (add -runHive to command to run it)'
+  log 'Skipping hive stage (add -runHive to command to run it)'
 fi
 
 if [ $runHadoop == "true" ];then
-  echo 'Downloading the CSVs from Hadoop (Existing data are overwritten)'
+  log 'Running Hadoop stages'
+  log 'Downloading the CSVs from Hadoop (Existing data are overwritten)'
   rm -fr hadoop
   mkdir hadoop
   hdfs dfs -getmerge /user/hive/warehouse/"$destination_db".db/occ_country_kingdom_basisofrecord hadoop/occ_country_kingdom_basisOfRecord.csv
@@ -112,38 +130,48 @@ if [ $runHadoop == "true" ];then
   hdfs dfs -getmerge /user/hive/warehouse/"$destination_db".db/spe_country_repatriation hadoop/spe_country_repatriation.csv
   hdfs dfs -getmerge /user/hive/warehouse/"$destination_db".db/spe_publishercountry_repatriation hadoop/spe_publisherCountry_repatriation.csv
   hdfs dfs -getmerge /user/hive/warehouse/"$destination_db".db/spe_repatriation hadoop/spe_repatriation.csv
-  echo '######################'
-  echo 'HADOOP STAGE COMPLETED'
-  echo '######################'
+  log '######################'
+  log 'HADOOP STAGE COMPLETED'
+  log '######################'
 else
-  echo 'Skipping hadoop copy stage (add -runHadoop to command to run it)'
+  log 'Skipping Hadoop copy stage (add -runHadoop to command to run it)'
 fi
 
 if [ $runPrepare == "true" ];then
-  echo 'Removing the reports output folder'
+  log 'Removing the reports output folder'
   rm -fr report
 
-  echo 'Preparing the CSVs'
+  log 'Preparing the CSVs'
+  log 'R script occ_kingdomBasisOfRecord.R'
   Rscript R/csv/occ_kingdomBasisOfRecord.R
+  log 'R script occ_dayCollected.R'
   Rscript R/csv/occ_dayCollected.R
+  log 'R script occ_yearCollected.R'
   Rscript R/csv/occ_yearCollected.R
+  log 'R script occ_complete.R'
   Rscript R/csv/occ_complete.R
+  log 'R script occ_repatriation.R'
   Rscript R/csv/occ_repatriation.R
+  log 'R script occ_cells.R'
   Rscript R/csv/occ_cells.R
+  log 'R script spe_kingdom.R'
   Rscript R/csv/spe_kingdom.R
+  log 'R script spe_dayCollected.R'
   Rscript R/csv/spe_dayCollected.R
+  log 'R script spe_yearCollected.R'
   Rscript R/csv/spe_yearCollected.R
+  log 'R script spe_repatriation.R'
   Rscript R/csv/spe_repatriation.R
 
-  echo '#######################'
-  echo 'PREPARE STAGE COMPLETED'
-  echo '#######################'
+  log '#######################'
+  log 'PREPARE STAGE COMPLETED'
+  log '#######################'
 else
-  echo 'Skipping prepare CSV stage (add -runPrepare to command to run it)'
+  log 'Skipping prepare CSV stage (add -runPrepare to command to run it)'
 fi
 
 if [ $runFigures == "true" ];then
-  echo 'Generating the figures'
+  log 'Generating the figures'
   Rscript R/report.R
 
   # Font embedding, disabled as we aren't making PDF figures.
@@ -151,9 +179,9 @@ if [ $runFigures == "true" ];then
   # ./embed_dingbats_mac.sh report /System/Library/Fonts
   # linux specific, paths as per readme
   # ./embed_dingbats_linux.sh report /usr/share/fonts
-  echo '#######################'
-  echo 'FIGURES STAGE COMPLETED'
-  echo '#######################'
+  log '#######################'
+  log 'FIGURES STAGE COMPLETED'
+  log '#######################'
 else
-  echo 'Skipping create figures stage (add -runFigures to command to run it)'
+  log 'Skipping create figures stage (add -runFigures to command to run it)'
 fi
