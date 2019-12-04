@@ -15,6 +15,7 @@ declare -a mysql_snapshots=("20071219" "20080401" "20080627" "20081010" "2008121
 declare -a hbase_v1_snapshots=("20131220" "20140328")
 declare -a hbase_v2_snapshots=("20140908" "20150119" "20150409")
 declare -a hbase_v3_snapshots=("20150703" "20151001" "20160104" "20160405" "20160704" "20161007" "20161227" "20170412" "20170724" "20171012" "20171222" "20180409" "20180711" "20180928" "20190101" "20190406" "20190701" "20191009")
+declare -a hdfs_v1_snapshots=("20200101")
 
 log 'Creating MySQL snapshots'
 for snapshot in "${mysql_snapshots[@]}"
@@ -42,4 +43,11 @@ for snapshot in "${hbase_v3_snapshots[@]}"
 do
     log "Creating HBase V3 snapshot $snapshot"
     hive --hiveconf occjar=/tmp/occurrence-hive.jar --hiveconf mapcount=100 --hiveconf snapshot="$snapshot" -f hive/normalize/occurrence_v3_hbase.q
+done
+
+log 'Creating HDFS V1 snapshots'
+for snapshot in "${hdfs_v1_snapshots[@]}"
+do
+    log "Creating HDFS V1 snapshot $snapshot"
+    hive --hiveconf occjar=/tmp/occurrence-hive.jar --hiveconf mapcount=100 --hiveconf snapshot="$snapshot" -f hive/normalize/occurrence_v1_hdfs.q
 done

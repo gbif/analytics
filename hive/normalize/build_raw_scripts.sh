@@ -6,9 +6,10 @@ declare -a hbase_v1_snapshots=("20131220" "20140328")
 declare -a hbase_v2_snapshots=("20140908" "20150119" "20150409")
 # v3 exists only because of a tiny difference in taxonomy schema (v_order_ became v_order)
 declare -a hbase_v3_snapshots=("20150703" "20151001" "20160104" "20160405" "20160704" "20161007" "20161227" "20170412" "20170724" "20171012" "20171222" "20180409" "20180711" "20180928" "20190101" "20190406" "20190701" "20191009")
+declare -a hdfs_v1_snapshots=("20200101")
 
-max=$(( ${#hbase_v3_snapshots[*]} - 1 ))
-last_modern_snapshot=${hbase_v3_snapshots[$max]}
+max=$(( ${#hdfs_v1_snapshots[*]} - 1 ))
+last_modern_snapshot=${hdfs_v1_snapshots[$max]}
 
 ################ RAW TAXONOMY SCRIPT
 taxonomy_file="hive/normalize/raw_taxonomy.q"
@@ -84,7 +85,7 @@ do
     UNION ALL' >> $taxonomy_file
 done
 
-for snapshot in "${hbase_v3_snapshots[@]}"
+for snapshot in "${hbase_v3_snapshots[@]}" "${hdfs_v1_snapshots[@]}"
 do
   echo '
     SELECT COALESCE(v_kingdom,"") AS kingdom, COALESCE(v_phylum,"") AS phylum, COALESCE(v_class,"") AS class_rank, COALESCE(v_order,"") AS order_rank, COALESCE(v_family,"") AS family, COALESCE(v_genus,"") AS genus, COALESCE(v_scientificname,"") AS scientific_name, COALESCE(v_specificepithet,"") AS specific_epithet, COALESCE(v_infraspecificepithet,"") AS infra_specific_epithet, COALESCE(v_scientificnameauthorship,"") AS author, COALESCE(v_taxonrank,"") AS rank
@@ -151,7 +152,7 @@ do
   UNION ALL' >> "$geo_file"
 done
 
-new_snapshots=( ${hbase_v2_snapshots[@]} ${hbase_v3_snapshots[@]} )
+new_snapshots=( ${hbase_v2_snapshots[@]} ${hbase_v3_snapshots[@]} ${hdfs_v1_snapshots[@]} )
 for snapshot in "${new_snapshots[@]}"
 do
   echo '
