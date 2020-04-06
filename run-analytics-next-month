@@ -7,7 +7,13 @@
 # Wait until the first of the month (UTC).
 while [[ $(date -u +%-d) -ne 1 ]]; do
     echo "Date is "$(date -u +%Y-%m-%d)", too soon for analytics."
-    sleep 1h
+    sleep 15m
+done
+
+# Wait until the seventh hour (UTC), so the HDFS build has completed.
+while [[ $(date -u +%-H) -ne 7 ]]; do
+    echo "Time is "$(date -u +%H:%M:%S)", too soon for analytics."
+    sleep 15m
 done
 
 date -u -R
