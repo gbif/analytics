@@ -15,6 +15,8 @@ snapshot_db="snapshot"
 
 export LANG=en_GB.UTF-8
 
+alias Rscript="docker run --rm -it -v $PWD:/analytics/ docker.gbif.org/analytics-figures Rscript"
+
 log () {
   echo $(tput setaf 3)$(date '+%Y-%m-%d %H:%M:%S ')$(tput setaf 11)$1$(tput sgr0)
 }
