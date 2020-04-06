@@ -15,7 +15,7 @@ snapshot_db="snapshot"
 
 export LANG=en_GB.UTF-8
 
-alias Rscript="docker run --rm -it -v $PWD:/analytics/ docker.gbif.org/analytics-figures Rscript"
+Rscript="docker run --rm -it -v $PWD:/analytics/ docker.gbif.org/analytics-figures Rscript"
 
 log () {
   echo $(tput setaf 3)$(date '+%Y-%m-%d %H:%M:%S ')$(tput setaf 11)$1$(tput sgr0)
@@ -145,25 +145,25 @@ if [ $runPrepare == "true" ];then
 
   log 'Preparing the CSVs'
   log 'R script occ_kingdomBasisOfRecord.R'
-  Rscript R/csv/occ_kingdomBasisOfRecord.R
+  $Rscript R/csv/occ_kingdomBasisOfRecord.R
   log 'R script occ_dayCollected.R'
-  Rscript R/csv/occ_dayCollected.R
+  $Rscript R/csv/occ_dayCollected.R
   log 'R script occ_yearCollected.R'
-  Rscript R/csv/occ_yearCollected.R
+  $Rscript R/csv/occ_yearCollected.R
   log 'R script occ_complete.R'
-  Rscript R/csv/occ_complete.R
+  $Rscript R/csv/occ_complete.R
   log 'R script occ_repatriation.R'
-  Rscript R/csv/occ_repatriation.R
+  $Rscript R/csv/occ_repatriation.R
   log 'R script occ_cells.R'
-  Rscript R/csv/occ_cells.R
+  $Rscript R/csv/occ_cells.R
   log 'R script spe_kingdom.R'
-  Rscript R/csv/spe_kingdom.R
+  $Rscript R/csv/spe_kingdom.R
   log 'R script spe_dayCollected.R'
-  Rscript R/csv/spe_dayCollected.R
+  $Rscript R/csv/spe_dayCollected.R
   log 'R script spe_yearCollected.R'
-  Rscript R/csv/spe_yearCollected.R
+  $Rscript R/csv/spe_yearCollected.R
   log 'R script spe_repatriation.R'
-  Rscript R/csv/spe_repatriation.R
+  $Rscript R/csv/spe_repatriation.R
 
   log '#######################'
   log 'PREPARE STAGE COMPLETED'
@@ -174,7 +174,7 @@ fi
 
 if [ $runFigures == "true" ];then
   log 'Generating the figures'
-  Rscript R/report.R
+  $Rscript R/report.R
 
   # Font embedding, disabled as we aren't making PDF figures.
   # Mac specific, typical font defaults
