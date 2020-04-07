@@ -24,7 +24,13 @@ kilo_formatter <- function(x) {
 }
 
 savePng <- function(plot, file) {
+  print(paste("Writing web plot: ", file))
   ggsave(filename=file, plot=plot, width=8, height=6);
+}
+
+saveSvg <- function(plot, file) {
+  print(paste("Writing svg plot: ", file))
+  ggsave(filename=file, plot=plot, device='svg', width=8, height=6)
 }
 
 # rewrite kingdom

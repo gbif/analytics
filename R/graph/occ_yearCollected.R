@@ -12,12 +12,18 @@ occ_yearCollected <- function(sourceFile, targetDir) {
   DF <- DF[DF$year >= minPlotYear,]
   
   p1 <- ggplot(arrange(DF,snapshot,year), aes(x=year,y=occurrenceCount)) + 
-           geom_area(fill="#ff7f00", alpha='0.7') +
+           geom_area(fill="#ff7f00", alpha=0.7) +
            facet_grid(snapshot~.) +
            ylab("Number of occurrences (in millions)") +
            xlab("Year") +
            scale_y_continuous(label = mill_formatter) +
           ggtitle("Number of occurrences per year") 
   
-  savePng(p1, paste(targetDir, "occ_yearCollected.png", sep="/"))
+  #png
+  webFile <- paste(targetDir, "occ_yearCollected.png", sep="/")
+  savePng(file=webFile, plot=p1)
+
+  #svg
+  svgFile <- paste(targetDir, "occ_yearCollected.svg", sep="/")
+  saveSvg(file=svgFile, plot=p1)
 }

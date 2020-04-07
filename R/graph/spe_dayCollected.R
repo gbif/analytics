@@ -11,13 +11,18 @@ spe_dayCollected <- function(sourceFile, targetDir) {
   DF <- DF[DF$snapshot %in% temporalFacetSnapshots,]
   
   p1 <- ggplot(arrange(DF,day,speciesCount), aes(x=day,y=speciesCount)) + 
-    geom_area(fill="#2d004b", alpha='0.7') +
+    geom_area(fill="#2d004b", alpha=0.7) +
     facet_grid(snapshot~.) +
     ylab("Number of species (in thousands)") +
     xlab("Day of year") +
     scale_y_continuous(label = kilo_formatter) + 
     ggtitle("Number of species per day of year") 
   
-  #ggsave(filename=paste(targetDir, "spe_dayCollected.png", sep="/"), plot=p1, width=8, height=6 )
-  savePng(p1, paste(targetDir, "spe_dayCollected.png", sep="/"))
+  #png
+  webFile <- paste(targetDir, "spe_dayCollected.png", sep="/")
+  savePng(file=webFile, plot=p1)
+
+  #svg
+  svgFile <- paste(targetDir, "spe_dayCollected.svg", sep="/")
+  saveSvg(file=svgFile, plot=p1)
 }

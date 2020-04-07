@@ -59,19 +59,17 @@ printTheme <- theme(
 #############
 generatePlots <- function(doWeb=TRUE, doPrint=FALSE, df, totalDf, plotsDir, targetFilePattern, plotTitle, dataCol, xCol, yCol, xTitle, yTitle, yFormatter, legendTitle, seriesColours, seriesValues, seriesTitles=NULL) {
   if (doWeb) {
-    #png
     webPlot <- createPlot(webTheme, df, totalDf, plotTitle, dataCol, xCol, yCol, xTitle, yTitle, yFormatter, legendTitle, seriesColours, seriesValues, seriesTitles)
     webDir <- paste(plotsDir, webDirSuffix, sep="/")
     dir.create(webDir, showWarnings=F)  
+
+    #png
     webFile <- paste(webDir, paste(targetFilePattern, ".png", sep=""), sep="/")
-    print(paste("Writing web plot: ", webFile))
     savePng(file=webFile, plot=webPlot)
 
     #svg
-    svgPlot <- createPlot(webTheme, df, totalDf, plotTitle, dataCol, xCol, yCol, xTitle, yTitle, yFormatter, legendTitle, seriesColours, seriesValues, seriesTitles)
     svgFile <- paste(webDir, paste(targetFilePattern, ".svg", sep=""), sep="/")
-    print(paste("Writing svg plot: ", svgFile))
-    ggsave(filename=svgFile, plot=svgPlot, device='svg', width=21, height=11, scale=0.75)
+    saveSvg(file=svgFile, plot=webPlot)
   }
   if (doPrint) {
     #pdf

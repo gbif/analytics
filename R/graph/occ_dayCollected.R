@@ -11,12 +11,18 @@ occ_dayCollected <- function(sourceFile, targetDir) {
   DF <- DF[DF$snapshot %in% temporalFacetSnapshots,]
   
   p1 <- ggplot(arrange(DF,day,occurrenceCount), aes(x=day,y=occurrenceCount)) + 
-    geom_area(fill="#ff7f00", alpha='0.7') +
+    geom_area(fill="#ff7f00", alpha=0.7) +
     facet_grid(snapshot~.) +
     ylab("Number of occurrences (in millions)") +
     xlab("Day of year") +
     scale_y_continuous(label = mill_formatter) +
     ggtitle("Number of occurrences per day of year") 
   
-  savePng(p1, paste(targetDir, "occ_dayCollected.png", sep="/"))
+  #png
+  webFile <- paste(targetDir, "occ_dayCollected.png", sep="/")
+  savePng(file=webFile, plot=p1)
+
+  #svg
+  svgFile <- paste(targetDir, "occ_dayCollected.svg", sep="/")
+  saveSvg(file=svgFile, plot=p1)
 }
