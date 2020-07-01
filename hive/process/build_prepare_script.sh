@@ -29,7 +29,7 @@ SET mapreduce.reduce.java.opts = -Xmx3072m;
 CREATE DATABASE IF NOT EXISTS ${hiveconf:DB};
 DROP TABLE IF EXISTS ${hiveconf:DB}.snapshots;
 
-CREATE TABLE ${hiveconf:DB}.snapshots STORED AS RCFILE AS
+CREATE TABLE ${hiveconf:DB}.snapshots STORED AS ORC AS
 SELECT * FROM
 (' > $prepare_file
 

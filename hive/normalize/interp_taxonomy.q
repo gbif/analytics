@@ -17,7 +17,7 @@ ADD JAR ${hiveconf:props};
 CREATE TEMPORARY FUNCTION nubLookup AS 'org.gbif.occurrence.hive.udf.SpeciesMatchUDF';
 
 DROP TABLE IF EXISTS snapshot.tmp_taxonomy_interp;
-CREATE TABLE snapshot.tmp_taxonomy_interp STORED AS RCFILE AS
+CREATE TABLE snapshot.tmp_taxonomy_interp STORED AS ORC AS
 SELECT
   t1.taxon_key,
   n.kingdom as kingdom,

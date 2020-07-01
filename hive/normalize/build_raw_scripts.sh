@@ -26,7 +26,7 @@ SET mapred.output.compression.codec=org.apache.hadoop.io.compress.SnappyCodec;
 SET hive.exec.parallel=true;
 
 DROP TABLE IF EXISTS snapshot.tmp_raw_taxonomy;
-CREATE TABLE snapshot.tmp_raw_taxonomy STORED AS RCFILE AS
+CREATE TABLE snapshot.tmp_raw_taxonomy STORED AS ORC AS
 SELECT
   CONCAT_WS("|",
     t1.kingdom,
@@ -128,7 +128,7 @@ SET mapred.output.compression.codec=org.apache.hadoop.io.compress.SnappyCodec;
 SET hive.exec.parallel=true;
 
 DROP TABLE IF EXISTS snapshot.tmp_raw_geo;
-CREATE TABLE snapshot.tmp_raw_geo STORED AS RCFILE AS
+CREATE TABLE snapshot.tmp_raw_geo STORED AS ORC AS
 SELECT
   CONCAT_WS("|",
     t1.latitude,
