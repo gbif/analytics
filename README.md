@@ -30,7 +30,7 @@ These steps are required for a new environment
 - This will only work on a Cloudera Manager managed gateway such as `c5gateway-vh` on which you should be able to `sudo su - hdfs` and find the code in `/home/hdfs/analytics/` (do a `git pull`)
 - Make sure Hadoop libraries and binaries (e.g. hive) are on your path
 - The snapshot name will be the date as `YYYYMMDD` so e.g. `20140923`.
-- Create new "raw" table from the HDFS table using `hive/import/hdfs/create_new_snapshot.sh`. Pass in snapshot database, snapshot name, source Hive database and source Hive table e.g. `cd hive/import/hdfs; ./create_new_snapshot.sh snapshot 20200101 prod_h occurrence_pipelines_hdfs`
+- Create new "raw" table from the HDFS table using `hive/import/hdfs/create_new_snapshot.sh`. Pass in snapshot database, snapshot name, source Hive database and source Hive table e.g. `cd hive/import/hdfs; ./create_new_snapshot.sh snapshot 20200701 prod_h occurrence`
 - Tell Matt he can run the backup script, which exports these snapshots to external storage.
 - Add the new snapshot name to the `hive/normalize/build_raw_scripts.sh` script, to the array hdfs_v1_snapshots. If the HDFS schema has changed you'll have to add a new array called e.g. hdfs_v2_snapshots and add logic to process that array at the bottom of the script (another loop).
 - Add the new snapshot name to `hive/normalize/create_occurrence_tables.sh` in the same way as above.

@@ -29,7 +29,7 @@ echo "Starting analytics!"
 
 cd /home/hdfs/analytics/hive/import/hdfs
 echo "Creating snapshot"
-./create_new_snapshot.sh snapshot $(date -u +%Y%m%d) prod_h occurrence_pipeline_hdfs
+./create_new_snapshot.sh snapshot $(date -u +%Y%m%d) prod_h occurrence
 echo "Snapshot completed"
 
 sleep 1m
