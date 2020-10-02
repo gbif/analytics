@@ -15,6 +15,15 @@ snapshot_db="snapshot"
 
 export LANG=en_GB.UTF-8
 
+# If Docker isn't used:
+# - Arial and Arial Narrow will be required on the machine from which
+# the runFigures command is run. For Linux that means a new dir under
+# /usr/share/fonts with the .ttf files from this project's fonts/ dir
+# copied in (the provisioning project's Ansible scripts take care of
+# this).
+# - The /usr/lib64/R/library/extrafontdb dir must be writeable by the
+# user running the runFigures command because font stuff will be
+# written there on first load
 Rscript="docker run --rm -it -v $PWD:/analytics/ docker.gbif.org/analytics-figures Rscript"
 
 log () {

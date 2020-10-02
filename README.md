@@ -47,11 +47,8 @@ screen -L -S analytics
 
 (Detach from the screen with "^A d", reattach with `screen -x`.)
 
+- `sudo chown hdfs:hdfs reports`, as Docker has set the owner of this directory to root.
 - Run the `country_reports/copy_placeholders.sh` script, which creates missing graphs (e.g. where a country does not publish any occurrences).
-
-### Notes for figure producers (for country reports)
-- Arial and Arial Narrow will be required on the machine from which the runFigures command is run. For Linux that means a new dir under /usr/share/fonts with the .ttf files from this project's fonts/ dir copied in (the provisioning project's Ansible scripts take care of this).
-- the /usr/lib64/R/library/extrafontdb dir must be writeable by the user running the runFigures command because font stuff will be written there on first load
 
 ### Steps to build country reports after the R part is done
 - rsync the CSVs and figures to `root@analytics-files.gbif-uat.org:/var/www/html/analytics-files/` and check (this server is also used for gbif-dev.org)

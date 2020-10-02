@@ -7,10 +7,10 @@ temporalFactors <- c("Unknown", "YearMonthDay", "YearMonth", "Year")
 
 # snapshots used in the temporal facets (e.g. collection year)
 # December/January snapshots:
-# yearEnds <- c("20071219" "20081217" "20091216" "20101117" "20120118" "20121211" "20131220" "20150119" "20160104" "20161227" "20171222" "20190101" "20200101" "20200701")
+# yearEnds <- c("20071219" "20081217" "20091216" "20101117" "20120118" "20121211" "20131220" "20150119" "20160104" "20161227" "20171222" "20190101" "20200101" "20201001")
 #               ..........                                             ..........                                  ..........                                  ..........
 # Split into four
-temporalFacetSnapshots <- c("2007-12-19", "2012-12-11", "2016-12-27", "2020-07-01")
+temporalFacetSnapshots <- c("2007-12-19", "2012-12-11", "2016-12-27", "2020-10-01")
 
 # minimum year to plot of year range charts
 minPlotYear <- 1950
