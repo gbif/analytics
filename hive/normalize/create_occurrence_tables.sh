@@ -17,37 +17,54 @@ declare -a hbase_v2_snapshots=("20140908" "20150119" "20150409")
 declare -a hbase_v3_snapshots=("20150703" "20151001" "20160104" "20160405" "20160704" "20161007" "20161227" "20170412" "20170724" "20171012" "20171222" "20180409" "20180711" "20180928" "20190101" "20190406" "20190701" "20191009")
 declare -a hdfs_v1_snapshots=("20200101" "20200401" "20200701" "20201001")
 
+waitFor4JobsOrFewer () {
+    sleep 10
+    while [[ $(jobs | wc -l) -ge 5 ]]; do
+	echo "Waiting"
+	sleep 30
+    done
+}
+
 log 'Creating MySQL snapshots'
 for snapshot in "${mysql_snapshots[@]}"
 do
     log "Creating MySQL snapshot $snapshot"
-    hive --hiveconf occjar=/tmp/occurrence-hive.jar --hiveconf mapcount=100 --hiveconf snapshot="$snapshot" -f hive/normalize/occurrence_mysql.q
+    hive --hiveconf occjar=/tmp/occurrence-hive.jar --hiveconf mapcount=100 --hiveconf snapshot="$snapshot" -f hive/normalize/occurrence_mysql.q &
+    waitFor4JobsOrFewer
 done
 
 log 'Creating HBase V1 snapshots'
 for snapshot in "${hbase_v1_snapshots[@]}"
 do
     log "Creating HBase V1 snapshot $snapshot"
-    hive --hiveconf occjar=/tmp/occurrence-hive.jar --hiveconf mapcount=100 --hiveconf snapshot="$snapshot" -f hive/normalize/occurrence_v1_hbase.q
+    hive --hiveconf occjar=/tmp/occurrence-hive.jar --hiveconf mapcount=100 --hiveconf snapshot="$snapshot" -f hive/normalize/occurrence_v1_hbase.q &
+    waitFor4JobsOrFewer
 done
 
 log 'Creating HBase V2 snapshots'
 for snapshot in "${hbase_v2_snapshots[@]}"
 do
     log "Creating HBase V2 snapshot $snapshot"
-    hive --hiveconf occjar=/tmp/occurrence-hive.jar --hiveconf mapcount=100 --hiveconf snapshot="$snapshot" -f hive/normalize/occurrence_v2_hbase.q
+    hive --hiveconf occjar=/tmp/occurrence-hive.jar --hiveconf mapcount=100 --hiveconf snapshot="$snapshot" -f hive/normalize/occurrence_v2_hbase.q &
+    waitFor4JobsOrFewer
 done
 
 log 'Creating HBase V3 snapshots'
 for snapshot in "${hbase_v3_snapshots[@]}"
 do
     log "Creating HBase V3 snapshot $snapshot"
-    hive --hiveconf occjar=/tmp/occurrence-hive.jar --hiveconf mapcount=100 --hiveconf snapshot="$snapshot" -f hive/normalize/occurrence_v3_hbase.q
+    hive --hiveconf occjar=/tmp/occurrence-hive.jar --hiveconf mapcount=100 --hiveconf snapshot="$snapshot" -f hive/normalize/occurrence_v3_hbase.q &
+    waitFor4JobsOrFewer
 done
 
 log 'Creating HDFS V1 snapshots'
 for snapshot in "${hdfs_v1_snapshots[@]}"
 do
     log "Creating HDFS V1 snapshot $snapshot"
-    hive --hiveconf occjar=/tmp/occurrence-hive.jar --hiveconf mapcount=100 --hiveconf snapshot="$snapshot" -f hive/normalize/occurrence_v1_hdfs.q
+    hive --hiveconf occjar=/tmp/occurrence-hive.jar --hiveconf mapcount=100 --hiveconf snapshot="$snapshot" -f hive/normalize/occurrence_v1_hdfs.q &
+    waitFor4JobsOrFewer
 done
+
+echo "Waiting for remaining jobs to finish:"
+jobs
+wait

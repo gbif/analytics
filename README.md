@@ -27,7 +27,7 @@ These steps are required for a new environment
 - Run `Rscript R/install-packages.R` (Possibly it is necessary to set the `R_LIBS_USER` environment variable.)
 
 ### Steps for adding a new snapshot and then re-running the processing
-- This will only work on a Cloudera Manager managed gateway such as `c5gateway-vh` on which you should be able to `sudo su - hdfs` and find the code in `/home/hdfs/analytics/` (do a `git pull`)
+- This will only work on a Cloudera Manager managed gateway such as `c5gateway-vh` on which you should be able to `sudo -i -u hdfs` and find the code in `/home/hdfs/analytics/` (do a `git pull`)
 - Make sure Hadoop libraries and binaries (e.g. hive) are on your path
 - The snapshot name will be the date as `YYYYMMDD` so e.g. `20140923`.
 - Create new "raw" table from the HDFS table using `hive/import/hdfs/create_new_snapshot.sh`. Pass in snapshot database, snapshot name, source Hive database and source Hive table e.g. `cd hive/import/hdfs; ./create_new_snapshot.sh snapshot 20200701 prod_h occurrence`
@@ -49,10 +49,11 @@ screen -L -S analytics
 
 - `sudo chown hdfs:hdfs reports`, as Docker has set the owner of this directory to root.
 - Run the `country_reports/copy_placeholders.sh` script, which creates missing graphs (e.g. where a country does not publish any occurrences).
-
-### Steps to build country reports after the R part is done
 - rsync the CSVs and figures to `root@analytics-files.gbif-uat.org:/var/www/html/analytics-files/` and check (this server is also used for gbif-dev.org)
   `rsync -avn report/ root@analytics-files.gbif-uat.org:/var/www/html/analytics-files/`
+- Clear the Thumbor cache for these images.
+
+### Steps to build country reports after the R part is done
 - Check the download statistics are up-to-date, e.g. with https://github.com/gbif/registry/blob/master/populate_downloaded_records_statistics.sh
 - Generate the country reports — check you are using correct APIs! (Normally prod but UAT analytics assets.)  Instructions are in the [country-reports](https://github.org/gbif/country-reports) project.
 - rsync the reports to `root@analytics-files.gbif-uat.org:/var/www/html/analytics-files/`

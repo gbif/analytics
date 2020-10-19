@@ -7,10 +7,11 @@ SET hive.exec.compress.output=true;
 SET mapred.output.compression.type=BLOCK;
 SET mapred.output.compression.codec=org.apache.hadoop.io.compress.SnappyCodec;
 
--- Use lots of mappers
-SET mapred.map.tasks = ${hiveconf:mapcount};
+-- Set size, so we have relatively fewer mappers (limit is geocoder anyway).
+SET mapred.map.tasks=40;
 SET hive.merge.mapfiles = false;
-SET hive.input.format = org.apache.hadoop.hive.ql.io.HiveInputFormat;
+SET hive.input.format=org.apache.hadoop.hive.ql.io.CombineHiveInputFormat;
+SET mapred.min.split.size=128000000;
 
 ADD JAR ${hiveconf:epsgjar};
 ADD JAR ${hiveconf:occjar};
@@ -27,6 +28,6 @@ SELECT
 FROM (
   SELECT
     geo_key,
-    parseGeo("${hiveconf:api}",latitude, longitude, country) g
+    parseGeo("${hiveconf:api}", latitude, longitude, country) g
   FROM snapshot.tmp_raw_geo
 ) t1;
