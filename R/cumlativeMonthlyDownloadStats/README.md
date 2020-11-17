@@ -2,7 +2,7 @@
 
 A registry **user** and **password** is needed to run this. 
 
-Generate stats **cumulative monthly stats** similar to what is produced:
+Generate **cumulative monthly stats** similar to what is produced:
 
 * https://github.com/jlegind/GBIF_monthly_statistics
 * https://jlegind.github.io/

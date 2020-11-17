@@ -1,4 +1,4 @@
-source("R/csv/cumlativeMonthlyDownloadStats/addCumUniqueUsersByYear.R")
+source("R/cumlativeMonthlyDownloadStats/addCumUniqueUsersByYear.R")
 
 # input the clean downloaded registry tables
 monthlyTotals <- function(registryTable) {
@@ -14,7 +14,7 @@ monthlyTotals <- function(registryTable) {
     ungroup() %>%
     arrange(desc(year),desc(month)) %>%
     addCumUniqueUsersByYear() %>% # complicated cumulative distinct user counts
-    select(-unique_users_list)
+    select(-unique_users_list) # remove list column
 
   return(monthly_totals)
 }
@@ -30,9 +30,9 @@ monthlyTotalsCountry <- function(registryTable) {
     mutate(cumulative_downloads_by_year = cumsum(Downloads)) %>%
     mutate(cumulative_records_downloaded_by_year = cumsum(Records)) %>%
     ungroup() %>%
-    addCumUniqueUsersByYearCountry() %>%
+    addCumUniqueUsersByYearCountry() %>% # complicated stats
     arrange(desc(year),desc(month),country) %>%
-    select(-unique_users_list)
+    select(-unique_users_list) # remove list column
 
 return(monthly_totals_country)
 }

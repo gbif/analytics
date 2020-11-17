@@ -1,4 +1,4 @@
-source("R/csv/cumlativeMonthlyDownloadStats/registryConnection.R")
+source("R/cumlativeMonthlyDownloadStats/registryConnection.R")
 
 # download registry tables 
 downloadOccurrenceDownload <- function(con) {
