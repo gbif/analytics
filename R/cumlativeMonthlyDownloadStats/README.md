@@ -1,6 +1,6 @@
 # monthly and cumulative GBIF download statistics 
 
-A registry **user** and **password** is needed to run this. 
+A registry **user** and **password** are needed to run this. 
 
 Generate **cumulative monthly stats** similar to what is produced:
 
