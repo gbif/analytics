@@ -22,12 +22,13 @@ addCumUniqueUsersByYear <- function(d) {
 		arrange(desc(year),desc(month)) %>%
 		group_split(year)
 
-indexes <- data_list %>% map(~ .x %>% nrow())
+	indexes <- data_list %>% 
+		map(~ .x %>% nrow())
 
 	cumulative_unique_users_by_year <- map2(
-		indexes,
-		data_list,
-		~getCumUniqueUsers(.x,.y)) %>%
+			indexes,
+			data_list,
+			~getCumUniqueUsers(.x,.y)) %>%
 		flatten_dbl() %>%
 		rev()
 
@@ -47,11 +48,11 @@ getCumUniqueUsersCountry <- function(index,data) {
 
 	cumulative_unique_users_by_year = 1:index %>%
 		map(~
-		data[1:.x] %>%
-		unlist() %>%
-		unique() %>%
-		length()
-		) %>%
+			data[1:.x] %>%
+			unlist() %>%
+			unique() %>%
+			length()
+			) %>%
 		flatten_dbl() %>%
 		rev()
 
