@@ -2,15 +2,15 @@ source("R/cumlativeMonthlyDownloadStats/registryConnection.R")
 
 # download registry tables 
 downloadOccurrenceDownload <- function(con) {
-  qs <- 'SELECT * FROM occurrence_download;'
-  dbTable <- dbGetQuery(con,qs)
-  return(dbTable)
+	qs <- 'SELECT * FROM occurrence_download;'
+	dbTable <- dbGetQuery(con,qs)
+	return(dbTable)
 }
 
 downloadUser <- function(con) {
-  qs <- "SELECT email, username as user, settings -> 'country' as country FROM public.user;"
-  dbTable <- dbGetQuery(con,qs)
-  return(dbTable)
+	qs <- "SELECT email, username as user, settings -> 'country' as country FROM public.user;"
+	dbTable <- dbGetQuery(con,qs)
+	return(dbTable)
 }
 
 downloadRegistryTables <- function(pw,user) {

@@ -7,12 +7,13 @@ registryConnection <- function(
 	port="5432",
 	dbname="prod_b_registry") {
 
-	con <- dbConnect(RPostgres::Postgres(),
-					host=host,
-					port=port,
-					dbname=dbname,
-					user=user,
-					password=pw)
+	con <- dbConnect(
+		RPostgres::Postgres(),
+		host=host,
+		port=port,
+		dbname=dbname,
+		user=user,
+		password=pw)
 
 	return(con)
 }
