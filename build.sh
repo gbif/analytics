@@ -76,6 +76,8 @@ if [ $runHive == "true" ];then
 
   log 'Hive stage: Process repatriation.q'
   hive --hiveconf DB="$destination_db" -f hive/process/repatriation.q
+  log 'Hive stage: Process totals.q'
+  hive --hiveconf DB="$destination_db" -f hive/process/totals.q
   log '####################'
   log 'HIVE STAGE COMPLETED'
   log '####################'
@@ -107,6 +109,10 @@ if [ $runHadoop == "true" ];then
   hdfs dfs -getmerge /user/hive/warehouse/"$destination_db".db/occ_country_repatriation hadoop/occ_country_repatriation.csv
   hdfs dfs -getmerge /user/hive/warehouse/"$destination_db".db/occ_publishercountry_repatriation hadoop/occ_publisherCountry_repatriation.csv
   hdfs dfs -getmerge /user/hive/warehouse/"$destination_db".db/occ_repatriation hadoop/occ_repatriation.csv
+
+  hdfs dfs -getmerge /user/hive/warehouse/"$destination_db".db/occ_country hadoop/occ_country.csv
+  hdfs dfs -getmerge /user/hive/warehouse/"$destination_db".db/occ_publishercountry hadoop/occ_publisherCountry.csv
+  hdfs dfs -getmerge /user/hive/warehouse/"$destination_db".db/occ hadoop/occ.csv
 
   hdfs dfs -getmerge /user/hive/warehouse/"$destination_db".db/occ_country_cell_one_deg hadoop/occ_country_cell_one_deg.csv
   hdfs dfs -getmerge /user/hive/warehouse/"$destination_db".db/occ_publishercountry_cell_one_deg hadoop/occ_publisherCountry_cell_one_deg.csv
@@ -141,6 +147,10 @@ if [ $runHadoop == "true" ];then
   hdfs dfs -getmerge /user/hive/warehouse/"$destination_db".db/spe_country_repatriation hadoop/spe_country_repatriation.csv
   hdfs dfs -getmerge /user/hive/warehouse/"$destination_db".db/spe_publishercountry_repatriation hadoop/spe_publisherCountry_repatriation.csv
   hdfs dfs -getmerge /user/hive/warehouse/"$destination_db".db/spe_repatriation hadoop/spe_repatriation.csv
+
+  hdfs dfs -getmerge /user/hive/warehouse/"$destination_db".db/spe_country hadoop/spe_country.csv
+  hdfs dfs -getmerge /user/hive/warehouse/"$destination_db".db/spe_publishercountry hadoop/spe_publisherCountry.csv
+  hdfs dfs -getmerge /user/hive/warehouse/"$destination_db".db/spe hadoop/spe.csv
   log '######################'
   log 'HADOOP STAGE COMPLETED'
   log '######################'
@@ -163,6 +173,8 @@ if [ $runPrepare == "true" ];then
   $Rscript R/csv/occ_complete.R
   log 'R script occ_repatriation.R'
   $Rscript R/csv/occ_repatriation.R
+  log 'R script occ.R'
+  $Rscript R/csv/occ.R
   log 'R script occ_cells.R'
   $Rscript R/csv/occ_cells.R
   log 'R script spe_kingdom.R'
@@ -173,6 +185,8 @@ if [ $runPrepare == "true" ];then
   $Rscript R/csv/spe_yearCollected.R
   log 'R script spe_repatriation.R'
   $Rscript R/csv/spe_repatriation.R
+  log 'R script spe.R'
+  $Rscript R/csv/spe.R
 
   log '#######################'
   log 'PREPARE STAGE COMPLETED'
