@@ -64,13 +64,21 @@ screen -L -S analytics
 - Clear the Thumbor caches, see the [flush_analytics_urls](https://github.com/gbif/infrastructure/blob/master/roles/gbif.thumbor/files/flush_analytics_urls) script on the Thumbor server.
 - rsync the reports to `root@analytics-files.gbif.org:/var/www/html/analytics-files/`
 - Check https://www.gbif.org/analytics, write an email to staff@gbif.org giving heads up on the new data, and accept the many accolades due your outstanding achievement in the field of excellence!
-- Archive the new analytics in Box.  The old analytics files have been used several times by the communications team:
+- Archive the new analytics.  The old analytics files have been used several times by the communications team:
 ```
 cd /var/www/html/
-tar -cvJf gbif_analytics_2018-09-28.tar.xz --exclude assets --exclude '*.pdf' analytics-files
-# or
-tar -cvJf gbif_analytics_2018-09-28.tar.xz --exclude assets analytics-files
+tar -cvJf /mnt/auto/analytics/archives/gbif_analytics_2018-09-28.tar.xz --exclude '*.pdf' analytics-files/[a-z]*
+# or at the start of the year, when the country reports have been generated:
+tar -cvJf /mnt/auto/analytics/archives/gbif_analytics_2018-09-28.tar.xz analytics-files/[a-z]*
 ```
+  Then upload this file to Box.
+- Copy only the CSVs to the public, web archive:
+```
+rsync -rtv /var/www/html/analytics-files/[a-z]* /mnt/auto/analytics/files/2021-01-01 --exclude figure --exclude '*.pdf'
+cd /var/www/html/analytics-files
+ln -s /mnt/auto/analytics/files/2021-01-01 .
+```
+- Verify the display of this at https://analytics-files.gbif.org/
 
 ### Acknowledgements
 The work presented here is not new, and builds on ideas already published.  In particular the work of Javier Otegui, Arturo H. Ariño, María A. Encinas, Francisco Pando (http://www.plosone.org/article/info%3Adoi%2F10.1371%2Fjournal.pone.0055144) was used as inspiration during the first development iteration, and Javier Otegui kindly provided a crash course in R to kickstart the development.
