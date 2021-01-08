@@ -13,6 +13,7 @@ spe_dayCollected <- function(sourceFile, targetDir) {
   p1 <- ggplot(arrange(DF,day,speciesCount), aes(x=day,y=speciesCount)) + 
     geom_area(fill="#2d004b", alpha=0.7) +
     facet_grid(snapshot~.) +
+    scale_x_continuous(expand=c(0,0),limits=c(1,366),breaks=c(1,32,60,91,121,152,182,213,244,274,305,335,366)) +
     ylab("Number of species (in thousands)") +
     xlab("Day of year") +
     scale_y_continuous(label = kilo_formatter) + 

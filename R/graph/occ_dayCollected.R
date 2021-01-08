@@ -13,6 +13,7 @@ occ_dayCollected <- function(sourceFile, targetDir) {
   p1 <- ggplot(arrange(DF,day,occurrenceCount), aes(x=day,y=occurrenceCount)) + 
     geom_area(fill="#ff7f00", alpha=0.7) +
     facet_grid(snapshot~.) +
+    scale_x_continuous(expand=c(0,0),limits=c(1,366),breaks=c(1,32,60,91,121,152,182,213,244,274,305,335,366)) +
     ylab("Number of occurrences (in millions)") +
     xlab("Day of year") +
     scale_y_continuous(label = mill_formatter) +

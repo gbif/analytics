@@ -1,6 +1,7 @@
 library(reshape2)
 library(plyr)
 library(ggplot2)
+library(scales)
 library(grid)
 library(extrafont)
 source("R/graph/utils.R")
@@ -19,7 +20,7 @@ webTheme <- theme(
   plot.title=element_text(size=14, face="bold", vjust=1.5),
   axis.title.x=element_text(vjust=0.2),
   axis.title.y=element_text(vjust=1.1),
-  plot.margin = unit(c(0.1, 0.35, 0.1, 0.1), "cm") # added plot margin to see 2018
+  plot.margin = unit(c(0.1, 0.4, 0.1, 0.1), "cm") # right plot margin to show "YYYY" date
   )
 
 printTheme <- theme(
@@ -88,10 +89,10 @@ generatePlots <- function(doWeb=TRUE, doPrint=FALSE, df, totalDf, plotsDir, targ
 # Note the reverses in seriesColours, seriesValues, seriesTitles - RStudio will look wrong but commandline will look right...
 ###########
 createPlot <- function(plotTheme, df, totalDf, plotTitle, dataCol, xCol, yCol, xTitle, yTitle, yFormatter, legendTitle, seriesColours, seriesValues, seriesTitles) {
-  minXAxis <- as.Date(min(df[[xCol]]))-20
-  maxXAxis <- as.Date(max(df[[xCol]]))+20 # increased margins to fit 2018
+  minXAxis <- as.Date(min(df[[xCol]]))
+  maxXAxis <- as.Date(max(df[[xCol]]))
   maxYAxis <- 1.04*max(totalDf[[yCol]])
-  
+
   seriesColours <- rev(seriesColours)
   seriesValues <- rev(seriesValues)
 
@@ -103,7 +104,7 @@ createPlot <- function(plotTheme, df, totalDf, plotTitle, dataCol, xCol, yCol, x
   
   plot <- 
     ggplot(df, aes_string(x=xCol, y=yCol)) +
-    scale_x_date(expand=c(0,0),limits=c(minXAxis,maxXAxis)) +
+    scale_x_date(expand=c(0,0),limits=c(minXAxis,maxXAxis),breaks=date_breaks("year"),labels=date_format("%Y")) +
     geom_area(aes_q(fill=as.name(dataCol), group=as.name(dataCol)), position='stack', linetype=0, alpha=0.8) +
     geom_line(data=totalDf, colour="black", size=1) +
     geom_point(data=totalDf, colour="black") +
@@ -113,6 +114,71 @@ createPlot <- function(plotTheme, df, totalDf, plotTitle, dataCol, xCol, yCol, x
     xlab(xTitle) +
     scale_y_continuous(expand=c(0,0),limits=c(0,maxYAxis),label=yFormatter) +
     ggtitle(plotTitle) 
+
+  return(plot)
+}
+
+#############
+# Create a plot and tweak to match print and web settings, then save as pdf/png if desired.
+#
+# doWeb - boolean whether to save a web version of plot (default: TRUE)
+# doPrint - boolean whether to save a print version of plot (default: TRUE)
+# df - dataframe containing the data to be plotted
+# plotsDir - the directory above the directories that will contain the images, relative to R working direcotry (e.g. report/country/DE/about)
+# targetFilePattern - filename to write, but without extension (i.e. expect something like "spe_kingdom" and not "spe_kingdom.pdf")
+# plotTitle - title at top of plot
+# xCol - name of column in df holding x axis values (e.g. "snapshot")
+# yCol - name of column in df and totalDf holding y axis values (e.g. "speciesCount")
+# xTitle - title shown for x axis
+# yTitle - title shown for y axis
+# yFormatter - function that transforms values from yCol into readable values (e.g. kilo_converter, mill_converter)
+# colour - colour of filled area
+#############
+generateBasicPlots <- function(doWeb=TRUE, doPrint=FALSE, df, plotsDir, targetFilePattern, plotTitle, xCol, yCol, xTitle, yTitle, yFormatter, colour) {
+  if (doWeb) {
+    webPlot <- createBasicPlot(webTheme, df, plotTitle, xCol, yCol, xTitle, yTitle, yFormatter, colour)
+    webDir <- paste(plotsDir, webDirSuffix, sep="/")
+    dir.create(webDir, showWarnings=F)
+
+    #png
+    webFile <- paste(webDir, paste(targetFilePattern, ".png", sep=""), sep="/")
+    savePng(file=webFile, plot=webPlot)
+
+    #svg
+    svgFile <- paste(webDir, paste(targetFilePattern, ".svg", sep=""), sep="/")
+    saveSvg(file=svgFile, plot=webPlot)
+  }
+  if (doPrint) {
+    #pdf
+    printPlot <- createBasicPlot(printTheme, df, plotTitle, xCol, yCol, xTitle, yTitle, yFormatter, colour)
+    printDir <- paste(plotsDir, printDirSuffix, sep="/")
+    dir.create(printDir, showWarnings=F)
+    printFile <- paste(printDir, paste(targetFilePattern, ".pdf", sep=""), sep="/")
+    print(paste("Writing print plot: ", printFile))
+    ggsave(filename=printFile, plot=printPlot, width=21, height=11, scale=0.75)
+    embed_fonts(file=printFile)
+  }
+}
+
+###########
+# Creates the ggplot. This assumes the x-axis will be Date (years) in roughly the range 2008-2015.
+###########
+createBasicPlot <- function(plotTheme, df, plotTitle, xCol, yCol, xTitle, yTitle, yFormatter, colour) {
+  minXAxis <- as.Date(min(df[[xCol]]))
+  maxXAxis <- as.Date(max(df[[xCol]]))
+  maxYAxis <- 1.04*max(df[[yCol]])
+
+  plot <-
+    ggplot(df, aes_string(x=xCol, y=yCol)) +
+    scale_x_date(expand=c(0,0),limits=c(minXAxis,maxXAxis),breaks=date_breaks("year"),labels=date_format("%Y")) +
+    geom_area(fill=colour, linetype=0, alpha=0.8) +
+    geom_line(data=df, colour="black", size=1) +
+    geom_point(data=df, colour="black") +
+    plotTheme +
+    ylab(yTitle) +
+    xlab(xTitle) +
+    scale_y_continuous(expand=c(0,0),limits=c(0,maxYAxis),label=yFormatter) +
+    ggtitle(plotTitle)
 
   return(plot)
 }

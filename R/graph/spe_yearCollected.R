@@ -13,6 +13,7 @@ spe_yearCollected <- function(sourceFile, targetDir) {
   
   p1 <- ggplot(arrange(DF,snapshot,year), aes(x=year,y=speciesCount)) + 
            geom_area(fill="#2d004b", alpha=0.7) +
+           scale_x_continuous(expand=c(0,0),breaks=seq(minPlotYear,2020,10)) +
            facet_grid(snapshot~.) +
            ylab("Number of species (in thousands)") +
            xlab("Year") +

@@ -5,10 +5,12 @@ source("R/graph/occ_basisOfRecordComplete.R")
 source("R/graph/occ_complete.R")
 source("R/graph/occ_repatriation.R")
 source("R/graph/occ_cells.R")
+source("R/graph/occ.R")
 source("R/graph/spe_kingdom.R")
 source("R/graph/spe_dayCollected.R")
 source("R/graph/spe_yearCollected.R")
 source("R/graph/spe_repatriation.R")
+source("R/graph/spe.R")
 
 library(doParallel)
 

@@ -25,6 +25,7 @@ writeCsvPerGroup <- function(DF, groupTerm, filename, parentDir, childDir) {
       # remove group column
       drops <- c(groupTerm)
       group <- group[,!(names(group) %in% drops)]  
+      group <- group[order(group[,1], group[,2]), ]
       dir <- paste(targetDir,parentDir,key,childDir, "csv", sep="/")
       dir.create(dir, showWarnings=FALSE, recursive=TRUE)
       write.csv(group, paste(dir, filename, sep="/"), row.names=FALSE)
@@ -58,6 +59,7 @@ extractCountryCSV <- function(sourceFile, sourceSchema, targetFile, group, group
 #
 prepareGlobalCSV <- function(sourceFile, sourceSchema, targetFile) {
   t <- read.table(file=paste(sourceDir, sourceFile, sep="/"), header=F, sep=",",  col.names = sourceSchema)
+  t <- t[order(t[,1], t[,2]), ]
   dir <- paste(targetDir,"global", "csv", sep="/")
   dir.create(dir, showWarnings=FALSE, recursive=TRUE)
   write.csv(t, paste(dir, targetFile, sep="/"), row.names=FALSE)
