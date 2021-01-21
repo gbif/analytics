@@ -12,6 +12,7 @@ SONAR_DOWNLOAD_URL=${SONAR_REDIRECT_URL}/${VERSION}/${FILENAME}
 curl -SsLo /tmp/occurrence-hive.jar "${SONAR_REDIRECT_URL}/${VERSION}/${FILENAME}"
 
 curl -SsLo /tmp/gt-epsg-hsql.jar 'http://download.osgeo.org/webdav/geotools/org/geotools/gt-epsg-hsql/20.5/gt-epsg-hsql-20.5.jar'
+
 log 'Building intermediate interp geo tables'
 hive --hiveconf occjar=/tmp/occurrence-hive.jar \
      --hiveconf props=hive/normalize/occurrence-processor.properties \
@@ -24,3 +25,13 @@ hive --hiveconf occjar=/tmp/occurrence-hive.jar \
      --hiveconf props=hive/normalize/occurrence-processor.properties \
      --hiveconf api=http://api.gbif.org/v1/ \
      -f hive/normalize/interp_taxonomy.q
+
+log 'Building country→gbifRegion map table'
+(
+	curl -Ssg https://api.gbif.org/v1/enumeration/country | jq -r '.[] | "\(.iso2)\t\(.gbifRegion)"'
+	# Snapshots 2010-04-01 and 2010-07-26 contain UK values.
+	echo -e "UK\tEUROPE"
+	echo -e "XK\tEUROPE"
+) | sort | sort -k2 > hive/normalize/regions.tsv
+hive --hiveconf regionTable=hive/normalize/regions.tsv \
+	 -f hive/normalize/create_region_table.q

@@ -1,12 +1,9 @@
 -- This script requires three parameters to be passed in the command line: mapcount (# of mappers), occjar (the occurrence-hive.jar to use), and snapshot (e.g. 20200101)
 
+SET mapred.job.name=Creating table snapshot.occurrence_${hiveconf:snapshot};
+
 -- Fix UDF classpath issues
 SET mapreduce.job.user.classpath.first=true;
-
--- Use Snappy
-SET hive.exec.compress.output=true;
-SET mapred.output.compression.type=BLOCK;
-SET mapred.output.compression.codec=org.apache.hadoop.io.compress.SnappyCodec;
 
 SET mapred.map.tasks = ${hiveconf:mapcount};
 
@@ -15,8 +12,8 @@ SET mapred.job.queue.name = root.default;
 -- Set up memory for YARN
 SET mapreduce.map.memory.mb = 4096;
 SET mapreduce.reduce.memory.mb = 4096;
-SET mapreduce.map.java.opts = -Xmx3072m;
-SET mapreduce.reduce.java.opts = -Xmx3072m;
+SET mapreduce.map.java.opts = -Xmx3g;
+SET mapreduce.reduce.java.opts = -Xmx3g;
 
 
 ADD JAR ${hiveconf:occjar};
@@ -24,12 +21,13 @@ CREATE TEMPORARY FUNCTION parseDate AS 'org.gbif.occurrence.hive.udf.DateParseUD
 CREATE TEMPORARY FUNCTION parseBoR AS 'org.gbif.occurrence.hive.udf.BasisOfRecordParseUDF';
 
 DROP TABLE IF EXISTS snapshot.occurrence_${hiveconf:snapshot};
-CREATE TABLE snapshot.occurrence_${hiveconf:snapshot} STORED AS rcfile AS
+CREATE TABLE snapshot.occurrence_${hiveconf:snapshot} STORED AS ORC AS
 SELECT
   r.id,
   r.dataset_id,
   r.publisher_id,
   r.publisher_country,
+  rpc.gbif_region AS publisher_gbif_region,
   t.kingdom,
   t.phylum,
   t.class_rank,
@@ -50,6 +48,7 @@ SELECT
   g.latitude,
   g.longitude,
   g.country,
+  rc.gbif_region AS gbif_region,
   d.day,
   d.month,
   d.year
@@ -82,4 +81,6 @@ SELECT
  FROM snapshot.raw_${hiveconf:snapshot}
 ) r
 JOIN snapshot.tmp_taxonomy_interp t ON t.taxon_key = r.taxon_key
-JOIN snapshot.tmp_geo_interp g ON g.geo_key = r.geo_key;
+JOIN snapshot.tmp_geo_interp g ON g.geo_key = r.geo_key
+LEFT JOIN snapshot.tmp_regions rc ON rc.country = g.country
+LEFT JOIN snapshot.tmp_regions rpc ON rpc.country = r.publisher_country;

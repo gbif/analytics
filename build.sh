@@ -1,28 +1,30 @@
-runHbase="false"
-runHive="false"
-runHadoop="false"
-runPrepare="false"
-runFigures="false"
+setopt -e
+
+interpretSnapshots="false"
+summarizeSnapshots="false"
+downloadCsvs="false"
+processCsvs="false"
+makeFigures="false"
 
 destination_db="analytics"
 snapshot_db="snapshot"
 
-[[ $* =~ (^| )"-runHbase"($| ) ]] && runHbase="true"
-[[ $* =~ (^| )"-runHive"($| ) ]] && runHive="true"
-[[ $* =~ (^| )"-runHadoop"($| ) ]] && runHadoop="true"
-[[ $* =~ (^| )"-runPrepare"($| ) ]] && runPrepare="true"
-[[ $* =~ (^| )"-runFigures"($| ) ]] && runFigures="true"
+[[ $* =~ (^| )"-interpretSnapshots"($| ) ]] && interpretSnapshots="true"
+[[ $* =~ (^| )"-summarizeSnapshots"($| ) ]] && summarizeSnapshots="true"
+[[ $* =~ (^| )"-downloadCsvs"($| ) ]] && downloadCsvs="true"
+[[ $* =~ (^| )"-processCsvs"($| ) ]] && processCsvs="true"
+[[ $* =~ (^| )"-makeFigures"($| ) ]] && makeFigures="true"
 
 export LANG=en_GB.UTF-8
 
 # If Docker isn't used:
 # - Arial and Arial Narrow will be required on the machine from which
-# the runFigures command is run. For Linux that means a new dir under
+# the makeFigures command is run. For Linux that means a new dir under
 # /usr/share/fonts with the .ttf files from this project's fonts/ dir
 # copied in (the provisioning project's Ansible scripts take care of
 # this).
 # - The /usr/lib64/R/library/extrafontdb dir must be writeable by the
-# user running the runFigures command because font stuff will be
+# user running the makeFigures command because font stuff will be
 # written there on first load
 Rscript="docker run --rm -it -v $PWD:/analytics/ docker.gbif.org/analytics-figures Rscript"
 
@@ -30,8 +32,8 @@ log () {
   echo $(tput setaf 3)$(date '+%Y-%m-%d %H:%M:%S ')$(tput setaf 11)$1$(tput sgr0)
 }
 
-if [ $runHbase == "true" ];then
-  log 'Running HBase stages (import and geo/taxonomy table creation)'
+if [ $interpretSnapshots == "true" ];then
+  log 'Running Interpret Snapshots stages (import and geo/taxonomy table creation)'
   log 'HBase stage: build_raw_scripts.sh'
   ./hive/normalize/build_raw_scripts.sh
   log 'HBase stage: create_tmp_raw_tables.sh'
@@ -41,27 +43,26 @@ if [ $runHbase == "true" ];then
   log 'HBase stage: create_occurrence_tables.sh'
   ./hive/normalize/create_occurrence_tables.sh
 
-  log '#####################'
-  log 'HBASE STAGE COMPLETED'
-  log '#####################'
+  log '###################################'
+  log 'INTERPRET SNAPSHOTS STAGE COMPLETED'
+  log '###################################'
 else
-  log 'Skipping hbase stage (add -runHbase to command to run it)'
+  log 'Skipping Interpret Snapshots stage (add -interpretSnapshots to command to run it)'
 fi
 
-if [ $runHive == "true" ];then
-  log 'Running Hive stages (Existing tables are replaced)'
+if [ $summarizeSnapshots == "true" ];then
+  log 'Running Summarize Snapshots stages (Existing tables are replaced)'
   prepare_file="hive/process/prepare.q"
   ./hive/process/build_prepare_script.sh $prepare_file
   log 'Hive stage: Union all snapshots into a table'
   hive --hiveconf DB="$destination_db" --hiveconf SNAPSHOT_DB="$snapshot_db" -f $prepare_file
+
   log 'Hive stage: Process occ_kingdom_basisOfRecord.q'
   hive --hiveconf DB="$destination_db" -f hive/process/occ_kingdom_basisOfRecord.q
   log 'Hive stage: Process occ_dayCollected.q'
   hive --hiveconf DB="$destination_db" -f hive/process/occ_dayCollected.q
   log 'Hive stage: Process occ_yearCollected.q'
   hive --hiveconf DB="$destination_db" -f hive/process/occ_yearCollected.q
-  log 'Hive stage: Process occ_complete.q'
-  hive --hiveconf DB="$destination_db" -f hive/process/occ_complete.q
   log 'Hive stage: Process occ_complete_v2.q'
   hive --hiveconf DB="$destination_db" -f hive/process/occ_complete_v2.q
   log 'Hive stage: Process occ_cells.q'
@@ -78,87 +79,221 @@ if [ $runHive == "true" ];then
   hive --hiveconf DB="$destination_db" -f hive/process/repatriation.q
   log 'Hive stage: Process totals.q'
   hive --hiveconf DB="$destination_db" -f hive/process/totals.q
-  log '####################'
-  log 'HIVE STAGE COMPLETED'
-  log '####################'
+
+  log '###################################'
+  log 'SUMMARIZE SNAPSHOTS STAGE COMPLETED'
+  log '###################################'
 else
-  log 'Skipping hive stage (add -runHive to command to run it)'
+  log 'Skipping Summarize Snapshots stage (add -summarizeSnapshots to command to run it)'
 fi
 
-if [ $runHadoop == "true" ];then
-  log 'Running Hadoop stages'
-  log 'Downloading the CSVs from Hadoop (Existing data are overwritten)'
+if [ $downloadCsvs == "true" ];then
+  log 'Running Download CSVs stages'
+  log 'Downloading the CSVs from HDFS (existing data are overwritten)'
   rm -fr hadoop
   mkdir hadoop
-  hdfs dfs -getmerge /user/hive/warehouse/"$destination_db".db/occ_country_kingdom_basisofrecord hadoop/occ_country_kingdom_basisOfRecord.csv
-  hdfs dfs -getmerge /user/hive/warehouse/"$destination_db".db/occ_publishercountry_kingdom_basisofrecord hadoop/occ_publisherCountry_kingdom_basisOfRecord.csv
+
+  # Download in parallel (much faster), but list the file as a way to check it was retrieved.
+  hdfs dfs -getmerge /user/hive/warehouse/"$destination_db".db/occ_country_kingdom_basisofrecord hadoop/occ_country_kingdom_basisOfRecord.csv &
+  hdfs dfs -getmerge /user/hive/warehouse/"$destination_db".db/occ_publishercountry_kingdom_basisofrecord hadoop/occ_publisherCountry_kingdom_basisOfRecord.csv &
+  hdfs dfs -getmerge /user/hive/warehouse/"$destination_db".db/occ_gbifregion_kingdom_basisofrecord hadoop/occ_gbifRegion_kingdom_basisOfRecord.csv &
+  hdfs dfs -getmerge /user/hive/warehouse/"$destination_db".db/occ_publishergbifregion_kingdom_basisofrecord hadoop/occ_publisherGbifRegion_kingdom_basisOfRecord.csv &
   hdfs dfs -getmerge /user/hive/warehouse/"$destination_db".db/occ_kingdom_basisofrecord hadoop/occ_kingdom_basisOfRecord.csv
+  wait
+  ls -l hadoop/occ_country_kingdom_basisOfRecord.csv
+  ls -l hadoop/occ_publisherCountry_kingdom_basisOfRecord.csv
+  ls -l hadoop/occ_gbifRegion_kingdom_basisOfRecord.csv
+  ls -l hadoop/occ_publisherGbifRegion_kingdom_basisOfRecord.csv
+  ls -l hadoop/occ_kingdom_basisOfRecord.csv
 
-  hdfs dfs -getmerge /user/hive/warehouse/"$destination_db".db/occ_country_daycollected hadoop/occ_country_dayCollected.csv
-  hdfs dfs -getmerge /user/hive/warehouse/"$destination_db".db/occ_publishercountry_daycollected hadoop/occ_publisherCountry_dayCollected.csv
+  hdfs dfs -getmerge /user/hive/warehouse/"$destination_db".db/occ_country_daycollected hadoop/occ_country_dayCollected.csv &
+  hdfs dfs -getmerge /user/hive/warehouse/"$destination_db".db/occ_publishercountry_daycollected hadoop/occ_publisherCountry_dayCollected.csv &
+  hdfs dfs -getmerge /user/hive/warehouse/"$destination_db".db/occ_gbifregion_daycollected hadoop/occ_gbifRegion_dayCollected.csv &
+  hdfs dfs -getmerge /user/hive/warehouse/"$destination_db".db/occ_publishergbifregion_daycollected hadoop/occ_publisherGbifRegion_dayCollected.csv &
   hdfs dfs -getmerge /user/hive/warehouse/"$destination_db".db/occ_daycollected hadoop/occ_dayCollected.csv
+  wait
+  ls -l hadoop/occ_country_dayCollected.csv
+  ls -l hadoop/occ_publisherCountry_dayCollected.csv
+  ls -l hadoop/occ_gbifRegion_dayCollected.csv
+  ls -l hadoop/occ_publisherGbifRegion_dayCollected.csv
+  ls -l hadoop/occ_dayCollected.csv
 
-  hdfs dfs -getmerge /user/hive/warehouse/"$destination_db".db/occ_country_yearcollected hadoop/occ_country_yearCollected.csv
-  hdfs dfs -getmerge /user/hive/warehouse/"$destination_db".db/occ_publishercountry_yearcollected hadoop/occ_publisherCountry_yearCollected.csv
+  hdfs dfs -getmerge /user/hive/warehouse/"$destination_db".db/occ_country_yearcollected hadoop/occ_country_yearCollected.csv &
+  hdfs dfs -getmerge /user/hive/warehouse/"$destination_db".db/occ_publishercountry_yearcollected hadoop/occ_publisherCountry_yearCollected.csv &
+  hdfs dfs -getmerge /user/hive/warehouse/"$destination_db".db/occ_gbifregion_yearcollected hadoop/occ_gbifRegion_yearCollected.csv &
+  hdfs dfs -getmerge /user/hive/warehouse/"$destination_db".db/occ_publishergbifregion_yearcollected hadoop/occ_publisherGbifRegion_yearCollected.csv &
   hdfs dfs -getmerge /user/hive/warehouse/"$destination_db".db/occ_yearcollected hadoop/occ_yearCollected.csv
+  wait
+  ls -l hadoop/occ_country_yearCollected.csv
+  ls -l hadoop/occ_publisherCountry_yearCollected.csv
+  ls -l hadoop/occ_gbifRegion_yearCollected.csv
+  ls -l hadoop/occ_publisherGbifRegion_yearCollected.csv
+  ls -l hadoop/occ_yearCollected.csv
 
-  hdfs dfs -getmerge /user/hive/warehouse/"$destination_db".db/occ_country_complete hadoop/occ_country_complete.csv
-  hdfs dfs -getmerge /user/hive/warehouse/"$destination_db".db/occ_publishercountry_complete hadoop/occ_publisherCountry_complete.csv
+  hdfs dfs -getmerge /user/hive/warehouse/"$destination_db".db/occ_country_complete hadoop/occ_country_complete.csv &
+  hdfs dfs -getmerge /user/hive/warehouse/"$destination_db".db/occ_publishercountry_complete hadoop/occ_publisherCountry_complete.csv &
+  hdfs dfs -getmerge /user/hive/warehouse/"$destination_db".db/occ_gbifregion_complete hadoop/occ_gbifRegion_complete.csv &
+  hdfs dfs -getmerge /user/hive/warehouse/"$destination_db".db/occ_publishergbifregion_complete hadoop/occ_publisherGbifRegion_complete.csv &
   hdfs dfs -getmerge /user/hive/warehouse/"$destination_db".db/occ_complete hadoop/occ_complete.csv
+  wait
+  ls -l hadoop/occ_country_complete.csv
+  ls -l hadoop/occ_publisherCountry_complete.csv
+  ls -l hadoop/occ_gbifRegion_complete.csv
+  ls -l hadoop/occ_publisherGbifRegion_complete.csv
+  ls -l hadoop/occ_complete.csv
 
-  hdfs dfs -getmerge /user/hive/warehouse/"$destination_db".db/occ_country_repatriation hadoop/occ_country_repatriation.csv
-  hdfs dfs -getmerge /user/hive/warehouse/"$destination_db".db/occ_publishercountry_repatriation hadoop/occ_publisherCountry_repatriation.csv
+  hdfs dfs -getmerge /user/hive/warehouse/"$destination_db".db/occ_country_repatriation hadoop/occ_country_repatriation.csv &
+  hdfs dfs -getmerge /user/hive/warehouse/"$destination_db".db/occ_publishercountry_repatriation hadoop/occ_publisherCountry_repatriation.csv &
+  hdfs dfs -getmerge /user/hive/warehouse/"$destination_db".db/occ_gbifregion_repatriation hadoop/occ_gbifRegion_repatriation.csv &
+  hdfs dfs -getmerge /user/hive/warehouse/"$destination_db".db/occ_publishergbifregion_repatriation hadoop/occ_publisherGbifRegion_repatriation.csv &
   hdfs dfs -getmerge /user/hive/warehouse/"$destination_db".db/occ_repatriation hadoop/occ_repatriation.csv
+  wait
+  ls -l hadoop/occ_country_repatriation.csv
+  ls -l hadoop/occ_publisherCountry_repatriation.csv
+  ls -l hadoop/occ_gbifRegion_repatriation.csv
+  ls -l hadoop/occ_publisherGbifRegion_repatriation.csv
+  ls -l hadoop/occ_repatriation.csv
 
-  hdfs dfs -getmerge /user/hive/warehouse/"$destination_db".db/occ_country hadoop/occ_country.csv
-  hdfs dfs -getmerge /user/hive/warehouse/"$destination_db".db/occ_publishercountry hadoop/occ_publisherCountry.csv
+  hdfs dfs -getmerge /user/hive/warehouse/"$destination_db".db/occ_country hadoop/occ_country.csv &
+  hdfs dfs -getmerge /user/hive/warehouse/"$destination_db".db/occ_publishercountry hadoop/occ_publisherCountry.csv &
+  hdfs dfs -getmerge /user/hive/warehouse/"$destination_db".db/occ_gbifregion hadoop/occ_gbifRegion.csv &
+  hdfs dfs -getmerge /user/hive/warehouse/"$destination_db".db/occ_publishergbifregion hadoop/occ_publisherGbifRegion.csv &
   hdfs dfs -getmerge /user/hive/warehouse/"$destination_db".db/occ hadoop/occ.csv
+  wait
+  ls -l hadoop/occ_country.csv
+  ls -l hadoop/occ_publisherCountry.csv
+  ls -l hadoop/occ_gbifRegion.csv
+  ls -l hadoop/occ_publisherGbifRegion.csv
+  ls -l hadoop/occ.csv
 
-  hdfs dfs -getmerge /user/hive/warehouse/"$destination_db".db/occ_country_cell_one_deg hadoop/occ_country_cell_one_deg.csv
-  hdfs dfs -getmerge /user/hive/warehouse/"$destination_db".db/occ_publishercountry_cell_one_deg hadoop/occ_publisherCountry_cell_one_deg.csv
+  hdfs dfs -getmerge /user/hive/warehouse/"$destination_db".db/occ_country_cell_one_deg hadoop/occ_country_cell_one_deg.csv &
+  hdfs dfs -getmerge /user/hive/warehouse/"$destination_db".db/occ_publishercountry_cell_one_deg hadoop/occ_publisherCountry_cell_one_deg.csv &
+  hdfs dfs -getmerge /user/hive/warehouse/"$destination_db".db/occ_gbifregion_cell_one_deg hadoop/occ_gbifRegion_cell_one_deg.csv &
+  hdfs dfs -getmerge /user/hive/warehouse/"$destination_db".db/occ_publishergbifregion_cell_one_deg hadoop/occ_publisherGbifRegion_cell_one_deg.csv &
   hdfs dfs -getmerge /user/hive/warehouse/"$destination_db".db/occ_cell_one_deg hadoop/occ_cell_one_deg.csv
+  wait
+  ls -l hadoop/occ_country_cell_one_deg.csv
+  ls -l hadoop/occ_publisherCountry_cell_one_deg.csv
+  ls -l hadoop/occ_gbifRegion_cell_one_deg.csv
+  ls -l hadoop/occ_publisherGbifRegion_cell_one_deg.csv
+  ls -l hadoop/occ_cell_one_deg.csv
 
-  hdfs dfs -getmerge /user/hive/warehouse/"$destination_db".db/occ_country_cell_point_one_deg hadoop/occ_country_cell_point_one_deg.csv
-  hdfs dfs -getmerge /user/hive/warehouse/"$destination_db".db/occ_publishercountry_cell_point_one_deg hadoop/occ_publisherCountry_cell_point_one_deg.csv
+  hdfs dfs -getmerge /user/hive/warehouse/"$destination_db".db/occ_country_cell_point_one_deg hadoop/occ_country_cell_point_one_deg.csv &
+  hdfs dfs -getmerge /user/hive/warehouse/"$destination_db".db/occ_publishercountry_cell_point_one_deg hadoop/occ_publisherCountry_cell_point_one_deg.csv &
+  hdfs dfs -getmerge /user/hive/warehouse/"$destination_db".db/occ_gbifregion_cell_point_one_deg hadoop/occ_gbifRegion_cell_point_one_deg.csv &
+  hdfs dfs -getmerge /user/hive/warehouse/"$destination_db".db/occ_publishergbifregion_cell_point_one_deg hadoop/occ_publisherGbifRegion_cell_point_one_deg.csv &
   hdfs dfs -getmerge /user/hive/warehouse/"$destination_db".db/occ_cell_point_one_deg hadoop/occ_cell_point_one_deg.csv
+  wait
+  ls -l hadoop/occ_country_cell_point_one_deg.csv
+  ls -l hadoop/occ_publisherCountry_cell_point_one_deg.csv
+  ls -l hadoop/occ_gbifRegion_cell_point_one_deg.csv
+  ls -l hadoop/occ_publisherGbifRegion_cell_point_one_deg.csv
+  ls -l hadoop/occ_cell_point_one_deg.csv
 
-  hdfs dfs -getmerge /user/hive/warehouse/"$destination_db".db/occ_country_cell_half_deg hadoop/occ_country_cell_half_deg.csv
-  hdfs dfs -getmerge /user/hive/warehouse/"$destination_db".db/occ_publishercountry_cell_half_deg hadoop/occ_publisherCountry_cell_half_deg.csv
+  hdfs dfs -getmerge /user/hive/warehouse/"$destination_db".db/occ_country_cell_half_deg hadoop/occ_country_cell_half_deg.csv &
+  hdfs dfs -getmerge /user/hive/warehouse/"$destination_db".db/occ_publishercountry_cell_half_deg hadoop/occ_publisherCountry_cell_half_deg.csv &
+  hdfs dfs -getmerge /user/hive/warehouse/"$destination_db".db/occ_gbifregion_cell_half_deg hadoop/occ_gbifRegion_cell_half_deg.csv &
+  hdfs dfs -getmerge /user/hive/warehouse/"$destination_db".db/occ_publishergbifregion_cell_half_deg hadoop/occ_publisherGbifRegion_cell_half_deg.csv &
   hdfs dfs -getmerge /user/hive/warehouse/"$destination_db".db/occ_cell_half_deg hadoop/occ_cell_half_deg.csv
+  wait
+  ls -l hadoop/occ_country_cell_half_deg.csv
+  ls -l hadoop/occ_publisherCountry_cell_half_deg.csv
+  ls -l hadoop/occ_gbifRegion_cell_half_deg.csv
+  ls -l hadoop/occ_publisherGbifRegion_cell_half_deg.csv
+  ls -l hadoop/occ_cell_half_deg.csv
 
-  hdfs dfs -getmerge /user/hive/warehouse/"$destination_db".db/spe_country_kingdom hadoop/spe_country_kingdom.csv
-  hdfs dfs -getmerge /user/hive/warehouse/"$destination_db".db/spe_publishercountry_kingdom hadoop/spe_publisherCountry_kingdom.csv
+  hdfs dfs -getmerge /user/hive/warehouse/"$destination_db".db/spe_country_kingdom hadoop/spe_country_kingdom.csv &
+  hdfs dfs -getmerge /user/hive/warehouse/"$destination_db".db/spe_publishercountry_kingdom hadoop/spe_publisherCountry_kingdom.csv &
+  hdfs dfs -getmerge /user/hive/warehouse/"$destination_db".db/spe_gbifregion_kingdom hadoop/spe_gbifRegion_kingdom.csv &
+  hdfs dfs -getmerge /user/hive/warehouse/"$destination_db".db/spe_publishergbifregion_kingdom hadoop/spe_publisherGbifRegion_kingdom.csv &
   hdfs dfs -getmerge /user/hive/warehouse/"$destination_db".db/spe_kingdom hadoop/spe_kingdom.csv
-  hdfs dfs -getmerge /user/hive/warehouse/"$destination_db".db/spe_country_kingdom_observation hadoop/spe_country_kingdom_observation.csv
-  hdfs dfs -getmerge /user/hive/warehouse/"$destination_db".db/spe_publishercountry_kingdom_observation hadoop/spe_publisherCountry_kingdom_observation.csv
+  wait
+  ls -l hadoop/spe_country_kingdom.csv
+  ls -l hadoop/spe_publisherCountry_kingdom.csv
+  ls -l hadoop/spe_gbifRegion_kingdom.csv
+  ls -l hadoop/spe_publisherGbifRegion_kingdom.csv
+  ls -l hadoop/spe_kingdom.csv
+
+  hdfs dfs -getmerge /user/hive/warehouse/"$destination_db".db/spe_country_kingdom_observation hadoop/spe_country_kingdom_observation.csv &
+  hdfs dfs -getmerge /user/hive/warehouse/"$destination_db".db/spe_publishercountry_kingdom_observation hadoop/spe_publisherCountry_kingdom_observation.csv &
+  hdfs dfs -getmerge /user/hive/warehouse/"$destination_db".db/spe_gbifregion_kingdom_observation hadoop/spe_gbifRegion_kingdom_observation.csv &
+  hdfs dfs -getmerge /user/hive/warehouse/"$destination_db".db/spe_publishergbifregion_kingdom_observation hadoop/spe_publisherGbifRegion_kingdom_observation.csv &
   hdfs dfs -getmerge /user/hive/warehouse/"$destination_db".db/spe_kingdom_observation hadoop/spe_kingdom_observation.csv
-  hdfs dfs -getmerge /user/hive/warehouse/"$destination_db".db/spe_country_kingdom_specimen hadoop/spe_country_kingdom_specimen.csv
-  hdfs dfs -getmerge /user/hive/warehouse/"$destination_db".db/spe_publishercountry_kingdom_specimen hadoop/spe_publisherCountry_kingdom_specimen.csv
+  wait
+  ls -l hadoop/spe_country_kingdom_observation.csv
+  ls -l hadoop/spe_publisherCountry_kingdom_observation.csv
+  ls -l hadoop/spe_gbifRegion_kingdom_observation.csv
+  ls -l hadoop/spe_publisherGbifRegion_kingdom_observation.csv
+  ls -l hadoop/spe_kingdom_observation.csv
+
+  hdfs dfs -getmerge /user/hive/warehouse/"$destination_db".db/spe_country_kingdom_specimen hadoop/spe_country_kingdom_specimen.csv &
+  hdfs dfs -getmerge /user/hive/warehouse/"$destination_db".db/spe_publishercountry_kingdom_specimen hadoop/spe_publisherCountry_kingdom_specimen.csv &
+  hdfs dfs -getmerge /user/hive/warehouse/"$destination_db".db/spe_gbifregion_kingdom_specimen hadoop/spe_gbifRegion_kingdom_specimen.csv &
+  hdfs dfs -getmerge /user/hive/warehouse/"$destination_db".db/spe_publishergbifregion_kingdom_specimen hadoop/spe_publisherGbifRegion_kingdom_specimen.csv &
   hdfs dfs -getmerge /user/hive/warehouse/"$destination_db".db/spe_kingdom_specimen hadoop/spe_kingdom_specimen.csv
+  wait
+  ls -l hadoop/spe_country_kingdom_specimen.csv
+  ls -l hadoop/spe_publisherCountry_kingdom_specimen.csv
+  ls -l hadoop/spe_gbifRegion_kingdom_specimen.csv
+  ls -l hadoop/spe_publisherGbifRegion_kingdom_specimen.csv
+  ls -l hadoop/spe_kingdom_specimen.csv
 
-  hdfs dfs -getmerge /user/hive/warehouse/"$destination_db".db/spe_country_daycollected hadoop/spe_country_dayCollected.csv
-  hdfs dfs -getmerge /user/hive/warehouse/"$destination_db".db/spe_publishercountry_daycollected hadoop/spe_publisherCountry_dayCollected.csv
+  hdfs dfs -getmerge /user/hive/warehouse/"$destination_db".db/spe_country_daycollected hadoop/spe_country_dayCollected.csv &
+  hdfs dfs -getmerge /user/hive/warehouse/"$destination_db".db/spe_publishercountry_daycollected hadoop/spe_publisherCountry_dayCollected.csv &
+  hdfs dfs -getmerge /user/hive/warehouse/"$destination_db".db/spe_gbifregion_daycollected hadoop/spe_gbifRegion_dayCollected.csv &
+  hdfs dfs -getmerge /user/hive/warehouse/"$destination_db".db/spe_publishergbifregion_daycollected hadoop/spe_publisherGbifRegion_dayCollected.csv &
   hdfs dfs -getmerge /user/hive/warehouse/"$destination_db".db/spe_daycollected hadoop/spe_dayCollected.csv
+  wait
+  ls -l hadoop/spe_country_dayCollected.csv
+  ls -l hadoop/spe_publisherCountry_dayCollected.csv
+  ls -l hadoop/spe_gbifRegion_dayCollected.csv
+  ls -l hadoop/spe_publisherGbifRegion_dayCollected.csv
+  ls -l hadoop/spe_dayCollected.csv
 
-  hdfs dfs -getmerge /user/hive/warehouse/"$destination_db".db/spe_country_yearcollected hadoop/spe_country_yearCollected.csv
-  hdfs dfs -getmerge /user/hive/warehouse/"$destination_db".db/spe_publishercountry_yearcollected hadoop/spe_publisherCountry_yearCollected.csv
+  hdfs dfs -getmerge /user/hive/warehouse/"$destination_db".db/spe_country_yearcollected hadoop/spe_country_yearCollected.csv &
+  hdfs dfs -getmerge /user/hive/warehouse/"$destination_db".db/spe_publishercountry_yearcollected hadoop/spe_publisherCountry_yearCollected.csv &
+  hdfs dfs -getmerge /user/hive/warehouse/"$destination_db".db/spe_gbifregion_yearcollected hadoop/spe_gbifRegion_yearCollected.csv &
+  hdfs dfs -getmerge /user/hive/warehouse/"$destination_db".db/spe_publishergbifregion_yearcollected hadoop/spe_publisherGbifRegion_yearCollected.csv &
   hdfs dfs -getmerge /user/hive/warehouse/"$destination_db".db/spe_yearcollected hadoop/spe_yearCollected.csv
+  wait
+  ls -l hadoop/spe_country_yearCollected.csv
+  ls -l hadoop/spe_publisherCountry_yearCollected.csv
+  ls -l hadoop/spe_gbifRegion_yearCollected.csv
+  ls -l hadoop/spe_publisherGbifRegion_yearCollected.csv
+  ls -l hadoop/spe_yearCollected.csv
 
-  hdfs dfs -getmerge /user/hive/warehouse/"$destination_db".db/spe_country_repatriation hadoop/spe_country_repatriation.csv
-  hdfs dfs -getmerge /user/hive/warehouse/"$destination_db".db/spe_publishercountry_repatriation hadoop/spe_publisherCountry_repatriation.csv
+  hdfs dfs -getmerge /user/hive/warehouse/"$destination_db".db/spe_country_repatriation hadoop/spe_country_repatriation.csv &
+  hdfs dfs -getmerge /user/hive/warehouse/"$destination_db".db/spe_publishercountry_repatriation hadoop/spe_publisherCountry_repatriation.csv &
+  hdfs dfs -getmerge /user/hive/warehouse/"$destination_db".db/spe_gbifregion_repatriation hadoop/spe_gbifRegion_repatriation.csv &
+  hdfs dfs -getmerge /user/hive/warehouse/"$destination_db".db/spe_publishergbifregion_repatriation hadoop/spe_publisherGbifRegion_repatriation.csv &
   hdfs dfs -getmerge /user/hive/warehouse/"$destination_db".db/spe_repatriation hadoop/spe_repatriation.csv
+  wait
+  ls -l hadoop/spe_country_repatriation.csv
+  ls -l hadoop/spe_publisherCountry_repatriation.csv
+  ls -l hadoop/spe_gbifRegion_repatriation.csv
+  ls -l hadoop/spe_publisherGbifRegion_repatriation.csv
+  ls -l hadoop/spe_repatriation.csv
 
-  hdfs dfs -getmerge /user/hive/warehouse/"$destination_db".db/spe_country hadoop/spe_country.csv
-  hdfs dfs -getmerge /user/hive/warehouse/"$destination_db".db/spe_publishercountry hadoop/spe_publisherCountry.csv
+  hdfs dfs -getmerge /user/hive/warehouse/"$destination_db".db/spe_country hadoop/spe_country.csv &
+  hdfs dfs -getmerge /user/hive/warehouse/"$destination_db".db/spe_publishercountry hadoop/spe_publisherCountry.csv &
+  hdfs dfs -getmerge /user/hive/warehouse/"$destination_db".db/spe_gbifregion hadoop/spe_gbifRegion.csv &
+  hdfs dfs -getmerge /user/hive/warehouse/"$destination_db".db/spe_publishergbifregion hadoop/spe_publisherGbifRegion.csv &
   hdfs dfs -getmerge /user/hive/warehouse/"$destination_db".db/spe hadoop/spe.csv
-  log '######################'
-  log 'HADOOP STAGE COMPLETED'
-  log '######################'
+  wait
+  ls -l hadoop/spe_country.csv
+  ls -l hadoop/spe_publisherCountry.csv
+  ls -l hadoop/spe_gbifRegion.csv
+  ls -l hadoop/spe_publisherGbifRegion.csv
+  ls -l hadoop/spe.csv
+
+  log '#############################'
+  log 'DOWNLOAD CSVS STAGE COMPLETED'
+  log '#############################'
 else
-  log 'Skipping Hadoop copy stage (add -runHadoop to command to run it)'
+  log 'Skipping Download CSVs stage (add -downloadCsvs to command to run it)'
 fi
 
-if [ $runPrepare == "true" ];then
+if [ $processCsvs == "true" ];then
   log 'Removing the reports output folder'
   rm -fr report
 
@@ -188,14 +323,14 @@ if [ $runPrepare == "true" ];then
   log 'R script spe.R'
   $Rscript R/csv/spe.R
 
-  log '#######################'
-  log 'PREPARE STAGE COMPLETED'
-  log '#######################'
+  log '############################'
+  log 'PROCESS CSVS STAGE COMPLETED'
+  log '############################'
 else
-  log 'Skipping prepare CSV stage (add -runPrepare to command to run it)'
+  log 'Skipping Process CSVs stage (add -processCsvs to command to run it)'
 fi
 
-if [ $runFigures == "true" ];then
+if [ $makeFigures == "true" ];then
   log 'Generating the figures'
   $Rscript R/report.R
 
@@ -208,5 +343,5 @@ if [ $runFigures == "true" ];then
   log 'FIGURES STAGE COMPLETED'
   log '#######################'
 else
-  log 'Skipping create figures stage (add -runFigures to command to run it)'
+  log 'Skipping create figures stage (add -makeFigures to command to run it)'
 fi

@@ -1,35 +1,19 @@
 -- This script requires three parameters to be passed in the command line: mapcount (# of mappers), occjar (the occurrence-hive.jar to use), and snapshot (e.g. 20071219)
 
+SET mapred.job.name=Creating table snapshot.occurrence_${hiveconf:snapshot};
+
 -- Fix UDF classpath issues
 SET mapreduce.task.classpath.user.precedence = true;
 SET mapreduce.user.classpath.first=true;
 SET mapreduce.job.user.classpath.first=true;
 
--- Use Snappy
-SET hive.exec.compress.output=true;
-SET mapred.output.compression.type=BLOCK;
-SET mapred.output.compression.codec=org.apache.hadoop.io.compress.SnappyCodec;
-
--- Do not allow Hive to run things locally as we don't control the environment.
--- Rationale: we don't control the environment (e.g. can blow memory, might miss Snappy etc.)
-SET hive.auto.convert.join=false;
-
--- Under some configurations memory can blow in the reduce phase (shuffling)
--- Set very conservative values to prevent this and effectively ensure we merge using disk and not in memory
---   See: http://mail-archives.apache.org/mod_mbox/hive-user/201405.mbox/%3CCAPb7cFaFOQyf98dz1E1R_VqKBZfQnG6Ld1h=VUAEjke7RK3bjw@mail.gmail.com%3E
---   See: http://jason4zhu.blogspot.dk/2014/11/shuffle-error-by-java-lang-out-of-memory-error-java-heap-space.html
-SET mapreduce.reduce.shuffle.input.buffer.percent=0.4;
-SET mapreduce.reduce.shuffle.parallelcopies=5;
-
-SET mapred.map.tasks = ${hiveconf:mapcount};
-
 SET mapred.job.queue.name = root.default;
 
 -- Set up memory for YARN
-SET mapreduce.map.memory.mb = 4096;
-SET mapreduce.reduce.memory.mb = 4096;
-SET mapreduce.map.java.opts = -Xmx3072m;
-SET mapreduce.reduce.java.opts = -Xmx3072m;
+SET mapreduce.map.memory.mb = 16384;
+SET mapreduce.reduce.memory.mb = 16384;
+SET mapreduce.map.java.opts = -Xmx14g;
+SET mapreduce.reduce.java.opts = -Xmx14g;
 
 
 ADD JAR ${hiveconf:occjar};
@@ -37,14 +21,16 @@ CREATE TEMPORARY FUNCTION parseDate AS 'org.gbif.occurrence.hive.udf.DateParseUD
 CREATE TEMPORARY FUNCTION parseBoR AS 'org.gbif.occurrence.hive.udf.BasisOfRecordParseUDF';
 
 -- Converting UK→GB is done to resolve https://dev.gbif.org/issues/browse/POR-2455/
--- Snapshots 2010-04-01 and 2010-07-26 contain UK values.
+-- Snapshots up to 2010-07-26 contain UK values.
+-- (The tmp_geo_interp table keys contain UK for these values, and the gbif_region is also defined.)
 DROP TABLE IF EXISTS snapshot.occurrence_${hiveconf:snapshot};
-CREATE TABLE snapshot.occurrence_${hiveconf:snapshot} STORED AS rcfile AS
+CREATE TABLE snapshot.occurrence_${hiveconf:snapshot} STORED AS ORC AS
 SELECT
-  /*+ MAPJOIN(p) */
-	r.id,
+  r.id,
   r.data_resource_id as dataset_id,
   r.data_provider_id as publisher_id,
+  CASE WHEN p.iso_country_code = 'UK' THEN 'GB' ELSE p.iso_country_code END AS publisher_country,
+  rpc.gbif_region AS publisher_gbif_region,
   t.kingdom,
   t.phylum,
   t.class_rank,
@@ -65,10 +51,10 @@ SELECT
   g.latitude,
   g.longitude,
   CASE WHEN g.country = 'UK' THEN 'GB' ELSE g.country END AS country,
+  rc.gbif_region AS gbif_region,
   d.day,
   d.month,
-  d.year,
-  CASE WHEN p.iso_country_code = 'UK' THEN 'GB' ELSE p.iso_country_code END AS publisher_country
+  d.year
 FROM
   (SELECT
     id,
@@ -98,4 +84,6 @@ FROM
   ) r
   JOIN snapshot.tmp_taxonomy_interp t ON t.taxon_key = r.taxon_key
   JOIN snapshot.tmp_geo_interp g ON g.geo_key = r.geo_key
-  JOIN snapshot.publisher_${hiveconf:snapshot} p ON r.data_provider_id=p.id;
+  JOIN snapshot.publisher_${hiveconf:snapshot} p ON r.data_provider_id=p.id
+  LEFT JOIN snapshot.tmp_regions rc ON rc.country = g.country
+  LEFT JOIN snapshot.tmp_regions rpc ON rpc.country = p.iso_country_code;

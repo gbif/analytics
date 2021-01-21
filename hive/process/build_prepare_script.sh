@@ -15,11 +15,6 @@ echo '--
 -- the union all means we can run in parallel
 SET hive.exec.parallel=true;
 
--- Use Snappy
-SET hive.exec.compress.output=true;
-SET mapred.output.compressiot.type=BLOCK;
-SET mapred.output.compressiot.codec=org.apache.hadoop.io.compress.SnappyCodec;
-
 -- Set up memory for YARN
 SET mapreduce.map.memory.mb = 4096;
 SET mapreduce.reduce.memory.mb = 4096;
@@ -36,7 +31,7 @@ SELECT * FROM
 for snapshot in "${snapshots[@]}"
 do
   tmptable=${snapshot:0:4}-${snapshot:4:2}-${snapshot:6:2}
-  echo "SELECT '${tmptable}'"' AS snapshot, CAST(id AS BIGINT), CAST(dataset_id AS String) AS dataset_id, CAST(publisher_id AS String) AS publisher_id, kingdom, phylum, class_rank, order_rank, family, genus, species, scientific_name, kingdom_id, phylum_id, class_id, order_id, family_id, genus_id, species_id, taxon_id, basis_of_record, latitude, longitude, country, day, month, year, publisher_country FROM ${hiveconf:SNAPSHOT_DB}.occurrence_'"$snapshot" >> $prepare_file
+  echo "SELECT '${tmptable}'"' AS snapshot, CAST(id AS BIGINT), CAST(dataset_id AS String) AS dataset_id, CAST(publisher_id AS String) AS publisher_id, kingdom, phylum, class_rank, order_rank, family, genus, species, scientific_name, kingdom_id, phylum_id, class_id, order_id, family_id, genus_id, species_id, taxon_id, basis_of_record, latitude, longitude, country, day, month, year, publisher_country, gbif_region, publisher_gbif_region FROM ${hiveconf:SNAPSHOT_DB}.occurrence_'"$snapshot" >> $prepare_file
   if [[ $snapshot != $last_snapshot ]]; then
     echo "UNION ALL" >> $prepare_file
   fi

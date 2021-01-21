@@ -9,7 +9,7 @@ GBIF capture various metrics to enable monitoring of data trends.
 
 The development is being done in an open manner, to enable others to verify procedures, contribute, or fork the project for their own purposes.  The results are visible on https://www.gbif.org/analytics/global and show global and country specific charts illustrating the changes observed in the GBIF index since 2007.
 
-Please note that all samples of the index have been reprocessed to **consistent quality control** and to the **same taxonomic backbone** to enable comparisons over time.  This is the first time this analysis has been possible, and is thanks to the adoption of the Hadoop environment at GBIF which enables the large scale analysis.  In total there are approximately 19 billion (to summer 2018) records being analysed for these reports.
+Please note that all samples of the index have been reprocessed to **consistent quality control** and to the **same taxonomic backbone** to enable comparisons over time.  This is the first time this analysis has been possible, and is thanks to the adoption of the Hadoop environment at GBIF which enables the large scale analysis.  In total there are approximately [32 billion](https://analytics-files.gbif.org/global/csv/occ.csv) (to January 2021) records being analysed for these reports.
 
 ### Project structure
 The project is divided into several parts:
@@ -42,7 +42,7 @@ These steps are required for a new environment
 
 ```
 screen -L -S analytics
-./build.sh -runHbase -runHive -runHadoop -runPrepare -runFigures
+./build.sh -interpretSnapshots -summarizeSnapshots -downloadCsvs -processCsvs -makeFigures
 ```
 
 (Detach from the screen with "^A d", reattach with `screen -x`.)

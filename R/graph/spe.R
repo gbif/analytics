@@ -19,7 +19,7 @@ spe <- function(sourceFile, plotsDir) {
     yCol="speciesCount",
     xTitle="Date",
     yTitle="Number of species (in thousands)",
-    yFormatter=mill_formatter,
+    yFormatter=kilo_formatter,
     colour='#005397',
   )
 }
