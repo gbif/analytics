@@ -1,10 +1,11 @@
-setopt -e
+#!/bin/bash -e
 
 interpretSnapshots="false"
 summarizeSnapshots="false"
 downloadCsvs="false"
 processCsvs="false"
 makeFigures="false"
+queryDownloads="false"
 
 destination_db="analytics"
 snapshot_db="snapshot"
@@ -14,6 +15,7 @@ snapshot_db="snapshot"
 [[ $* =~ (^| )"-downloadCsvs"($| ) ]] && downloadCsvs="true"
 [[ $* =~ (^| )"-processCsvs"($| ) ]] && processCsvs="true"
 [[ $* =~ (^| )"-makeFigures"($| ) ]] && makeFigures="true"
+[[ $* =~ (^| )"-queryDownloads"($| ) ]] && queryDownloads="true"
 
 export LANG=en_GB.UTF-8
 
@@ -344,4 +346,19 @@ if [ $makeFigures == "true" ];then
   log '#######################'
 else
   log 'Skipping create figures stage (add -makeFigures to command to run it)'
+fi
+
+if [ $queryDownloads == "true" ];then
+  log 'Removing the download reports output folder'
+  rm -Rf report/download/csv/
+  mkdir -p report/download/csv/
+
+  log 'Downloading download statistics from PostgreSQL'
+  ./sql/summarizeDownloads.sh report/download/csv/
+
+  log '######################################'
+  log 'DOWNLOAD DOWNLOAD STATISTICS COMPLETED'
+  log '######################################'
+else
+  log 'Skipping download download statistics stage (add -queryDownloads to command to run it)'
 fi
