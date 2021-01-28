@@ -13,5 +13,6 @@ WITH dpupm AS (
 )
 -- Count distinct users for each year
 SELECT dpupm.year, SUM(dpupm.totalRecords) AS "totalRecords", SUM(dpupm.totalDownloads) AS "totalDownloads", COUNT(DISTINCT dpupm.username) AS "totalUsers" FROM dpupm
+WHERE NOT (year = DATE_PART('year', NOW()))
 GROUP BY year
 ORDER BY year DESC;
