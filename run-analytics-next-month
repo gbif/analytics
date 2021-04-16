@@ -38,7 +38,7 @@ echo "Snapshot $(date +%Y%m%d) (probably) is ready for backup." | mail -s "Quart
 
 cd /home/hdfs/analytics
 echo "Running analytics"
-./build.sh -runHbase -runHive -runHadoop -runPrepare -runFigures || echo "Analytics exited with a failure code: $?"
+./build.sh -interpretSnapshots -summarizeSnapshots -downloadCsvs -processCsvs -makeFigures -queryDownloads || echo "Analytics exited with a failure code: $?"
 echo "Analytics completed"
 
 echo "Analytics script exited." | mail -s "Analytics script exited -- map tiles needs resuming." mblissett@gbif.org

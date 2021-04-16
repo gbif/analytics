@@ -15,7 +15,6 @@ SET mapred.min.split.size=128000000;
 
 ADD JAR ${hiveconf:epsgjar};
 ADD JAR ${hiveconf:occjar};
-ADD JAR ${hiveconf:props};
 CREATE TEMPORARY FUNCTION parseGeo AS 'org.gbif.occurrence.hive.udf.CoordinateCountryParseUDF';
 
 DROP TABLE IF EXISTS snapshot.tmp_geo_interp;
@@ -28,6 +27,6 @@ SELECT
 FROM (
   SELECT
     geo_key,
-    parseGeo("${hiveconf:api}", latitude, longitude, country) g
+    parseGeo("${hiveconf:api}", "${hiveconf:cacheTable}", "${hiveconf:cacheBuckets}", "${hiveconf:cacheZk}", latitude, longitude, country) g
   FROM snapshot.tmp_raw_geo
 ) t1;
