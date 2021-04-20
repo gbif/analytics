@@ -29,6 +29,8 @@ export LANG=en_GB.UTF-8
 # user running the makeFigures command because font stuff will be
 # written there on first load
 Rscript="docker run --rm -it -v $PWD:/analytics/ docker.gbif.org/analytics-figures Rscript"
+# Set the permissions correctly afterwards
+RscriptChown="docker run --rm -it -v $PWD:/analytics/ docker.gbif.org/analytics-figures chown --recursive --from root:root --reference build.sh report"
 
 log () {
   echo $(tput setaf 3)$(date '+%Y-%m-%d %H:%M:%S ')$(tput setaf 11)$1$(tput sgr0)
@@ -69,6 +71,10 @@ if [ $summarizeSnapshots == "true" ];then
   hive --hiveconf DB="$destination_db" -f hive/process/occ_complete_v2.q
   log 'Hive stage: Process occ_cells.q'
   hive --hiveconf DB="$destination_db" -f hive/process/occ_cells.q
+  log 'Hive stage: Process occ_repatriation.q'
+  hive --hiveconf DB="$destination_db" -f hive/process/occ_repatriation.q
+  log 'Hive stage: Process occ_density.q'
+  hive --hiveconf DB="$destination_db" -f hive/process/occ_density.q
 
   log 'Hive stage: Process spe_kingdom.q'
   hive --hiveconf DB="$destination_db" -f hive/process/spe_kingdom.q
@@ -76,9 +82,9 @@ if [ $summarizeSnapshots == "true" ];then
   hive --hiveconf DB="$destination_db" -f hive/process/spe_dayCollected.q
   log 'Hive stage: Process spe_yearCollected.q'
   hive --hiveconf DB="$destination_db" -f hive/process/spe_yearCollected.q
+  log 'Hive stage: Process spe_repatriation.q'
+  hive --hiveconf DB="$destination_db" -f hive/process/spe_repatriation.q
 
-  log 'Hive stage: Process repatriation.q'
-  hive --hiveconf DB="$destination_db" -f hive/process/repatriation.q
   log 'Hive stage: Process totals.q'
   hive --hiveconf DB="$destination_db" -f hive/process/totals.q
 
@@ -204,6 +210,18 @@ if [ $downloadCsvs == "true" ];then
   ls -l hadoop/occ_publisherGbifRegion_cell_half_deg.csv
   ls -l hadoop/occ_cell_half_deg.csv
 
+  hdfs dfs -getmerge /user/hive/warehouse/"$destination_db".db/occ_density_country_point_one_deg hadoop/occ_density_country_point_one_deg.csv &
+  hdfs dfs -getmerge /user/hive/warehouse/"$destination_db".db/occ_density_publishercountry_point_one_deg hadoop/occ_density_publisherCountry_point_one_deg.csv &
+  hdfs dfs -getmerge /user/hive/warehouse/"$destination_db".db/occ_density_gbifregion_point_one_deg hadoop/occ_density_gbifRegion_point_one_deg.csv &
+  hdfs dfs -getmerge /user/hive/warehouse/"$destination_db".db/occ_density_publishergbifregion_point_one_deg hadoop/occ_density_publisherGbifRegion_point_one_deg.csv &
+  hdfs dfs -getmerge /user/hive/warehouse/"$destination_db".db/occ_density_point_one_deg hadoop/occ_density_point_one_deg.csv
+  wait
+  ls -l hadoop/occ_density_country_point_one_deg.csv
+  ls -l hadoop/occ_density_publisherCountry_point_one_deg.csv
+  ls -l hadoop/occ_density_gbifRegion_point_one_deg.csv
+  ls -l hadoop/occ_density_publisherGbifRegion_point_one_deg.csv
+  ls -l hadoop/occ_density_point_one_deg.csv
+
   hdfs dfs -getmerge /user/hive/warehouse/"$destination_db".db/spe_country_kingdom hadoop/spe_country_kingdom.csv &
   hdfs dfs -getmerge /user/hive/warehouse/"$destination_db".db/spe_publishercountry_kingdom hadoop/spe_publisherCountry_kingdom.csv &
   hdfs dfs -getmerge /user/hive/warehouse/"$destination_db".db/spe_gbifregion_kingdom hadoop/spe_gbifRegion_kingdom.csv &
@@ -314,6 +332,8 @@ if [ $processCsvs == "true" ];then
   $Rscript R/csv/occ.R
   log 'R script occ_cells.R'
   $Rscript R/csv/occ_cells.R
+  log 'R script occ_density.R'
+  $Rscript R/csv/occ_density.R
   log 'R script spe_kingdom.R'
   $Rscript R/csv/spe_kingdom.R
   log 'R script spe_dayCollected.R'
@@ -324,6 +344,7 @@ if [ $processCsvs == "true" ];then
   $Rscript R/csv/spe_repatriation.R
   log 'R script spe.R'
   $Rscript R/csv/spe.R
+  $RscriptChown
 
   log '############################'
   log 'PROCESS CSVS STAGE COMPLETED'
@@ -335,6 +356,7 @@ fi
 if [ $makeFigures == "true" ];then
   log 'Generating the figures'
   $Rscript R/report.R
+  $RscriptChown
 
   # Font embedding, disabled as we aren't making PDF figures.
   # Mac specific, typical font defaults

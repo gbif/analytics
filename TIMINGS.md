@@ -1,12 +1,14 @@
 # Timings
 
-Time taken to produce the Q1-2019 analytics:
+Time taken to produce the Q2-2021 analytics:
 
 * Snapshot time not measured (not long)
-* HBase stage: 2½ days
-* Hive stage: ½ day
-* Hadoop stage: 15 minutes
-* Prepare stage: pretty fast
-* Figures stage: ½ day (before parallelism)
+* Interpret snapshots stage: 2½ days
+  * Interpreting geography (with KVS): 7 hours
+  * Interpreting taxonomy (no KVS): 14 hours
+* Summarize snapshots stage: 2½ days
+* Download CSVs stage: ½ day
+* Process CSVs stage: <5 minutes
+* Figures stage: 1½ hours
 
 * Generating country reports: 15 minutes

@@ -11,6 +11,7 @@ source("R/graph/spe_dayCollected.R")
 source("R/graph/spe_yearCollected.R")
 source("R/graph/spe_repatriation.R")
 source("R/graph/spe.R")
+source("R/graph/occ_density.R")
 
 library(doParallel)
 
@@ -23,11 +24,12 @@ if (Sys.info()[['sysname']] == "Windows") {
 }
 
 path <- "report"
+globalAndRegionPath <- c("report/global", "report/gbifRegion")
 # useful to speed up development, to only use the global directory
 # path <- "report/global"
 # path <- "report/country/DE"
 # path <- "report/country/FR"
-# path <- "report/country/AX/publishedBy"
+# path <- "report/country/ZW/publishedBy"
 
 csvs <- list.files(path=path, pattern="occ_kingdom_basisOfRecord.csv", full.names=TRUE, recursive=TRUE, include.dirs=TRUE)
 mclapply(csvs, function(csv) {
@@ -142,6 +144,16 @@ mclapply(csvs, function(csv) {
     targetFilePattern="occ_cells_half_deg",
     title = "Number of species with presence in cells (0.5 degree)",
     palette <- c("#a6611a", "#dfc27d", "#f5f5f5", "#80cdc1", "#018571"))
+}, mc.cores = cores)
+
+# For the density maps, only global and GBIF region figures are made
+csvs <- list.files(path=globalAndRegionPath, pattern="occ_density_point_one_deg.csv", full.names=TRUE, recursive=TRUE, include.dirs=TRUE)
+mclapply(csvs, function(csv) {
+  plotsDir <- gsub("/csv", "", dirname(csv))
+  occ_density(
+    sourceFile=csv,
+    plotsDir=plotsDir,
+    targetFilePattern="occ_density_point_one_deg_%s")
 }, mc.cores = cores)
 
 # unused
