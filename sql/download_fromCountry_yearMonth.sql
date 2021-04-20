@@ -9,8 +9,10 @@ WITH dpupm AS (
        SUM(total_records) AS totalRecords,
        COUNT(od.key) AS totalDownloads,
        username
-     FROM occurrence_download od, public.user u WHERE od.created_by = u.username
+     FROM occurrence_download od, public.user u
+     WHERE od.created_by = u.username
      AND status IN('SUCCEEDED', 'FILE_ERASED') AND username NOT IN ('nagios')
+     AND od.created < DATE_TRUNC('month', NOW())
      GROUP BY DATE_PART('year', od.created), DATE_PART('month', od.created), userCountry, username
 ),
 -- Label each user's monthly download count sequentially (1 for the first month they make at least one download, 2 for the second etc)
@@ -22,6 +24,5 @@ SELECT sud.*, SUM(CASE WHEN seqnum = 1 THEN 1 ELSE 0 END) OVER (PARTITION BY yea
 )
 -- Count distinct users for each month (independently), and take the cumulative (by year) user count.
 SELECT sudc.year, sudc.month, sudc.userCountry AS "userCountry", SUM(sudc.totalRecords) AS "totalRecords", SUM(sudc.totalDownloads) AS "totalDownloads", COUNT(DISTINCT sudc.username) AS "totalUsers", MAX(cum_distinct_username) AS "cumulativeAnnualUsers" FROM sudc
-WHERE NOT (year = DATE_PART('year', NOW()) AND month = DATE_PART('month', NOW()))
 GROUP BY year, month, userCountry
 ORDER BY year DESC, month DESC;
