@@ -29,6 +29,7 @@ export LANG=en_GB.UTF-8
 # user running the makeFigures command because font stuff will be
 # written there on first load
 Rscript="docker run --rm -it -v $PWD:/analytics/ docker.gbif.org/analytics-figures Rscript"
+PyScript="docker run --rm -it -v $PWD:/analytics/ docker.gbif.org/analytics-figures python3"
 # Set the permissions correctly afterwards
 RscriptChown="docker run --rm -it -v $PWD:/analytics/ docker.gbif.org/analytics-figures chown --recursive --from root:root --reference build.sh report"
 
@@ -332,8 +333,9 @@ if [ $processCsvs == "true" ];then
   $Rscript R/csv/occ.R
   log 'R script occ_cells.R'
   $Rscript R/csv/occ_cells.R
-  log 'R script occ_density.R'
-  $Rscript R/csv/occ_density.R
+  log 'Python script occ_density.py'
+  $PyScript R/geotiff/occ_density.py
+
   log 'R script spe_kingdom.R'
   $Rscript R/csv/spe_kingdom.R
   log 'R script spe_dayCollected.R'

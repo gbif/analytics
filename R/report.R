@@ -11,7 +11,6 @@ source("R/graph/spe_dayCollected.R")
 source("R/graph/spe_yearCollected.R")
 source("R/graph/spe_repatriation.R")
 source("R/graph/spe.R")
-source("R/graph/occ_density.R")
 
 library(doParallel)
 
@@ -147,13 +146,10 @@ mclapply(csvs, function(csv) {
 }, mc.cores = cores)
 
 # For the density maps, only global and GBIF region figures are made
-csvs <- list.files(path=globalAndRegionPath, pattern="occ_density_point_one_deg.csv", full.names=TRUE, recursive=TRUE, include.dirs=TRUE)
-mclapply(csvs, function(csv) {
-  plotsDir <- gsub("/csv", "", dirname(csv))
-  occ_density(
-    sourceFile=csv,
-    plotsDir=plotsDir,
-    targetFilePattern="occ_density_point_one_deg_%s")
+tiffs <- list.files(path=globalAndRegionPath, pattern="occ_density_point_one_deg_.*.tiff", full.names=TRUE, recursive=TRUE, include.dirs=TRUE)
+mclapply(tiffs, function(tiff) {
+  print(paste("Processing density map for: ", tiff))
+  system2('R/map/occ_density.py', args=c(tiff))
 }, mc.cores = cores)
 
 # unused

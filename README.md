@@ -18,11 +18,11 @@ The project is divided into several parts:
 - Hive scripts that snapshot recent data from the latest GBIF infrastructure (the real time indexing system currently serving GBIF)
 - Hive scripts that process all data to the same quality control and taxonomic backbone
 - Hive scripts that digest the data into specific views suitable for download from Hadoop and further processing
-- R scripts that process the data into views per country
-- R scripts that produce the static charts for each country
+- R and Python scripts that process the data into views per country
+- R and Python scripts that produce the static charts for each country
 
 ### Setup
-These steps are required for a new environment
+These steps are required for a new environment.  It is probably easiest to use the Docker image.
 - Install the yum packages R, cairo, cairo-devel
 - Run `Rscript R/install-packages.R` (Possibly it is necessary to set the `R_LIBS_USER` environment variable.)
 
@@ -38,7 +38,7 @@ These steps are required for a new environment
 - Replace the last element of `temporalFacetSnapshots` in `R/graph/utils.R` with your new snapshot. Follow the formatting in use, e.g. `2015-01-19`
 - Make sure the version of EPSG used in the latest occurrence project pom.xml is the same as the one that the script `hive/normalize/create_tmp_interp_tables.sh` fetches. Do that by checking the pom.xml (hopefully still at: https://github.com/gbif/occurrence/blob/master/pom.xml) for the geotools.version. That version should be the same as what's in the shell script (at time of writing the geotools.version was 20.5 and the script line was `curl -L 'http://download.osgeo.org/webdav/geotools/org/geotools/gt-epsg-hsql/20.5/gt-epsg-hsql-20.5.jar' > /tmp/gt-epsg-hsql.jar`)
 - Set up additional geocode services (e.g. using UAT or Dev, or duplicates running in prod).  There need to be as many backends connections available as tasks will run in YARN.
-- From the root (analytics) directory you can now run the `build.sh` script to run all the HBase and Hive table building, build all the master CSV files, which are in turn processed down to per country CSVs, then generate the figures needed for the website and the country reports. Note that this will take up to 48 hours and is unfortunately error prone, so all steps could also be run individually. In any case it's probably best to run all parts of this script on a machine in the secretariat and ideally in a "screen" session. To run it all do:
+- From the root (analytics) directory you can now run the `build.sh` script to run all the HBase and Hive table building, build all the master CSV files, which are in turn processed down to per country/region CSVs and GeoTIFFs, then generate the maps and figures needed for the website and the country reports. Note that this will take up to 48 hours and is unfortunately error prone, so all steps could also be run individually. In any case it's probably best to run all parts of this script on a machine in the secretariat and ideally in a "screen" session. To run it all do:
 
 ```
 screen -L -S analytics
@@ -48,9 +48,8 @@ screen -L -S analytics
 (Detach from the screen with "^A d", reattach with `screen -x`.)
 
 - Run the `country_reports/copy_placeholders.sh` script, which creates missing graphs (e.g. where a country does not publish any occurrences).
-- rsync the CSVs and figures to `root@analytics-files.gbif-uat.org:/var/www/html/analytics-files/` and check (this server is also used for gbif-dev.org)
+- rsync the CSVs, GeoTIFFs, figures and maps to `root@analytics-files.gbif-uat.org:/var/www/html/analytics-files/` and check (this server is also used for gbif-dev.org)
   `rsync -avn report/ root@analytics-files.gbif-uat.org:/var/www/html/analytics-files/`
-- Clear the Thumbor cache for these images.
 
 ### Steps to build country reports after the R part is done
 - Check the download statistics are up-to-date, e.g. with https://github.com/gbif/registry/blob/master/populate_downloaded_records_statistics.sh
@@ -58,9 +57,8 @@ screen -L -S analytics
 - rsync the reports to `root@analytics-files.gbif-uat.org:/var/www/html/analytics-files/`
 
 ### Steps to deploy to production
-- rsync the CSVs and figures to `root@analytics-files.gbif.org:/var/www/html/analytics-files/`
+- rsync the CSVs, GeoTIFFs, figures and maps to `root@analytics-files.gbif.org:/var/www/html/analytics-files/`
   `rsync -avn report/ root@analytics-files.gbif.org:/var/www/html/analytics-files/`
-- Clear the Thumbor caches, see the [flush_analytics_urls](https://github.com/gbif/infrastructure/blob/master/roles/gbif.thumbor/files/flush_analytics_urls) script on the Thumbor server.
 - rsync the reports to `root@analytics-files.gbif.org:/var/www/html/analytics-files/`
 - Check https://www.gbif.org/analytics, write an email to staff@gbif.org giving heads up on the new data, and accept the many accolades due your outstanding achievement in the field of excellence!
 - Archive the new analytics.  The old analytics files have been used several times by the communications team:
@@ -71,9 +69,9 @@ tar -cvJf /mnt/auto/analytics/archives/gbif_analytics_2018-09-28.tar.xz --exclud
 tar -cvJf /mnt/auto/analytics/archives/gbif_analytics_2018-09-28.tar.xz analytics-files/[a-z]*
 ```
   Then upload this file to Box.
-- Copy only the CSVs to the public, web archive:
+- Copy only the CSVs and GeoTIFFs to the public, web archive:
 ```
-rsync -rtv /var/www/html/analytics-files/[a-z]* /mnt/auto/analytics/files/2021-01-01 --exclude figure --exclude '*.pdf'
+rsync -rtv /var/www/html/analytics-files/[a-z]* /mnt/auto/analytics/files/2021-01-01 --exclude figure --exclude map --exclude '*.pdf'
 cd /var/www/html/analytics-files
 ln -s /mnt/auto/analytics/files/2021-01-01 .
 ```

@@ -17,10 +17,12 @@ cd -
 
 # for every country in report/
 countries=`ls -d $pathprefix/country/* | grep -v -e XZ -e ZZ`
-for country in $countries; do
-	countrycode=`echo $country | rev | cut -d \/ -f 1 | rev`
-	# echo "$countrycode"
-	path=$pathprefix/country/$countrycode
+regions=`ls -d $pathprefix/gbifRegion/*`
+for country in $countries $regions; do
+	area=`echo $country | rev | cut -d/ -f 2 | rev`
+	countrycode=`echo $country | rev | cut -d/ -f 1 | rev`
+	# echo "$area / $countrycode"
+	path=$pathprefix/$area/$countrycode
 	mkdir -p $path/about/csv $path/publishedBy/csv $path/about/figure $path/publishedBy/figure
 
 	for filename in "${csvlist[@]}"; do
