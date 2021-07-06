@@ -11,7 +11,7 @@ log () {
 #SONAR_DOWNLOAD_URL=${SONAR_REDIRECT_URL}/${VERSION}/${FILENAME}
 #curl -SsLo /tmp/occurrence-hive.jar "${SONAR_REDIRECT_URL}/${VERSION}/${FILENAME}"
 
-if [[ ! -e /home/hdfs/occurrence-hive-udf-kvs.jar ]] then;
+if [[ ! -e /home/hdfs/occurrence-hive-udf-kvs.jar ]]; then
     echo "Build the udf-kvs branch of occurrence-hive, copy to /home/hdfs/occurrence-hive-udf-kvs.jar"
     exit 1
 fi

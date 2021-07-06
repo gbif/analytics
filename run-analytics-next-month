@@ -4,41 +4,50 @@
 # (Even if it fails, at least the snapshot should be ready.)
 #
 
+function logdate() {
+    echo -n $(date +%A\ %H:%M\ %Z)
+}
+
 # Wait until the first of the month (UTC).
 while [[ $(date -u +%-d) -ne 1 ]]; do
-    echo "Date is "$(date -u +%Y-%m-%d)", too soon for analytics."
+    echo $(logdate) "Date is "$(date -u +%Y-%m-%d)", too soon for analytics."
     sleep 15m
 done
 
-# Wait until the seventh hour (UTC), so the HDFS build has completed.
-while [[ $(date -u +%-H) -ne 7 ]]; do
-    echo "Time is "$(date -u +%H:%M:%S)", too soon for analytics."
-    sleep 15m
+# Check the HDFS build has completed
+startTime=$(date -u +%s -d 'today 00:00:00')
+while [[ $(hdfs dfs -stat %Y /user/hive/warehouse/prod_h.db/occurrence/000000_0) -lt ${startTime}000 ]]; do
+    echo $(logdate) "occurrence (hdfs) is still old, from" $(hdfs dfs -stat %y /user/hive/warehouse/prod_h.db/occurrence/000000_0) \
+      "(waiting until" $(date -u +%Y-%m-%d\ %H:%M\ %Z -d 'today 00:00:00') "or later)"
+    sleep 5m
 done
+echo $(logdate) "occurrence (hdfs) is fresh, from" $(hdfs dfs -stat %y /user/hive/warehouse/prod_h.db/occurrence/000000_0)
+sleep 15m
+echo
 
 date -u -R
 (
-    echo "Suspending map tiles build"
+    echo $(logdate) "Suspending map tiles build"
     WID=$(oozie jobs -oozie http://c5oozie.gbif.org:11000/oozie/ -jobtype coordinator -filter name=MapBuild-Tiles | awk 'NR==3 {print $1}')
     if [ -n "$WID" ]; then
 	oozie job -oozie http://c5oozie.gbif.org:11000/oozie/ -suspend $WID
     fi
-) || echo "Failed to suspend map tiles build" | mail -s "Failed to suspend map tiles build." mblissett@gbif.org
+) || echo $(logdate) "Failed to suspend map tiles build" | mail -s "Failed to suspend map tiles build." mblissett@gbif.org
 
-echo "Starting analytics!"
+echo $(logdate) "Starting analytics!"
 
 cd /home/hdfs/analytics/hive/import/hdfs
-echo "Creating snapshot"
+echo $(logdate) "Creating snapshot"
 ./create_new_snapshot.sh snapshot $(date -u +%Y%m%d) prod_h occurrence
-echo "Snapshot completed"
+echo $(logdate) "Snapshot completed"
 
 sleep 1m
 
-echo "Snapshot $(date +%Y%m%d) (probably) is ready for backup." | mail -s "Quarterly snapshot ready for backup" mblissett@gbif.org
+echo $(logdate) "Snapshot $(date +%Y%m%d) (probably) is ready for backup." | mail -s "Quarterly snapshot ready for backup" mblissett@gbif.org
 
 cd /home/hdfs/analytics
-echo "Running analytics"
-./build.sh -interpretSnapshots -summarizeSnapshots -downloadCsvs -processCsvs -makeFigures -queryDownloads || echo "Analytics exited with a failure code: $?"
-echo "Analytics completed"
+echo $(logdate) "Running analytics"
+./build.sh -interpretSnapshots -summarizeSnapshots -downloadCsvs -processCsvs -makeFigures -queryDownloads || echo $(logdate) "Analytics exited with a failure code: $?"
+echo $(logdate) "Analytics completed"
 
-echo "Analytics script exited." | mail -s "Analytics script exited -- map tiles needs resuming." mblissett@gbif.org
+echo $(logdate) "Analytics script exited." | mail -s "Analytics script exited -- map tiles needs resuming." mblissett@gbif.org

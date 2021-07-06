@@ -30,7 +30,7 @@ These steps are required for a new environment.  It is probably easiest to use t
 - This will only work on a Cloudera Manager managed gateway such as `c5gateway-vh` on which you should be able to `sudo -i -u hdfs` and find the code in `/home/hdfs/analytics/` (do a `git pull`)
 - Make sure Hadoop libraries and binaries (e.g. hive) are on your path
 - The snapshot name will be the date as `YYYYMMDD` so e.g. `20140923`.
-- Create new "raw" table from the HDFS table using `hive/import/hdfs/create_new_snapshot.sh`. Pass in snapshot database, snapshot name, source Hive database and source Hive table e.g. `cd hive/import/hdfs; ./create_new_snapshot.sh snapshot 20200701 prod_h occurrence`
+- Create new "raw" table from the HDFS table using `hive/import/hdfs/create_new_snapshot.sh`. Pass in snapshot database, snapshot name, source Hive database and source Hive table e.g. `cd hive/import/hdfs; ./create_new_snapshot.sh snapshot $(date +%Y%m%d) prod_h occurrence`
 - Tell Matt he can run the backup script, which exports these snapshots to external storage.
 - Add the new snapshot name to the `hive/normalize/build_raw_scripts.sh` script, to the array hdfs_v1_snapshots. If the HDFS schema has changed you'll have to add a new array called e.g. hdfs_v2_snapshots and add logic to process that array at the bottom of the script (another loop).
 - Add the new snapshot name to `hive/normalize/create_occurrence_tables.sh` in the same way as above.
@@ -64,16 +64,16 @@ screen -L -S analytics
 - Archive the new analytics.  The old analytics files have been used several times by the communications team:
 ```
 cd /var/www/html/
-tar -cvJf /mnt/auto/analytics/archives/gbif_analytics_2018-09-28.tar.xz --exclude '*.pdf' analytics-files/[a-z]*
+tar -cvJf /mnt/auto/analytics/archives/gbif_analytics_$(date +%Y-%m-01).tar.xz --exclude '*.pdf' analytics-files/[a-z]*
 # or at the start of the year, when the country reports have been generated:
-tar -cvJf /mnt/auto/analytics/archives/gbif_analytics_2018-09-28.tar.xz analytics-files/[a-z]*
+tar -cvJf /mnt/auto/analytics/archives/gbif_analytics_$(date +%Y-%m-01).tar.xz analytics-files/[a-z]*
 ```
   Then upload this file to Box.
 - Copy only the CSVs and GeoTIFFs to the public, web archive:
 ```
-rsync -rtv /var/www/html/analytics-files/[a-z]* /mnt/auto/analytics/files/2021-01-01 --exclude figure --exclude map --exclude '*.pdf'
+rsync -rtv /var/www/html/analytics-files/[a-z]* /mnt/auto/analytics/files/$(date +%Y-%m-01) --exclude figure --exclude map --exclude '*.pdf'
 cd /var/www/html/analytics-files
-ln -s /mnt/auto/analytics/files/2021-01-01 .
+ln -s /mnt/auto/analytics/files/$(date +%Y-%m-01) .
 ```
 - Verify the display of this at https://analytics-files.gbif.org/
 
