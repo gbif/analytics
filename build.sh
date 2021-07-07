@@ -1,5 +1,6 @@
 #!/bin/bash -e
 
+registryStatistics="false"
 interpretSnapshots="false"
 summarizeSnapshots="false"
 downloadCsvs="false"
@@ -10,6 +11,7 @@ queryDownloads="false"
 destination_db="analytics"
 snapshot_db="snapshot"
 
+[[ $* =~ (^| )"-registryStatistics"($| ) ]] && registryStatistics="true"
 [[ $* =~ (^| )"-interpretSnapshots"($| ) ]] && interpretSnapshots="true"
 [[ $* =~ (^| )"-summarizeSnapshots"($| ) ]] && summarizeSnapshots="true"
 [[ $* =~ (^| )"-downloadCsvs"($| ) ]] && downloadCsvs="true"
@@ -37,7 +39,23 @@ log () {
   echo $(tput setaf 3)$(date '+%Y-%m-%d %H:%M:%S ')$(tput setaf 11)$1$(tput sgr0)
 }
 
-if [ $interpretSnapshots == "true" ];then
+if [ $registryStatistics == "true" ]; then
+  log 'Removing the registry statistics output folder'
+  rm -Rf registry-report/
+  mkdir -p registry-report/dataset registry-report/organization
+
+  log 'Running Registry Statistics stage'
+  ./registry/datasets.sh
+  ./registry/organizations.sh
+
+  log '###################################'
+  log 'INTERPRET SNAPSHOTS STAGE COMPLETED'
+  log '###################################'
+else
+  log 'Skipping Registry Statistics stage (add -registryStatistics to command to run it)'
+fi
+
+if [ $interpretSnapshots == "true" ]; then
   log 'Running Interpret Snapshots stages (import and geo/taxonomy table creation)'
   log 'HBase stage: build_raw_scripts.sh'
   ./hive/normalize/build_raw_scripts.sh
@@ -55,7 +73,7 @@ else
   log 'Skipping Interpret Snapshots stage (add -interpretSnapshots to command to run it)'
 fi
 
-if [ $summarizeSnapshots == "true" ];then
+if [ $summarizeSnapshots == "true" ]; then
   log 'Running Summarize Snapshots stages (Existing tables are replaced)'
   prepare_file="hive/process/prepare.q"
   ./hive/process/build_prepare_script.sh $prepare_file
@@ -96,7 +114,7 @@ else
   log 'Skipping Summarize Snapshots stage (add -summarizeSnapshots to command to run it)'
 fi
 
-if [ $downloadCsvs == "true" ];then
+if [ $downloadCsvs == "true" ]; then
   log 'Running Download CSVs stages'
   log 'Downloading the CSVs from HDFS (existing data are overwritten)'
   rm -fr hadoop
@@ -314,7 +332,7 @@ else
   log 'Skipping Download CSVs stage (add -downloadCsvs to command to run it)'
 fi
 
-if [ $processCsvs == "true" ];then
+if [ $processCsvs == "true" ]; then
   log 'Removing the reports output folder'
   rm -fr report
 
@@ -355,7 +373,7 @@ else
   log 'Skipping Process CSVs stage (add -processCsvs to command to run it)'
 fi
 
-if [ $makeFigures == "true" ];then
+if [ $makeFigures == "true" ]; then
   log 'Generating the figures'
   $Rscript R/report.R
   $RscriptChown
@@ -372,7 +390,7 @@ else
   log 'Skipping create figures stage (add -makeFigures to command to run it)'
 fi
 
-if [ $queryDownloads == "true" ];then
+if [ $queryDownloads == "true" ]; then
   log 'Removing the download reports output folder'
   rm -Rf report/download/csv/
   mkdir -p report/download/csv/

@@ -50,6 +50,7 @@ screen -L -S analytics
 - Run the `country_reports/copy_placeholders.sh` script, which creates missing graphs (e.g. where a country does not publish any occurrences).
 - rsync the CSVs, GeoTIFFs, figures and maps to `root@analytics-files.gbif-uat.org:/var/www/html/analytics-files/` and check (this server is also used for gbif-dev.org)
   `rsync -avn report/ root@analytics-files.gbif-uat.org:/var/www/html/analytics-files/`
+  `rsync -avn registry-report/ root@analytics-files.gbif-uat.org:/var/www/html/analytics-files/registry/`
 
 ### Steps to build country reports after the R part is done
 - Check the download statistics are up-to-date, e.g. with https://github.com/gbif/registry/blob/master/populate_downloaded_records_statistics.sh
@@ -59,6 +60,7 @@ screen -L -S analytics
 ### Steps to deploy to production
 - rsync the CSVs, GeoTIFFs, figures and maps to `root@analytics-files.gbif.org:/var/www/html/analytics-files/`
   `rsync -avn report/ root@analytics-files.gbif.org:/var/www/html/analytics-files/`
+  `rsync -avn registry-report/ root@analytics-files.gbif.org:/var/www/html/analytics-files/registry/`
 - rsync the reports to `root@analytics-files.gbif.org:/var/www/html/analytics-files/`
 - Check https://www.gbif.org/analytics, write an email to staff@gbif.org giving heads up on the new data, and accept the many accolades due your outstanding achievement in the field of excellence!
 - Archive the new analytics.  The old analytics files have been used several times by the communications team:
