@@ -12,10 +12,13 @@
 # https://commons.wikimedia.org/wiki/File:BlankMap-World.svg
 #
 
-mapSvg=registry-report/organization/active_gbif_publishing_organizations_by_country_$(date +%Y-%m-%d).svg
-mapData=registry-report/organization/active_gbif_publishing_organizations_$(date +%Y-%m-%d).tsv
+isoDate=$(date +%Y-%m-%d)
+longDate=$(date +'%-d %B %Y')
 
-sed "s/World Map/Active GBIF data publishing organizations by country, area or island/" < ${0:a:h}/robinson-map.head > $mapSvg
+mapSvg=registry-report/organization/active_gbif_publishing_organizations_by_country_$isoDate.svg
+mapData=registry-report/organization/active_gbif_publishing_organizations_$isoDate.tsv
+
+sed "s/World Map/Active GBIF data publishing organizations by country or area.  $longDate./" < ${0:a:h}/robinson-map.head > $mapSvg
 echo >> $mapSvg
 echo "/* Begin calculated styles */" >> $mapSvg
 echo >> $mapSvg
@@ -76,7 +79,7 @@ echo >> $mapSvg
 echo "/* End calculated styles */" >> $mapSvg
 echo >> $mapSvg
 
-cat ${0:a:h}/robinson-map.tail >> $mapSvg
+sed "s/Number of active publishers by country or area/Number of active publishers by country or area.  $longDate./" < ${0:a:h}/robinson-map.tail >> $mapSvg
 
 ln -sf $mapSvg:t registry-report/organization/active_gbif_publishing_organizations_by_country.svg
 ln -sf $mapData:t registry-report/organization/active_gbif_publishing_organizations.tsv

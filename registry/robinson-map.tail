@@ -3112,7 +3112,7 @@
  */
 -->
 
-<g transform="translate(1200,1200)">
+<g id="key" transform="translate(1200,1200)">
   <svg
       xmlns:dc="http://purl.org/dc/elements/1.1/"
       xmlns:cc="http://creativecommons.org/ns#"
