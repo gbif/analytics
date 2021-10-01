@@ -73,7 +73,7 @@ tar -cvJf /mnt/auto/analytics/archives/gbif_analytics_$(date +%Y-%m-01).tar.xz a
   Then upload this file to Box.
 - Copy only the CSVs and GeoTIFFs to the public, web archive:
 ```
-rsync -rtv /var/www/html/analytics-files/[a-z]* /mnt/auto/analytics/files/$(date +%Y-%m-01) --exclude figure --exclude map --exclude '*.pdf'
+rsync -rtv /var/www/html/analytics-files/[a-z]* /mnt/auto/analytics/files/$(date +%Y-%m-01) --exclude figure --exclude map --exclude '*.pdf' --exclude favicon.ico
 cd /var/www/html/analytics-files
 ln -s /mnt/auto/analytics/files/$(date +%Y-%m-01) .
 ```
