@@ -47,7 +47,7 @@ echo $(logdate) "Snapshot $(date +%Y%m%d) (probably) is ready for backup." | mai
 
 cd /home/hdfs/analytics
 echo $(logdate) "Running analytics"
-./build.sh -interpretSnapshots -summarizeSnapshots -downloadCsvs -processCsvs -makeFigures -queryDownloads || echo $(logdate) "Analytics exited with a failure code: $?"
+./build.sh -registryStatistics -interpretSnapshots -summarizeSnapshots -downloadCsvs -processCsvs -makeFigures -queryDownloads || echo $(logdate) "Analytics exited with a failure code: $?"
 echo $(logdate) "Analytics completed"
 
 echo $(logdate) "Analytics script exited." | mail -s "Analytics script exited -- map tiles needs resuming." mblissett@gbif.org

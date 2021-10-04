@@ -49,7 +49,7 @@ if [ $registryStatistics == "true" ]; then
   ./registry/organizations.sh
 
   log '###################################'
-  log 'INTERPRET SNAPSHOTS STAGE COMPLETED'
+  log 'REGISTRY STATISTICS STAGE COMPLETED'
   log '###################################'
 else
   log 'Skipping Registry Statistics stage (add -registryStatistics to command to run it)'
@@ -377,6 +377,9 @@ if [ $makeFigures == "true" ]; then
   log 'Generating the figures'
   $Rscript R/report.R
   $RscriptChown
+
+  log 'Copying placeholders'
+  country_reports/copy_placeholders.sh
 
   # Font embedding, disabled as we aren't making PDF figures.
   # Mac specific, typical font defaults

@@ -10,7 +10,7 @@ temporalFactors <- c("Unknown", "YearMonthDay", "YearMonth", "Year")
 # yearEnds <- c("20071219" "20081217" "20091216" "20101117" "20120118" "20121211" "20131220" "20150119" "20160104" "20161227" "20171222" "20190101" "20200101" "20201001" "20210101" "20211001")
 #               ..........                                             ..........                                             ..........                                             ..........
 # Split into four
-temporalFacetSnapshots <- c("2007-12-19", "2012-12-11", "2017-12-22", "2021-07-01")
+temporalFacetSnapshots <- c("2007-12-19", "2012-12-11", "2017-12-22", "2021-10-01")
 
 # minimum year to plot of year range charts
 minPlotYear <- 1950

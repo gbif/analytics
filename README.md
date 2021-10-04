@@ -47,7 +47,6 @@ screen -L -S analytics
 
 (Detach from the screen with "^A d", reattach with `screen -x`.)
 
-- Run the `country_reports/copy_placeholders.sh` script, which creates missing graphs (e.g. where a country does not publish any occurrences).
 - rsync the CSVs, GeoTIFFs, figures and maps to `root@analytics-files.gbif-uat.org:/var/www/html/analytics-files/` and check (this server is also used for gbif-dev.org)
   `rsync -avn report/ root@analytics-files.gbif-uat.org:/var/www/html/analytics-files/`
   `rsync -avn registry-report/ root@analytics-files.gbif-uat.org:/var/www/html/analytics-files/registry/`
