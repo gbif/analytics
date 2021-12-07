@@ -83,3 +83,9 @@ sed "s/Number of active publishers by country or area/Number of active publisher
 
 ln -sf $mapSvg:t registry-report/organization/active_gbif_publishing_organizations_by_country.svg
 ln -sf $mapData:t registry-report/organization/active_gbif_publishing_organizations.tsv
+
+# Report new countries
+echo "Newly publishing countries (check if any small areas will need highlighting)"
+diff \
+	<(curl -Ss https://analytics-files.gbif.org/registry/organization/active_gbif_publishing_organizations.tsv | cut -d $'\t' -f 2 | sort -u) \
+	<(cat registry-report/organization/active_gbif_publishing_organizations.tsv | cut -d $'\t' -f 2 | sort -u)
