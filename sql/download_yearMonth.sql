@@ -3,16 +3,15 @@ SET TIME ZONE 'UTC';
 -- Count downloads per user per month
 WITH dpupm AS (
      SELECT
-       DATE_PART('year', od.created) AS year,
-       DATE_PART('month', od.created) AS month,
+       DATE_PART('year', created) AS year,
+       DATE_PART('month', created) AS month,
        SUM(total_records) AS totalRecords,
-       COUNT(od.key) AS totalDownloads,
-       username
-     FROM occurrence_download od, public.user u
-     WHERE od.created_by = u.username
-     AND status IN('SUCCEEDED', 'FILE_ERASED') AND username NOT IN ('nagios')
-     AND od.created < DATE_TRUNC('month', NOW())
-     GROUP BY DATE_PART('year', od.created), DATE_PART('month', od.created), username
+       COUNT(key) AS totalDownloads,
+       created_by AS username
+     FROM occurrence_download
+     WHERE status IN('SUCCEEDED', 'FILE_ERASED') AND created_by NOT IN ('nagios')
+     AND created < DATE_TRUNC('month', NOW())
+     GROUP BY DATE_PART('year', created), DATE_PART('month', created), created_by
 ),
 -- Label each user's monthly download count sequentially (1 for the first month they make at least one download, 2 for the second etc)
 sudc AS (

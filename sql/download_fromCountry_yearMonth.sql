@@ -9,9 +9,8 @@ WITH dpupm AS (
        SUM(total_records) AS totalRecords,
        COUNT(od.key) AS totalDownloads,
        username
-     FROM occurrence_download od, public.user u
-     WHERE od.created_by = u.username
-     AND status IN('SUCCEEDED', 'FILE_ERASED') AND username NOT IN ('nagios')
+     FROM occurrence_download od LEFT JOIN public.user u ON od.created_by = u.username
+     WHERE status IN('SUCCEEDED', 'FILE_ERASED') AND username NOT IN ('nagios')
      AND od.created < DATE_TRUNC('month', NOW())
      GROUP BY DATE_PART('year', od.created), DATE_PART('month', od.created), userCountry, username
 ),
