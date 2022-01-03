@@ -10,4 +10,5 @@ nohup.out
 screenlog.*
 hadoop/
 registry-report/
+registry-report-new-countries
 report/

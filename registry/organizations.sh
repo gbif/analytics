@@ -86,6 +86,9 @@ ln -sf $mapData:t registry-report/organization/active_gbif_publishing_organizati
 
 # Report new countries
 echo "Newly publishing countries (check if any small areas will need highlighting)"
-diff \
-	<(curl -Ss https://analytics-files.gbif.org/registry/organization/active_gbif_publishing_organizations.tsv | cut -d $'\t' -f 2 | sort -u) \
-	<(cat registry-report/organization/active_gbif_publishing_organizations.tsv | cut -d $'\t' -f 2 | sort -u)
+if ! diff \
+    <(curl -Ss https://analytics-files.gbif.org/registry/organization/active_gbif_publishing_organizations.tsv | cut -d $'\t' -f 2 | sort -u) \
+    <(cat registry-report/organization/active_gbif_publishing_organizations.tsv | cut -d $'\t' -f 2 | sort -u) \
+    > registry-report-new-countries; then
+    cat registry-report-new-countries | mail -s "Newly publishing countries, check if any are small and will need special highlighting" mblissett@gbif.org
+fi
