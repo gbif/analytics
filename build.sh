@@ -30,8 +30,8 @@ export LANG=en_GB.UTF-8
 # - The /usr/lib64/R/library/extrafontdb dir must be writeable by the
 # user running the makeFigures command because font stuff will be
 # written there on first load
-Rscript="docker run --rm -it -v $PWD:/analytics/ docker.gbif.org/analytics-figures Rscript"
-PyScript="docker run --rm -it -v $PWD:/analytics/ docker.gbif.org/analytics-figures python3"
+Rscript="docker run --rm -it -v $PWD:/analytics/ -v $(realpath hadoop/):/analytics/hadoop/ docker.gbif.org/analytics-figures Rscript"
+PyScript="docker run --rm -it -v $PWD:/analytics/ -v $(realpath hadoop/):/analytics/hadoop/ docker.gbif.org/analytics-figures python3"
 # Set the permissions correctly afterwards
 RscriptChown="docker run --rm -it -v $PWD:/analytics/ docker.gbif.org/analytics-figures chown --recursive --from root:root --reference build.sh report"
 
@@ -117,8 +117,9 @@ fi
 if [ $downloadCsvs == "true" ]; then
   log 'Running Download CSVs stages'
   log 'Downloading the CSVs from HDFS (existing data are overwritten)'
-  rm -fr hadoop
-  mkdir hadoop
+  # This might be a symlink to somewhere with more disk space
+  mkdir -p hadoop
+  find hadoop/ -type f -delete
 
   # Download in parallel (much faster), but list the file as a way to check it was retrieved.
   hdfs dfs -getmerge /user/hive/warehouse/"$destination_db".db/occ_country_kingdom_basisofrecord hadoop/occ_country_kingdom_basisOfRecord.csv &

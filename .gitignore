@@ -8,7 +8,7 @@ raw_taxonomy.q
 *.Rproj
 nohup.out
 screenlog.*
-hadoop/
+hadoop
 registry-report/
 registry-report-new-countries
 report/
