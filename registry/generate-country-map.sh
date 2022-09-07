@@ -14,7 +14,9 @@
 # https://commons.wikimedia.org/wiki/File:BlankMap-World.svg
 #
 
-while getopts "i:o:t:l:" opt; do
+projection=robinson
+
+while getopts "i:o:t:l:p:" opt; do
     case $opt in
         i)
             # Set input file
@@ -32,6 +34,10 @@ while getopts "i:o:t:l:" opt; do
             # Set legend title
             legend=$OPTARG
             ;;
+        p)
+            # Override projection
+            projection=$OPTARG
+            ;;
         \?)
             echo "Invalid option: -$OPTARG" >&2
             echo
@@ -47,7 +53,7 @@ echo "Generating $outputSvg from $input, title $title legend $legend."
 if [[ -z $input ]]; then echo &>2 "-i <input> must be set"; exit 1; fi
 if [[ -z $outputSvg ]]; then echo &>2 "-o <outputSvg> must be set"; exit 1; fi
 
-sed "s/World Map/$title/" < ${0:a:h}/robinson-map.head > $outputSvg
+sed "s/World Map/$title/" < ${0:a:h}/$projection-map.head > $outputSvg
 echo >> $outputSvg
 echo "/* Begin calculated styles */" >> $outputSvg
 echo >> $outputSvg
@@ -91,4 +97,4 @@ echo >> $outputSvg
 echo "/* End calculated styles */" >> $outputSvg
 echo >> $outputSvg
 
-sed "s/Number of active publishers by country or area/$legend/" < ${0:a:h}/robinson-map.tail >> $outputSvg
+sed "s/Number of active publishers by country or area/$legend/" < ${0:a:h}/$projection-map.tail >> $outputSvg
