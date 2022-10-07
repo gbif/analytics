@@ -16,7 +16,7 @@ Time taken to produce the Q2-2021 analytics:
 Times for the Q3-2022 analytics:
 
 * Snapshot: 10 minutes
-* Interpret snapshots stage: 2½ days
+* Interpret snapshots stage: 17½ hours
   * Create raw tables: 4½ hours (4¼ hours with rand())
   * Interpreting geography (with shapefiles): 2 minutes
   * Interpreting taxonomy (no KVS): 13 hours, but should be less next time with the ORDER BY rand()
