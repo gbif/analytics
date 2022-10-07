@@ -110,7 +110,8 @@ GROUP BY
   t1.specific_epithet,
   t1.infra_specific_epithet,
   t1.author,
-  t1.rank;' >> "$taxonomy_file"
+  t1.rank
+ORDER BY rand();' >> "$taxonomy_file"
 
 
 ################ RAW GEO SCRIPT
@@ -169,4 +170,5 @@ done
 
 echo '
 ) t1
-GROUP BY t1.latitude,t1.longitude,t1.country;' >> "$geo_file"
+GROUP BY t1.latitude, t1.longitude, t1.country
+ORDER BY rand();' >> "$geo_file"

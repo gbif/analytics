@@ -7,14 +7,13 @@ SET hive.exec.compress.output=true;
 SET mapred.output.compression.type=BLOCK;
 SET mapred.output.compression.codec=org.apache.hadoop.io.compress.SnappyCodec;
 
--- Use lots of mappers
-SET mapred.map.tasks=40;
-SET hive.merge.mapfiles = false;
+-- Control the number of mappers.  This gave 21 for the 2022-10 analytics.
 SET hive.input.format = org.apache.hadoop.hive.ql.io.CombineHiveInputFormat;
-SET mapred.min.split.size=256000000;
+SET hive.merge.mapfiles = true;
+SET mapreduce.input.fileinputformat.split.minsize = 20000000; -- 20 MB
+SET mapreduce.input.fileinputformat.split.maxsize = 90000000; -- 90 MB
 
 ADD JAR ${hiveconf:occjar};
-ADD JAR ${hiveconf:props};
 CREATE TEMPORARY FUNCTION nubLookup AS 'org.gbif.occurrence.hive.udf.SpeciesMatchUDF';
 
 DROP TABLE IF EXISTS snapshot.tmp_taxonomy_interp;
