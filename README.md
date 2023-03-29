@@ -55,14 +55,14 @@ screen -L -S analytics
 - Check the download statistics are up-to-date, e.g. with https://github.com/gbif/registry/blob/master/populate_downloaded_records_statistics.sh
 - Generate the country reports — check you are using correct APIs! (Normally prod but UAT analytics assets.)  Instructions are in the [country-reports](https://github.org/gbif/country-reports) project.
 - rsync the reports to `root@analytics-files.gbif-uat.org:/var/www/html/analytics-files/`
-  `rsync -av gbif_analytics/country/ root@analytics-files.gbif-uat.org:/var/www/html/analytics-files/country/`
+  `rsync -av country-report/ root@analytics-files.gbif-uat.org:/var/www/html/analytics-files/country/`
 
 ### Steps to deploy to production
 - rsync the CSVs, GeoTIFFs, figures and maps to `root@analytics-files.gbif.org:/var/www/html/analytics-files/`
   `rsync -avn report/ root@analytics-files.gbif.org:/var/www/html/analytics-files/`
   `rsync -avn registry-report/ root@analytics-files.gbif.org:/var/www/html/analytics-files/registry/`
 - rsync the reports to `root@analytics-files.gbif.org:/var/www/html/analytics-files/`
-  `rsync -av gbif_analytics/country/ root@analytics-files.gbif.org:/var/www/html/analytics-files/country/`
+  `rsync -av country-report/ root@analytics-files.gbif.org:/var/www/html/analytics-files/country/`
 - Check https://www.gbif.org/analytics, write an email to staff@gbif.org giving heads up on the new data, and accept the many accolades due your outstanding achievement in the field of excellence!
 - Archive the new analytics.  The old analytics files have been used several times by the communications team:
 ```

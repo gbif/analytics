@@ -13,13 +13,14 @@ Time taken to produce the Q2-2021 analytics:
 
 * Generating country reports: 15 minutes
 
-Times for the Q3-2022 analytics:
+Times for the Q1-2023 analytics:
 
-* Snapshot: 10 minutes
-* Interpret snapshots stage: 17½ hours
-  * Create raw tables: 4½ hours (4¼ hours with rand())
+* Snapshot: 30 minutes
+* Interpret snapshots stage: 27 hours
+  * Create raw tables: 5 hours
   * Interpreting geography (with shapefiles): 2 minutes
-  * Interpreting taxonomy (no KVS): 13 hours, but should be less next time with the ORDER BY rand()
+  * Interpreting taxonomy (no KVS): 11 hours
+  * Create occurrence tables: 11 hours
 * Summarize snapshots stage: 14 hours
 * Download CSVs stage: 15 minutes
 * Process CSVs stage: 1 hour
