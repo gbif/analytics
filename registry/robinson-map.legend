@@ -1,13 +1,4 @@
-</style>
-<!--
-/* Equirectangular: NOT IMPLEMENTED
- * Territories without ISO 3166-1 codes are listed above inside their respective host countries' groupings:
- *
- * xa, xo, xj, xk, xs, xq, xn, xz, xv, xp, xd, xl, xc
- */
--->
-
-<g id="key" transform="translate(0,50) scale(0.15)">
+<g id="key" transform="translate(1200,1200)">
   <svg
       xmlns:dc="http://purl.org/dc/elements/1.1/"
       xmlns:cc="http://creativecommons.org/ns#"
@@ -50,44 +41,44 @@
      height="7.999999"
      width="15"
      id="rect3152"
-     style="fill:#b3b3b3;stroke:#ffffff;stroke-width:0;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none" />
+     style="fill:#fbfbfb;stroke:#ffffff;stroke-width:0;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none" />
   <rect
      y="26.343632"
      x="22.486792"
      height="7.999999"
      width="215"
      id="rect3067-6-2"
-     style="fill:#2f4858;fill-opacity:1;stroke:#ffffff;stroke-width:0;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none" />
+     style="fill:#5a964d;fill-opacity:1;stroke:#ffffff;stroke-width:0;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none" />
   <rect
-     style="fill:#1d5969;fill-opacity:1;stroke:#ffffff;stroke-width:0;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none"
+     style="fill:#82a872;fill-opacity:1;stroke:#ffffff;stroke-width:0;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none"
      id="rect3067-6"
      width="200"
      height="7.999999"
      x="22.486792"
      y="26.343632" />
   <rect
-     style="fill:#006b72;fill-opacity:1;stroke:#ffffff;stroke-width:0;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none"
+     style="fill:#94b487;fill-opacity:1;stroke:#ffffff;stroke-width:0;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none"
      id="rect3067-9"
      width="160.20599"
      height="7.999999"
      x="22.486792"
      y="26.343632" />
   <rect
-     style="fill:#007c71;fill-opacity:1;stroke:#ffffff;stroke-width:0;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none"
+     style="fill:#a6c19b;fill-opacity:1;stroke:#ffffff;stroke-width:0;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none"
      id="rect3067-8"
      width="100"
      height="7.999999"
      x="22.486792"
      y="26.343632" />
   <rect
-     style="fill:#258c66;fill-opacity:1;stroke:#ffffff;stroke-width:0;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none"
+     style="fill:#b8ceb0;fill-opacity:1;stroke:#ffffff;stroke-width:0;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none"
      id="rect3067-7"
      width="60.259998"
      height="7.999999"
      x="22.486792"
      y="26.343632" />
   <rect
-     style="fill:#559a55;fill-opacity:1;stroke:#ffffff;stroke-width:0;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none"
+     style="fill:#cbdbc5;fill-opacity:1;stroke:#ffffff;stroke-width:0;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none"
      id="rect3067-2"
      width="30.102999"
      height="7.999999"
@@ -176,8 +167,6 @@
        id="tspan4013"
        y="13.212177"
        x="122.25528"
-       style="stroke-width:0.26458299">Number of active publishers by country or area. 1 July 2021.</tspan></text>
+       style="stroke-width:0.26458299">Number of active publishers by country or area</tspan></text>
 </svg>
 </g>
-
-</svg>
