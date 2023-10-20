@@ -1,0 +1,309 @@
+CREATE SCHEMA marcos with (LOCATION='hdfs://gbif-hdfs/stackable/warehouse/marcos.db');
+
+DROP TABLE IF EXISTS raw;
+
+CREATE TABLE raw
+WITH (format = 'RCTEXT')
+AS
+select gbifid AS id, datasetkey AS dataset_id, publishingorgkey AS publisher_id, publishingcountry AS publisher_country
+,v_accessrights
+,v_bibliographiccitation
+,v_language
+,v_license
+,v_modified
+,v_publisher
+,v_references
+,v_rightsholder
+,v_type
+,v_institutionid
+,v_collectionid
+,v_datasetid
+,v_institutioncode
+,v_collectioncode
+,v_datasetname
+,v_ownerinstitutioncode
+,v_basisofrecord
+,v_informationwithheld
+,v_datageneralizations
+,v_dynamicproperties
+,v_occurrenceid
+,v_catalognumber
+,v_recordnumber
+,v_recordedby
+,v_recordedbyid
+,v_individualcount
+,v_organismquantity
+,v_organismquantitytype
+,v_sex
+,v_lifestage
+,v_reproductivecondition
+,v_behavior
+,v_establishmentmeans
+,v_degreeofestablishment
+,v_pathway
+,v_georeferenceverificationstatus
+,v_occurrencestatus
+,v_preparations
+,v_disposition
+,v_associatedmedia
+,v_associatedoccurrences
+,v_associatedreferences
+,v_associatedsequences
+,v_associatedtaxa
+,v_othercatalognumbers
+,v_occurrenceremarks
+,v_organismid
+,v_organismname
+,v_organismscope
+,v_associatedorganisms
+,v_previousidentifications
+,v_organismremarks
+,v_materialsampleid
+,v_eventid
+,v_parenteventid
+,v_fieldnumber
+,v_eventdate
+,v_eventtime
+,v_startdayofyear
+,v_enddayofyear
+,v_year
+,v_month
+,v_day
+,v_verbatimeventdate
+,v_habitat
+,v_samplingprotocol
+,v_samplesizevalue
+,v_samplesizeunit
+,v_samplingeffort
+,v_fieldnotes
+,v_eventremarks
+,v_locationid
+,v_highergeographyid
+,v_highergeography
+,v_continent
+,v_waterbody
+,v_islandgroup
+,v_island
+,v_country
+,v_countrycode
+,v_stateprovince
+,v_county
+,v_municipality
+,v_locality
+,v_verbatimlocality
+,v_minimumelevationinmeters
+,v_maximumelevationinmeters
+,v_verbatimelevation
+,v_verticaldatum
+,v_minimumdepthinmeters
+,v_maximumdepthinmeters
+,v_verbatimdepth
+,v_minimumdistanceabovesurfaceinmeters
+,v_maximumdistanceabovesurfaceinmeters
+,v_locationaccordingto
+,v_locationremarks
+,v_decimallatitude
+,v_decimallongitude
+,v_geodeticdatum
+,v_coordinateuncertaintyinmeters
+,v_coordinateprecision
+,v_pointradiusspatialfit
+,v_verbatimcoordinates
+,v_verbatimlatitude
+,v_verbatimlongitude
+,v_verbatimcoordinatesystem
+,v_verbatimsrs
+,v_footprintwkt
+,v_footprintsrs
+,v_footprintspatialfit
+,v_georeferencedby
+,v_georeferenceddate
+,v_georeferenceprotocol
+,v_georeferencesources
+,v_georeferenceremarks
+,v_geologicalcontextid
+,v_earliesteonorlowesteonothem
+,v_latesteonorhighesteonothem
+,v_earliesteraorlowesterathem
+,v_latesteraorhighesterathem
+,v_earliestperiodorlowestsystem
+,v_latestperiodorhighestsystem
+,v_earliestepochorlowestseries
+,v_latestepochorhighestseries
+,v_earliestageorloweststage
+,v_latestageorhigheststage
+,v_lowestbiostratigraphiczone
+,v_highestbiostratigraphiczone
+,v_lithostratigraphicterms
+,v_group
+,v_formation
+,v_member
+,v_bed
+,v_identificationid
+,v_verbatimidentification
+,v_identificationqualifier
+,v_typestatus
+,v_identifiedby
+,v_identifiedbyid
+,v_dateidentified
+,v_identificationreferences
+,v_identificationverificationstatus
+,v_identificationremarks
+,v_taxonid
+,v_scientificnameid
+,v_acceptednameusageid
+,v_parentnameusageid
+,v_originalnameusageid
+,v_nameaccordingtoid
+,v_namepublishedinid
+,v_taxonconceptid
+,v_scientificname
+,v_acceptednameusage
+,v_parentnameusage
+,v_originalnameusage
+,v_nameaccordingto
+,v_namepublishedin
+,v_namepublishedinyear
+,v_higherclassification
+,v_kingdom
+,v_phylum
+,v_class
+,v_order
+,v_family
+,v_subfamily
+,v_genus
+,v_genericname
+,v_subgenus
+,v_infragenericepithet
+,v_specificepithet
+,v_infraspecificepithet
+,v_cultivarepithet
+,v_taxonrank
+,v_verbatimtaxonrank
+,v_scientificnameauthorship
+,v_vernacularname
+,v_nomenclaturalcode
+,v_taxonomicstatus
+,v_nomenclaturalstatus
+,v_taxonremarks
+from dev2.occurrence;
+
+DROP TABLE IF EXISTS tmp_raw_taxonomy;
+
+CREATE TABLE tmp_raw_taxonomy
+WITH (format = 'ORC')
+AS
+SELECT
+  CONCAT_WS('|',
+    t1.kingdom,
+    t1.phylum,
+    t1.class_rank,
+    t1.order_rank,
+    t1.family,
+    t1.genus,
+    t1.scientific_name,
+    t1.specific_epithet,
+    t1.infra_specific_epithet,
+    t1.author,
+    t1.rank
+  ) AS taxon_key,
+  t1.kingdom,
+  t1.phylum,
+  t1.class_rank,
+  t1.order_rank,
+  t1.family,
+  t1.genus,
+  t1.scientific_name,
+  t1.specific_epithet,
+  t1.infra_specific_epithet,
+  t1.author,
+  t1.rank
+FROM
+(
+ SELECT COALESCE(v_kingdom,'') AS kingdom, COALESCE(v_phylum,'') AS phylum, COALESCE(v_class,'') AS class_rank, COALESCE(v_order,'') AS order_rank, COALESCE(v_family,'') AS family, COALESCE(v_genus,'') AS genus, COALESCE(v_scientificname,'') AS scientific_name, COALESCE(v_specificepithet,'') AS specific_epithet, COALESCE(v_infraspecificepithet,'') AS infra_specific_epithet, COALESCE(v_scientificnameauthorship,'') AS author, COALESCE(v_taxonrank,'') AS rank
+    FROM raw
+    GROUP BY COALESCE(v_kingdom,''), COALESCE(v_phylum,''), COALESCE(v_class,''), COALESCE(v_order,''), COALESCE(v_family,''), COALESCE(v_genus,''), COALESCE(v_scientificname,''), COALESCE(v_scientificnameauthorship,''), COALESCE(v_specificepithet,''), COALESCE(v_infraspecificepithet,''), COALESCE(v_taxonrank,'')
+) t1
+  GROUP BY
+    t1.kingdom,
+    t1.phylum,
+    t1.class_rank,
+    t1.order_rank,
+    t1.family,
+    t1.genus,
+    t1.scientific_name,
+    t1.specific_epithet,
+    t1.infra_specific_epithet,
+    t1.author,
+    t1.rank
+ORDER BY rand();
+
+DROP TABLE IF EXISTS tmp_raw_geo;
+
+CREATE TABLE tmp_raw_geo
+WITH (format = 'ORC')
+AS
+SELECT
+  CONCAT_WS('|',
+    t1.latitude,
+    t1.longitude,
+    t1.country
+  ) AS geo_key,
+  t1.latitude,
+  t1.longitude,
+  t1.country
+FROM
+(
+ SELECT COALESCE(v_decimallatitude,v_verbatimlatitude,'') AS latitude, COALESCE(v_decimallongitude,v_verbatimlongitude,'') AS longitude, COALESCE(v_country,'') AS country
+  FROM raw
+  GROUP BY COALESCE(v_decimallatitude,v_verbatimlatitude,''), COALESCE(v_decimallongitude,v_verbatimlongitude,''), COALESCE(v_country,'')
+) t1
+GROUP BY t1.latitude, t1.longitude, t1.country
+ORDER BY rand();
+
+DROP TABLE IF EXISTS tmp_taxonomy_interp;
+
+CREATE TABLE tmp_taxonomy_interp
+WITH (format = 'ORC')
+AS
+SELECT
+  t1.taxon_key,
+  n.kingdom as kingdom,
+  n.phylum as phylum,
+  n.class_ as class_rank,
+  n.order_ as order_rank,
+  n.family as family,
+  n.genus as genus,
+  n.species as species,
+  n.scientificname as scientific_name,
+  n.kingdomkey as kingdom_id,
+  n.phylumkey as phylum_id,
+  n.classkey as class_id,
+  n.orderkey as order_id,
+  n.familykey as family_id,
+  n.genuskey as genus_id,
+  n.specieskey as species_id,
+  n.usageKey as taxon_id
+FROM (
+  SELECT
+    taxon_key,
+    nubLookup('https://api.gbif-uat.org/v1/', kingdom, phylum, class_rank, order_rank, family, genus, scientific_name, specific_epithet, infra_specific_epithet, rank) n
+  FROM tmp_raw_taxonomy
+) t1;
+
+DROP TABLE IF EXISTS tmp_geo_interp;
+
+CREATE TABLE tmp_geo_interp
+WITH (format = 'ORC')
+AS
+SELECT
+  t1.geo_key,
+  g.latitude,
+  g.longitude,
+  g.country
+FROM (
+  SELECT
+    geo_key,
+    parseGeo('/tmp/layers/', latitude, longitude, country) g
+  FROM tmp_raw_geo
+) t1;
