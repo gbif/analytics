@@ -1,0 +1,8 @@
+SET hive.exec.compress.output=false;
+
+DROP TABLE IF EXISTS tmp_regions;
+CREATE TABLE tmp_regions (country string, gbif_region string) row format delimited fields terminated by '\t';
+LOAD DATA LOCAL INPATH '/home/mlopez/analytics_regions.tsv' OVERWRITE INTO TABLE tmp_regions;
+
+
+Time taken: 0.554 seconds

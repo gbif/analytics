@@ -1,0 +1,54 @@
+CREATE SCHEMA marcos with (LOCATION='hdfs://gbif-hdfs/stackable/warehouse/marcos.db');
+
+SET SESSION hive.compression_codec='SNAPPY';
+
+# Steps to create tables
+1. raw
+2. raw_geo
+3. raw_taxon
+4. interp_geo
+5. interp_taxon
+6. create_regions.sh
+7. region_table
+8. occurrence_hdfs
+9. occ_cells
+
+
+# Tests
+
+I created the raw table in Hive with the same amount of records as the that we have in trino, although the data is different
+and it resulted in trino tables being bigger. Anyway, queires seem faster in trino than in Hive, worst-case scenario for some
+queries it takes the same time. Also, I can see that the creation and submission of the job takes much longer in Hive than
+in trino. Also, in trino the first query takes much more time(2-3x) than the second and next queries. Also, using set the
+hive compression codec to Snappy made queries much faster.
+
+Sometimes it takes a bit for trino to start processing a query, could it be network issues?
+
+
+## Query times
+
+Tests done for 441862 records in both systems although the data is different in each of them. That made trino end up with
+more data than hive in the tables created from the raw data.
+
+### Trino
+
+| Query     | 1st    | 2nd | 3rd   |   |
+|-----------|--------|--|-------|---|
+| raw       | 11.33s | 9.73s |       |   |
+| raw_geo   | 2.96s  | 1.45s | 1.52s |   |
+| raw_taxon | 4.31s  | 2.11s |       |   |
+| interp_geo | 15.40s | 10.30s |       |   |
+| interp_taxon | 7.73m | 2.93m |       |   |
+
+
+### Hive
+
+| Query     | 1st | 2nd | 3rd     |   |
+|-----------|---|--|---------|---|
+| raw       | 60.304s | 57.953s |         |   |
+| raw_geo   | 44.124s | 48.906s | 46.305s |   |
+| raw_taxon | 68.145s | 70.251s | 70.272s |   |
+| interp_geo | 21.51s | 22.244s | 20.609s |   |
+| interp_taxon | 872.952s | 416.124s |         |   |
+
+

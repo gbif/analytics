@@ -1,5 +1,3 @@
-CREATE SCHEMA marcos with (LOCATION='hdfs://gbif-hdfs/stackable/warehouse/marcos.db');
-
 DROP TABLE IF EXISTS raw;
 
 CREATE TABLE raw
@@ -188,122 +186,14 @@ select gbifid AS id, datasetkey AS dataset_id, publishingorgkey AS publisher_id,
 ,v_taxonremarks
 from dev2.occurrence;
 
-DROP TABLE IF EXISTS tmp_raw_taxonomy;
 
-CREATE TABLE tmp_raw_taxonomy
-WITH (format = 'ORC')
-AS
-SELECT
-  CONCAT_WS('|',
-    t1.kingdom,
-    t1.phylum,
-    t1.class_rank,
-    t1.order_rank,
-    t1.family,
-    t1.genus,
-    t1.scientific_name,
-    t1.specific_epithet,
-    t1.infra_specific_epithet,
-    t1.author,
-    t1.rank
-  ) AS taxon_key,
-  t1.kingdom,
-  t1.phylum,
-  t1.class_rank,
-  t1.order_rank,
-  t1.family,
-  t1.genus,
-  t1.scientific_name,
-  t1.specific_epithet,
-  t1.infra_specific_epithet,
-  t1.author,
-  t1.rank
-FROM
-(
- SELECT COALESCE(v_kingdom,'') AS kingdom, COALESCE(v_phylum,'') AS phylum, COALESCE(v_class,'') AS class_rank, COALESCE(v_order,'') AS order_rank, COALESCE(v_family,'') AS family, COALESCE(v_genus,'') AS genus, COALESCE(v_scientificname,'') AS scientific_name, COALESCE(v_specificepithet,'') AS specific_epithet, COALESCE(v_infraspecificepithet,'') AS infra_specific_epithet, COALESCE(v_scientificnameauthorship,'') AS author, COALESCE(v_taxonrank,'') AS rank
-    FROM raw
-    GROUP BY COALESCE(v_kingdom,''), COALESCE(v_phylum,''), COALESCE(v_class,''), COALESCE(v_order,''), COALESCE(v_family,''), COALESCE(v_genus,''), COALESCE(v_scientificname,''), COALESCE(v_scientificnameauthorship,''), COALESCE(v_specificepithet,''), COALESCE(v_infraspecificepithet,''), COALESCE(v_taxonrank,'')
-) t1
-  GROUP BY
-    t1.kingdom,
-    t1.phylum,
-    t1.class_rank,
-    t1.order_rank,
-    t1.family,
-    t1.genus,
-    t1.scientific_name,
-    t1.specific_epithet,
-    t1.infra_specific_epithet,
-    t1.author,
-    t1.rank
-ORDER BY rand();
+Execution Time	29.69s
+Execution Time	19.93s
+Execution Time	19.61s
+Execution Time	19.22s
 
-DROP TABLE IF EXISTS tmp_raw_geo;
 
-CREATE TABLE tmp_raw_geo
-WITH (format = 'ORC')
-AS
-SELECT
-  CONCAT_WS('|',
-    t1.latitude,
-    t1.longitude,
-    t1.country
-  ) AS geo_key,
-  t1.latitude,
-  t1.longitude,
-  t1.country
-FROM
-(
- SELECT COALESCE(v_decimallatitude,v_verbatimlatitude,'') AS latitude, COALESCE(v_decimallongitude,v_verbatimlongitude,'') AS longitude, COALESCE(v_country,'') AS country
-  FROM raw
-  GROUP BY COALESCE(v_decimallatitude,v_verbatimlatitude,''), COALESCE(v_decimallongitude,v_verbatimlongitude,''), COALESCE(v_country,'')
-) t1
-GROUP BY t1.latitude, t1.longitude, t1.country
-ORDER BY rand();
+Con Snappy:
 
-DROP TABLE IF EXISTS tmp_taxonomy_interp;
-
-CREATE TABLE tmp_taxonomy_interp
-WITH (format = 'ORC')
-AS
-SELECT
-  t1.taxon_key,
-  n.kingdom as kingdom,
-  n.phylum as phylum,
-  n.class_ as class_rank,
-  n.order_ as order_rank,
-  n.family as family,
-  n.genus as genus,
-  n.species as species,
-  n.scientificname as scientific_name,
-  n.kingdomkey as kingdom_id,
-  n.phylumkey as phylum_id,
-  n.classkey as class_id,
-  n.orderkey as order_id,
-  n.familykey as family_id,
-  n.genuskey as genus_id,
-  n.specieskey as species_id,
-  n.usageKey as taxon_id
-FROM (
-  SELECT
-    taxon_key,
-    nubLookup('https://api.gbif-uat.org/v1/', kingdom, phylum, class_rank, order_rank, family, genus, scientific_name, specific_epithet, infra_specific_epithet, rank) n
-  FROM tmp_raw_taxonomy
-) t1;
-
-DROP TABLE IF EXISTS tmp_geo_interp;
-
-CREATE TABLE tmp_geo_interp
-WITH (format = 'ORC')
-AS
-SELECT
-  t1.geo_key,
-  g.latitude,
-  g.longitude,
-  g.country
-FROM (
-  SELECT
-    geo_key,
-    parseGeo('/tmp/layers/', latitude, longitude, country) g
-  FROM tmp_raw_geo
-) t1;
+Execution Time	11.33s
+Execution Time	9.73s
