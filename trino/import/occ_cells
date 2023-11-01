@@ -1,13 +1,13 @@
 CREATE TABLE occ_country_cell_one_deg
 WITH (format = 'CSV')
 AS SELECT
-  t1.snapshot,
+  CAST(t1.snapshot AS varchar) as snapshot,
   t1.country,
-  SUM( CASE WHEN t1.num_cells=1 THEN 1 ELSE 0 END ) AS one_cell,
-  SUM( CASE WHEN t1.num_cells>1 AND num_cells<=19 THEN 1 ELSE 0 END ) AS under_twenty_cells,
-  SUM( CASE WHEN t1.num_cells>=20 AND num_cells<=99 THEN 1 ELSE 0 END ) AS under_hundred_cells,
-  SUM( CASE WHEN t1.num_cells>=100 AND num_cells<=999 THEN 1 ELSE 0 END ) AS under_thousand_cells,
-  SUM( CASE WHEN t1.num_cells>=1000 THEN 1 ELSE 0 END ) AS over_thousand_cells
+  CAST(SUM( CASE WHEN t1.num_cells=1 THEN 1 ELSE 0 END ) AS varchar) AS one_cell,
+  CAST(SUM( CASE WHEN t1.num_cells>1 AND num_cells<=19 THEN 1 ELSE 0 END ) AS varchar) AS under_twenty_cells,
+  CAST(SUM( CASE WHEN t1.num_cells>=20 AND num_cells<=99 THEN 1 ELSE 0 END ) AS varchar) AS under_hundred_cells,
+  CAST(SUM( CASE WHEN t1.num_cells>=100 AND num_cells<=999 THEN 1 ELSE 0 END ) AS varchar) AS under_thousand_cells,
+  CAST(SUM( CASE WHEN t1.num_cells>=1000 THEN 1 ELSE 0 END ) AS varchar) AS over_thousand_cells
 FROM
   (SELECT
     snapshot,
@@ -15,9 +15,9 @@ FROM
     species_id,
     COUNT(DISTINCT
       CONCAT(
-        CAST(floor(latitude) AS STRING),
-        ",",
-        CAST(floor(longitude) AS STRING)
+        CAST(floor(latitude) AS varchar),
+        ',',
+        CAST(floor(longitude) AS varchar)
       )
     ) AS num_cells
   FROM
@@ -34,6 +34,10 @@ GROUP BY
   t1.snapshot,
   t1.country;
 
+Execution Time	2.40s
+Execution Time	1.41s
+
+-- TODO: rest of the queries are not migrated yet
 
 -- occ_publisherCountry_cell_one_deg
 DROP TABLE IF EXISTS ${hiveconf:DB}.occ_publisherCountry_cell_one_deg;

@@ -11,7 +11,8 @@ SET SESSION hive.compression_codec='SNAPPY';
 6. create_regions.sh
 7. region_table
 8. occurrence_hdfs
-9. occ_cells
+9. snapshots
+10. occ_cells
 
 
 # Tests
@@ -35,23 +36,28 @@ more data than hive in the tables created from the raw data.
 
 ### Trino
 
-| Query     | 1st    | 2nd | 3rd   |   |
-|-----------|--------|--|-------|---|
-| raw       | 11.33s | 9.73s |       |   |
-| raw_geo   | 2.96s  | 1.45s | 1.52s |   |
-| raw_taxon | 4.31s  | 2.11s |       |   |
-| interp_geo | 15.40s | 10.30s |       |   |
-| interp_taxon | 7.73m | 2.93m |       |   |
+| Query           | 1st    | 2nd    | 3rd   |   |
+|-----------------|--------|--------|-------|---|
+| raw             | 11.33s | 9.73s  |       |   |
+| raw_geo         | 2.96s  | 1.45s  | 1.52s |   |
+| raw_taxon       | 4.31s  | 2.11s  |       |   |
+| interp_geo      | 15.40s | 10.30s |       |   |
+| interp_taxon    | 7.73m  | 2.93m  |       |   |
+| occurrence_hdfs | 30.35s | 19.53s |       |   |
+| snapshots       | 4.75s  | 4.16s  |       |   |
+| occ_country_cell_one_deg | 2.40s  | 1.41s  |       |   |
 
 
 ### Hive
 
-| Query     | 1st | 2nd | 3rd     |   |
-|-----------|---|--|---------|---|
-| raw       | 60.304s | 57.953s |         |   |
-| raw_geo   | 44.124s | 48.906s | 46.305s |   |
-| raw_taxon | 68.145s | 70.251s | 70.272s |   |
-| interp_geo | 21.51s | 22.244s | 20.609s |   |
+| Query     | 1st | 2nd      | 3rd     |   |
+|-----------|---|----------|---------|---|
+| raw       | 60.304s | 57.953s  |         |   |
+| raw_geo   | 44.124s | 48.906s  | 46.305s |   |
+| raw_taxon | 68.145s | 70.251s  | 70.272s |   |
+| interp_geo | 21.51s | 22.244s  | 20.609s |   |
 | interp_taxon | 872.952s | 416.124s |         |   |
-
+| occurrence_hdfs | 70.621s | 68.51s  |       |   |
+| snapshots       | 22.347s | 20.234s   |       |   |
+| occ_country_cell_one_deg | 23.697s | 26.374s |       |   |
 

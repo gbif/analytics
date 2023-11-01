@@ -13,3 +13,4 @@ SELECT "hdfs" AS snapshot, CAST(id AS BIGINT), CAST(dataset_id AS String) AS dat
 FROM occurrence_hdfs;
 
 Time taken: 22.347 seconds
+Time taken: 20.234 seconds
