@@ -24,6 +24,9 @@ hive compression codec to Snappy made queries much faster.
 
 Sometimes it takes a bit for trino to start processing a query, could it be network issues?
 
+Prepared statements: this was tested but it didn't bring any performance improvement. Also, the statements are only saved
+in the session but can't be persisted to use them across multiple sessions.
+
 
 ## Query times
 
