@@ -15,6 +15,16 @@ SET SESSION hive.compression_codec='SNAPPY';
 10. scripts in process folder
 
 
+All these steps can be run by using the create_tables.sh script that is inside the import folder.
+
+You need to pass the following parameters:
+- DB name
+- Trino password
+- Path of the Kubetctl config
+
+Example: ./create_tables.sh marcos ***** /Users/marcoslopezgonzalez/.kube/config
+
+
 # Tests
 
 I created the raw table in Hive with the same amount of records as the that we have in trino, although the data is different
