@@ -15,7 +15,7 @@ SET SESSION hive.compression_codec='SNAPPY';
 10. scripts in process folder
 
 
-All these steps can be run by using the create_tables.sh script that is inside the import folder.
+All these steps can be run by using the `create_tables.sh` script that is inside the import folder.
 
 You need to pass the following parameters:
 - DB name
