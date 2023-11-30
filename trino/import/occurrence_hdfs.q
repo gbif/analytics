@@ -66,6 +66,3 @@ JOIN tmp_geo_interp g ON g.geo_key = r.geo_key
 LEFT JOIN tmp_regions rc ON rc.country = g.country
 LEFT JOIN tmp_regions rpc ON rpc.country = r.publisher_country;
 
-
-Execution Time	30.35s
-Execution Time	19.53s

@@ -1,4 +1,4 @@
-CREATE SCHEMA marcos with (LOCATION='hdfs://gbif-hdfs/stackable/warehouse/marcos.db');
+CREATE SCHEMA IF NOT EXISTS marcos with (LOCATION='hdfs://gbif-hdfs/stackable/warehouse/marcos.db');
 
 SET SESSION hive.compression_codec='SNAPPY';
 
@@ -11,8 +11,8 @@ SET SESSION hive.compression_codec='SNAPPY';
 6. create_regions.sh
 7. region_table
 8. occurrence_hdfs
-9. snapshots
-10. occ_cells
+9. create_snapshots_table
+10. scripts in process folder
 
 
 # Tests
@@ -61,3 +61,26 @@ more data than hive in the tables created from the raw data.
 | snapshots       | 22.347s | 20.234s   |       |
 | occ_country_cell_one_deg | 23.697s | 26.374s |       |
 
+
+
+## Prepared Statement example
+
+````
+PREPARE interp_geo FROM
+CREATE TABLE tmp_geo_interp
+WITH (format = 'ORC')
+AS
+SELECT
+  t1.geo_key,
+  g.latitude,
+  g.longitude,
+  g.country
+FROM (
+  SELECT
+    geo_key,
+    parseGeo('/gbif/geocode-layers/', latitude, longitude, country) g
+  FROM tmp_raw_geo
+) t1;
+
+EXECUTE interp_geo;
+````

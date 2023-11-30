@@ -1,3 +1,5 @@
+SET SESSION hive.compression_codec='SNAPPY';
+
 DROP TABLE IF EXISTS raw;
 
 CREATE TABLE raw
@@ -186,14 +188,3 @@ select gbifid AS id, datasetkey AS dataset_id, publishingorgkey AS publisher_id,
 ,v_taxonremarks
 from dev2.occurrence;
 
-
-Execution Time	29.69s
-Execution Time	19.93s
-Execution Time	19.61s
-Execution Time	19.22s
-
-
-Con Snappy:
-
-Execution Time	11.33s
-Execution Time	9.73s

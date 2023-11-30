@@ -48,6 +48,3 @@ FROM
     t1.rank
 ORDER BY rand();
 
-
-Execution Time	4.31s
-Execution Time	2.11s

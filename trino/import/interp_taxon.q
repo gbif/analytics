@@ -27,9 +27,3 @@ FROM (
     nubLookup('https://api.gbif-uat.org/v1/', kingdom, phylum, class_rank, order_rank, family, genus, scientific_name, specific_epithet, infra_specific_epithet, rank) n
   FROM tmp_raw_taxonomy
 ) t1;
-
-
-Execution Time	7.73m
-Execution Time	2.93m
-Execution Time	8.59m
-Execution Time	3.13m

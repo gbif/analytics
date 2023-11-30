@@ -1,3 +1,4 @@
+DROP TABLE IF EXISTS snapshots;
 CREATE TABLE snapshots
 WITH (format = 'ORC')
 AS
@@ -7,6 +8,3 @@ SELECT 'hdfs' AS snapshot, CAST(id AS BIGINT) as id, CAST(dataset_id AS varchar)
     gbif_region, publisher_gbif_region
 FROM occurrence_hdfs;
 
-
-Execution Time	4.75s
-Execution Time	4.16s
