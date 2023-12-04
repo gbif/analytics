@@ -3,7 +3,7 @@
 DB=$1
 
 SOURCE_DB=/stackable/warehouse/$DB.db
-DESTINATION_DIR=/home/mlopez/hadoop
+DESTINATION_DIR=hadoop
 
 export JAVA_HOME=/usr/lib/jvm/java-11-openjdk-amd64
 
