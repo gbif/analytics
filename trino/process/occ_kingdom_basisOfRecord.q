@@ -40,7 +40,7 @@ CREATE TABLE occ_publisherGbifRegion_kingdom_basisOfRecord  (
 
 INSERT INTO occ_country_kingdom_basisOfRecord
   SELECT
-    snapshot,
+    CAST(snapshot AS VARCHAR) AS snapshot,
     country,
     CAST(COALESCE(kingdom_id, 0) AS VARCHAR) AS kingdom_id,
     COALESCE(basis_of_record, 'UNKNOWN') AS basis_of_record,
@@ -55,7 +55,7 @@ INSERT INTO occ_country_kingdom_basisOfRecord
 
 INSERT INTO occ_publisherCountry_kingdom_basisOfRecord
   SELECT
-    snapshot,
+    CAST(snapshot AS VARCHAR) AS snapshot,
     publisher_country,
     CAST(COALESCE(kingdom_id, 0) AS VARCHAR) AS kingdom_id,
     COALESCE(basis_of_record, 'UNKNOWN') AS basis_of_record,
@@ -70,7 +70,7 @@ INSERT INTO occ_publisherCountry_kingdom_basisOfRecord
 
 INSERT INTO occ_gbifRegion_kingdom_basisOfRecord
   SELECT
-    snapshot,
+    CAST(snapshot AS VARCHAR) AS snapshot,
     gbif_region,
     CAST(COALESCE(kingdom_id, 0) AS VARCHAR) AS kingdom_id,
     COALESCE(basis_of_record, 'UNKNOWN') AS basis_of_record,
@@ -85,7 +85,7 @@ INSERT INTO occ_gbifRegion_kingdom_basisOfRecord
 
 INSERT INTO occ_publisherGbifRegion_kingdom_basisOfRecord
   SELECT
-    snapshot,
+    CAST(snapshot AS VARCHAR) AS snapshot,
     publisher_gbif_region,
     CAST(COALESCE(kingdom_id, 0) AS VARCHAR) AS kingdom_id,
     COALESCE(basis_of_record, 'UNKNOWN') AS basis_of_record,
@@ -102,7 +102,7 @@ DROP TABLE IF EXISTS occ_kingdom_basisOfRecord;
 CREATE TABLE occ_kingdom_basisOfRecord
 WITH (format = 'CSV')
 AS SELECT
-  snapshot,
+  CAST(snapshot AS VARCHAR) AS snapshot,
   kingdom_id,
   basis_of_record,
   CAST(SUM(CAST(occurrence_count AS BIGINT)) AS VARCHAR) AS occurrence_count
