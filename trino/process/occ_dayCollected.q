@@ -7,9 +7,9 @@ AS SELECT
   country,
   CAST(date_diff(
     'day',
-    date(concat_ws('-', CAST(year AS varchar), CAST(month AS varchar), CAST(day AS varchar))),
-    date(concat_ws('-', CAST(year AS varchar), '01', '01'))
-  ) + 1 AS varchar) as day_of_year,
+    date(concat_ws('-', CAST(year AS varchar), '01', '01')),
+    date(concat_ws('-', CAST(year AS varchar), CAST(month AS varchar), CAST(day AS varchar)))
+    ) + 1 AS varchar) as day_of_year,
   CAST(COUNT(*) AS varchar) AS count
 FROM snapshots
 WHERE
@@ -18,8 +18,8 @@ WHERE
   year IS NOT NULL
 GROUP BY snapshot,country,
 date_diff('day',
-    date(concat_ws('-', CAST(year AS varchar), CAST(month AS varchar), CAST(day AS varchar))),
-    date(concat_ws('-', CAST(year AS varchar), '01', '01'))
+    date(concat_ws('-', CAST(year AS varchar), '01', '01')),
+    date(concat_ws('-', CAST(year AS varchar), CAST(month AS varchar), CAST(day AS varchar)))
   ) + 1;
 
 -- occ_publisherCountry_dayCollected
@@ -31,8 +31,8 @@ AS SELECT
   publisher_country,
   CAST(date_diff(
     'day',
-    date(concat_ws('-', CAST(year AS varchar), CAST(month AS varchar), CAST(day AS varchar))),
-    date(concat_ws('-', CAST(year AS varchar), '01', '01'))
+    date(concat_ws('-', CAST(year AS varchar), '01', '01')),
+    date(concat_ws('-', CAST(year AS varchar), CAST(month AS varchar), CAST(day AS varchar)))
   ) + 1 as varchar) as day_of_year,
   CAST(COUNT(*) AS varchar) AS count
 FROM snapshots
@@ -43,8 +43,8 @@ WHERE
 GROUP BY snapshot,publisher_country,
 date_diff(
     'day',
-    date(concat_ws('-', CAST(year AS varchar), CAST(month AS varchar), CAST(day AS varchar))),
-    date(concat_ws('-', CAST(year AS varchar), '01', '01'))
+    date(concat_ws('-', CAST(year AS varchar), '01', '01')),
+    date(concat_ws('-', CAST(year AS varchar), CAST(month AS varchar), CAST(day AS varchar)))
   ) + 1;
 
 -- occ_gbifRegion_dayCollected
@@ -55,8 +55,8 @@ AS SELECT
   CAST(snapshot AS varchar) AS snapshot,
   gbif_region,
   CAST(date_diff('day',
-    date(concat_ws('-', CAST(year AS varchar), CAST(month AS varchar), CAST(day AS varchar))),
-    date(concat_ws('-', CAST(year AS varchar), '01', '01'))
+  date(concat_ws('-', CAST(year AS varchar), '01', '01')),
+    date(concat_ws('-', CAST(year AS varchar), CAST(month AS varchar), CAST(day AS varchar)))
   ) + 1 as varchar) as day_of_year,
   CAST(COUNT(*) AS varchar) AS count
 FROM snapshots
@@ -66,8 +66,8 @@ WHERE
   year IS NOT NULL
 GROUP BY snapshot,gbif_region,
 date_diff('day',
-    date(concat_ws('-', CAST(year AS varchar), CAST(month AS varchar), CAST(day AS varchar))),
-    date(concat_ws('-', CAST(year AS varchar), '01', '01'))
+    date(concat_ws('-', CAST(year AS varchar), '01', '01')),
+    date(concat_ws('-', CAST(year AS varchar), CAST(month AS varchar), CAST(day AS varchar)))
   ) + 1;
 
 -- occ_publisherGbifRegion_dayCollected
@@ -78,8 +78,8 @@ AS SELECT
   CAST(snapshot AS varchar) AS snapshot,
   publisher_gbif_region,
   CAST(date_diff('day',
-    date(concat_ws('-', CAST(year AS varchar), CAST(month AS varchar), CAST(day AS varchar))),
-    date(concat_ws('-', CAST(year AS varchar), '01', '01'))
+    date(concat_ws('-', CAST(year AS varchar), '01', '01')),
+    date(concat_ws('-', CAST(year AS varchar), CAST(month AS varchar), CAST(day AS varchar)))
   ) + 1 as varchar) as day_of_year,
   CAST(COUNT(*) AS varchar) AS count
 FROM snapshots
@@ -89,8 +89,8 @@ WHERE
   year IS NOT NULL
 GROUP BY snapshot,publisher_gbif_region,
 date_diff('day',
-    date(concat_ws('-', CAST(year AS varchar), CAST(month AS varchar), CAST(day AS varchar))),
-    date(concat_ws('-', CAST(year AS varchar), '01', '01'))
+    date(concat_ws('-', CAST(year AS varchar), '01', '01')),
+    date(concat_ws('-', CAST(year AS varchar), CAST(month AS varchar), CAST(day AS varchar)))
   ) + 1;
 
 -- occ_dayCollected

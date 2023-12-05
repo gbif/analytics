@@ -7,8 +7,8 @@ AS SELECT
   country,
   CAST(date_diff(
     'day',
-    date(concat_ws('-', CAST(year AS VARCHAR), CAST(month AS VARCHAR), CAST(day AS VARCHAR))),
-    date(concat_ws('-', CAST(year AS VARCHAR), '01', '01'))
+    date(concat_ws('-', CAST(year AS VARCHAR), '01', '01')),
+    date(concat_ws('-', CAST(year AS VARCHAR), CAST(month AS VARCHAR), CAST(day AS VARCHAR)))
   ) + 1 AS VARCHAR) AS day_of_year,
   CAST(COUNT(DISTINCT species_id) AS VARCHAR) AS count
 FROM snapshots
@@ -20,8 +20,8 @@ WHERE
 GROUP BY snapshot,country,
 date_diff(
     'day',
-    date(concat_ws('-', CAST(year AS VARCHAR), CAST(month AS VARCHAR), CAST(day AS VARCHAR))),
-    date(concat_ws('-', CAST(year AS VARCHAR), '01', '01'))
+    date(concat_ws('-', CAST(year AS VARCHAR), '01', '01')),
+    date(concat_ws('-', CAST(year AS VARCHAR), CAST(month AS VARCHAR), CAST(day AS VARCHAR)))
   ) + 1;
 
 -- spe_publisherCountry_dayCollected
@@ -33,8 +33,8 @@ AS SELECT
   publisher_country,
   CAST(date_diff(
     'day',
-    date(concat_ws('-', CAST(year AS VARCHAR), CAST(month AS VARCHAR), CAST(day AS VARCHAR))),
-    date(concat_ws('-', CAST(year AS VARCHAR), '01', '01'))
+    date(concat_ws('-', CAST(year AS VARCHAR), '01', '01')),
+    date(concat_ws('-', CAST(year AS VARCHAR), CAST(month AS VARCHAR), CAST(day AS VARCHAR)))
   ) + 1 AS VARCHAR) as day_of_year,
   CAST(COUNT(DISTINCT species_id) AS VARCHAR) AS count
 FROM snapshots
@@ -46,8 +46,8 @@ WHERE
 GROUP BY snapshot,publisher_country,
 date_diff(
     'day',
-    date(concat_ws('-', CAST(year AS VARCHAR), CAST(month AS VARCHAR), CAST(day AS VARCHAR))),
-    date(concat_ws('-', CAST(year AS VARCHAR), '01', '01'))
+    date(concat_ws('-', CAST(year AS VARCHAR), '01', '01')),
+    date(concat_ws('-', CAST(year AS VARCHAR), CAST(month AS VARCHAR), CAST(day AS VARCHAR)))
   ) + 1;
 
 -- spe_gbifRegion_dayCollected
@@ -59,8 +59,8 @@ AS SELECT
   gbif_region,
   CAST(date_diff(
     'day',
-    date(concat_ws('-', CAST(year AS VARCHAR), CAST(month AS VARCHAR), CAST(day AS VARCHAR))),
-    date(concat_ws('-', CAST(year AS VARCHAR), '01', '01'))
+    date(concat_ws('-', CAST(year AS VARCHAR), '01', '01')),
+    date(concat_ws('-', CAST(year AS VARCHAR), CAST(month AS VARCHAR), CAST(day AS VARCHAR)))
   ) + 1 AS VARCHAR) as day_of_year,
   CAST(COUNT(DISTINCT species_id) AS VARCHAR) AS count
 FROM snapshots
@@ -72,8 +72,8 @@ WHERE
 GROUP BY snapshot,gbif_region,
 date_diff(
     'day',
-    date(concat_ws('-', CAST(year AS VARCHAR), CAST(month AS VARCHAR), CAST(day AS VARCHAR))),
-    date(concat_ws('-', CAST(year AS VARCHAR), '01', '01'))
+    date(concat_ws('-', CAST(year AS VARCHAR), '01', '01')),
+    date(concat_ws('-', CAST(year AS VARCHAR), CAST(month AS VARCHAR), CAST(day AS VARCHAR)))
   ) + 1;
 
 -- spe_publisherGbifRegion_dayCollected
@@ -85,8 +85,8 @@ AS SELECT
   publisher_gbif_region,
   CAST(date_diff(
     'day',
-    date(concat_ws('-', CAST(year AS VARCHAR), CAST(month AS VARCHAR), CAST(day AS VARCHAR))),
-    date(concat_ws('-', CAST(year AS VARCHAR), '01', '01'))
+    date(concat_ws('-', CAST(year AS VARCHAR), '01', '01')),
+    date(concat_ws('-', CAST(year AS VARCHAR), CAST(month AS VARCHAR), CAST(day AS VARCHAR)))
   ) + 1 AS VARCHAR) as day_of_year,
   CAST(COUNT(DISTINCT species_id) AS VARCHAR) AS count
 FROM snapshots
@@ -98,8 +98,8 @@ WHERE
 GROUP BY snapshot,publisher_gbif_region,
 date_diff(
     'day',
-    date(concat_ws('-', CAST(year AS VARCHAR), CAST(month AS VARCHAR), CAST(day AS VARCHAR))),
-    date(concat_ws('-', CAST(year AS VARCHAR), '01', '01'))
+    date(concat_ws('-', CAST(year AS VARCHAR), '01', '01')),
+    date(concat_ws('-', CAST(year AS VARCHAR), CAST(month AS VARCHAR), CAST(day AS VARCHAR)))
   ) + 1;
 
 -- spe_dayCollected
@@ -110,8 +110,8 @@ AS SELECT
   CAST(snapshot AS varchar) as snapshot,
   CAST(date_diff(
     'day',
-    date(concat_ws('-', CAST(year AS VARCHAR), CAST(month AS VARCHAR), CAST(day AS VARCHAR))),
-    date(concat_ws('-', CAST(year AS VARCHAR), '01', '01'))
+    date(concat_ws('-', CAST(year AS VARCHAR), '01', '01')),
+    date(concat_ws('-', CAST(year AS VARCHAR), CAST(month AS VARCHAR), CAST(day AS VARCHAR)))
   ) + 1 AS VARCHAR) as day_of_year,
   CAST(COUNT(DISTINCT species_id) AS VARCHAR) AS count
 FROM snapshots
@@ -123,6 +123,6 @@ WHERE
 GROUP BY snapshot,
 date_diff(
     'day',
-    date(concat_ws('-', CAST(year AS VARCHAR), CAST(month AS VARCHAR), CAST(day AS VARCHAR))),
-    date(concat_ws('-', CAST(year AS VARCHAR), '01', '01'))
+    date(concat_ws('-', CAST(year AS VARCHAR), '01', '01')),
+    date(concat_ws('-', CAST(year AS VARCHAR), CAST(month AS VARCHAR), CAST(day AS VARCHAR)))
   ) + 1;
