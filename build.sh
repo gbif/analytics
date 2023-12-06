@@ -42,11 +42,12 @@ log () {
 if [ $registryStatistics == "true" ]; then
   log 'Removing the registry statistics output folder'
   rm -Rf registry-report/
-  mkdir -p registry-report/dataset registry-report/organization
+  mkdir -p registry-report/dataset registry-report/organization registry-report/node
 
   log 'Running Registry Statistics stage'
   ./registry/datasets.sh
   ./registry/organizations.sh
+  ./registry/nodes.sh
 
   log '###################################'
   log 'REGISTRY STATISTICS STAGE COMPLETED'
