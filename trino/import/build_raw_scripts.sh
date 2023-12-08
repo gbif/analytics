@@ -13,7 +13,7 @@ declare -a hbase_v1_snapshots=()
 declare -a hbase_v2_snapshots=()
 # v3 exists only because of a tiny difference in taxonomy schema (v_order_ became v_order)
 declare -a hbase_v3_snapshots=()
-declare -a hdfs_v1_snapshots=()
+declare -a hdfs_v1_snapshots=("20231208" "20231209")
 
 max=$(( ${#hdfs_v1_snapshots[*]} - 1 ))
 last_modern_snapshot=${hdfs_v1_snapshots[$max]}
