@@ -27,6 +27,7 @@ echo "
 DROP TABLE IF EXISTS snapshot.tmp_raw_taxonomy;
 CREATE TABLE snapshot.tmp_raw_taxonomy
 WITH (format = 'ORC')
+AS
 SELECT
   CONCAT_WS('|',
     t1.kingdom,
@@ -123,6 +124,7 @@ echo "
 DROP TABLE IF EXISTS snapshot.tmp_raw_geo;
 CREATE TABLE snapshot.tmp_raw_geo
 WITH (format = 'ORC')
+AS
 SELECT
   CONCAT_WS('|',
     t1.latitude,

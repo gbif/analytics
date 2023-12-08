@@ -11,6 +11,7 @@ DROP TABLE IF EXISTS snapshot.occurrence_$SNAPSHOT_NAME;
 
 CREATE TABLE snapshot.occurrence_$SNAPSHOT_NAME
 WITH (format = 'ORC')
+AS
 SELECT
   r.id,
   r.data_resource_id as dataset_id,

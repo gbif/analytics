@@ -10,6 +10,7 @@ SOURCE_TABLE=$6
 
 query="CREATE TABLE raw_$SNAPSHOT_NAME
 WITH (format = 'ORC')
+AS
 SELECT gbifid AS id, datasetkey AS dataset_id, publishingorgkey AS publisher_id, publishingcountry AS publisher_country
 ,v_accessrights
 ,v_bibliographiccitation
