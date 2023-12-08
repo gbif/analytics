@@ -192,5 +192,5 @@ SELECT gbifid AS id, datasetkey AS dataset_id, publishingorgkey AS publisher_id,
 ,v_taxonremarks
 FROM $SOURCE_DB.$SOURCE_TABLE;"
 
-/Users/marcoslopezgonzalez/dev/gbif/trino/trino.jar --insecure --debug --server "$TRINO_SERVER" --catalog=hive \
+/usr/local/gbif/trino.jar --insecure --debug --server "$TRINO_SERVER" --catalog=hive \
 --schema="$DB" --session="hive.compression_codec=SNAPPY" --execute="$query" --user gbif --password

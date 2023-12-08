@@ -30,7 +30,7 @@ for snapshot in "${mysql_snapshots[@]}"
 do
     log "Creating MySQL snapshot $snapshot"
     query=$(./occurrence_mysql.sh "$snapshot")
-    /Users/marcoslopezgonzalez/dev/gbif/trino/trino.jar --insecure --debug --server "$TRINO_SERVER" --catalog=hive \
+    /usr/local/gbif/trino.jar --insecure --debug --server "$TRINO_SERVER" --catalog=hive \
       --schema="$DB" --session=$SESSION_PARAMS_SNAPPY --execute="$query" --user gbif --password
     waitForJobsOrFewer 6
 done
@@ -40,7 +40,7 @@ for snapshot in "${hbase_v1_snapshots[@]}"
 do
     log "Creating HBase V1 snapshot $snapshot"
     query=$(./occurrence_v1_hbase.sh "$snapshot")
-    /Users/marcoslopezgonzalez/dev/gbif/trino/trino.jar --insecure --debug --server "$TRINO_SERVER" --catalog=hive \
+    /usr/local/gbif/trino.jar --insecure --debug --server "$TRINO_SERVER" --catalog=hive \
       --schema="$DB" --session=$SESSION_PARAMS_SNAPPY --execute="$query" --user gbif --password
     waitForJobsOrFewer 6
 done
@@ -50,7 +50,7 @@ for snapshot in "${hbase_v2_snapshots[@]}"
 do
     log "Creating HBase V2 snapshot $snapshot"
     query=$(./occurrence_v2_hbase.sh "$snapshot")
-    /Users/marcoslopezgonzalez/dev/gbif/trino/trino.jar --insecure --debug --server "$TRINO_SERVER" --catalog=hive \
+    /usr/local/gbif/trino.jar --insecure --debug --server "$TRINO_SERVER" --catalog=hive \
       --schema="$DB" --session=$SESSION_PARAMS_SNAPPY --execute="$query" --user gbif --password
     waitForJobsOrFewer 6
 done
@@ -60,7 +60,7 @@ for snapshot in "${hbase_v3_snapshots[@]}"
 do
     log "Creating HBase V3 snapshot $snapshot"
     query=$(./occurrence_v3_hbase.sh "$snapshot")
-    /Users/marcoslopezgonzalez/dev/gbif/trino/trino.jar --insecure --debug --server "$TRINO_SERVER" --catalog=hive \
+    /usr/local/gbif/trino.jar --insecure --debug --server "$TRINO_SERVER" --catalog=hive \
       --schema="$DB" --session=$SESSION_PARAMS_SNAPPY --execute="$query" --user gbif --password
     waitForJobsOrFewer 6
 done
@@ -70,7 +70,7 @@ for snapshot in "${hdfs_v1_snapshots[@]}"
 do
     log "Creating HDFS V1 snapshot $snapshot"
     query=$(./occurrence_v1_hdfs.sh "$snapshot")
-    /Users/marcoslopezgonzalez/dev/gbif/trino/trino.jar --insecure --debug --server "$TRINO_SERVER" --catalog=hive \
+    /usr/local/gbif/trino.jar --insecure --debug --server "$TRINO_SERVER" --catalog=hive \
       --schema="$DB" --session=$SESSION_PARAMS_SNAPPY --execute="$query" --user gbif --password
     waitForJobsOrFewer 4
 done

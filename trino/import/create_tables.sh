@@ -13,7 +13,7 @@ log () {
 
 # Create schema first if it doesn't exist
 log "Creating schema $DB"
-/Users/marcoslopezgonzalez/dev/gbif/trino/trino.jar --insecure --debug --server "$TRINO_SERVER" --catalog=hive \
+/usr/local/gbif/trino.jar --insecure --debug --server "$TRINO_SERVER" --catalog=hive \
 --session=$SESSION_PARAMS_SNAPPY \
 --execute="CREATE SCHEMA IF NOT EXISTS $DB with (LOCATION='hdfs://gbif-hdfs/stackable/warehouse/$DB.db');" \
 --user gbif --password
@@ -22,15 +22,15 @@ log "Building raw scripts"
 ./build_raw_scripts.sh
 
 log "Executing raw_geo.q"
-/Users/marcoslopezgonzalez/dev/gbif/trino/trino.jar --insecure --debug --server "$TRINO_SERVER" --catalog=hive \
+/usr/local/gbif/trino.jar --insecure --debug --server "$TRINO_SERVER" --catalog=hive \
 --schema="$DB" --session=$SESSION_PARAMS_SNAPPY --execute="$(<raw_geo.q)" --user gbif --password
 
 log "Executing raw_taxon.q"
-/Users/marcoslopezgonzalez/dev/gbif/trino/trino.jar --insecure --debug --server "$TRINO_SERVER" --catalog=hive \
+/usr/local/gbif/trino.jar --insecure --debug --server "$TRINO_SERVER" --catalog=hive \
 --schema="$DB" --session=$SESSION_PARAMS_SNAPPY --execute="$(<raw_taxonomy.q)" --user gbif --password
 
 log "Executing interp_geo.q"
-/Users/marcoslopezgonzalez/dev/gbif/trino/trino.jar --insecure --debug --server "$TRINO_SERVER" --catalog=hive \
+/usr/local/gbif/trino.jar --insecure --debug --server "$TRINO_SERVER" --catalog=hive \
 --schema="$DB" --session=$SESSION_PARAMS_SNAPPY --execute="$(<interp_geo.q)" --user gbif --password
 
 log "Executing interp_taxon.q"
@@ -49,7 +49,7 @@ log "Address is $clb_nub_location"
 interp_taxon_file="interp_taxon.q"
 ./interp_taxon.sh $interp_taxon_file $clb_nub_location
 
-/Users/marcoslopezgonzalez/dev/gbif/trino/trino.jar --insecure --debug --server "$TRINO_SERVER" --catalog=hive \
+/usr/local/gbif/trino.jar --insecure --debug --server "$TRINO_SERVER" --catalog=hive \
 --schema="$DB" --session=$SESSION_PARAMS_SNAPPY --execute="$(<interp_taxon_file)" --user gbif --password
 
 log "Creating regions file"
@@ -65,7 +65,7 @@ kubectl --kubeconfig="$KUBE_CONFIG" cp analytics_regions.tsv gbif-develop/gbif-t
 kubectl --kubeconfig="$KUBE_CONFIG" cp analytics_regions.tsv gbif-develop/gbif-trino-coordinator-default-0:/tmp/regions -c trino
 
 log "Executing region_table.q"
-/Users/marcoslopezgonzalez/dev/gbif/trino/trino.jar --insecure --debug --server "$TRINO_SERVER" --catalog=hive \
+/usr/local/gbif/trino.jar --insecure --debug --server "$TRINO_SERVER" --catalog=hive \
 --schema="$DB" --session=$SESSION_PARAMS_SNAPPY --execute="$(<region_table.q)" --user gbif --password
 
 log "Create occurrence tables"
