@@ -7,6 +7,7 @@ DESTINATION_DIR=hadoop
 
 export JAVA_HOME=/usr/lib/jvm/java-11-openjdk-amd64
 
+# This might be a symlink to somewhere with more disk space
 mkdir -p $DESTINATION_DIR
 find $DESTINATION_DIR/ -type f -delete
 

@@ -1,11 +1,12 @@
-SET SESSION hive.compression_codec='SNAPPY';
+#!/bin/bash
 
-DROP TABLE IF EXISTS raw;
+SNAPSHOT_DB=$1
+SNAPSHOT_NAME=$2
+SOURCE_DB=$3
+SOURCE_TABLE=$4
 
-CREATE TABLE raw
-WITH (format = 'RCTEXT')
-AS
-select gbifid AS id, datasetkey AS dataset_id, publishingorgkey AS publisher_id, publishingcountry AS publisher_country
+echo "CREATE TABLE $SNAPSHOT_DB.raw_$SNAPSHOT_NAME STORED AS ORC AS
+SELECT gbifid AS id, datasetkey AS dataset_id, publishingorgkey AS publisher_id, publishingcountry AS publisher_country
 ,v_accessrights
 ,v_bibliographiccitation
 ,v_language
@@ -186,5 +187,4 @@ select gbifid AS id, datasetkey AS dataset_id, publishingorgkey AS publisher_id,
 ,v_taxonomicstatus
 ,v_nomenclaturalstatus
 ,v_taxonremarks
-from dev2.occurrence;
-
+FROM $SOURCE_DB.$SOURCE_TABLE;"

@@ -1,3 +1,5 @@
+--NOT USED ANYMORE
+
 DROP TABLE IF EXISTS tmp_raw_taxonomy;
 
 CREATE TABLE tmp_raw_taxonomy
