@@ -8,7 +8,8 @@ SNAPSHOT_NAME=$4
 SOURCE_DB=$5
 SOURCE_TABLE=$6
 
-query="CREATE TABLE raw_$SNAPSHOT_NAME STORED AS ORC AS
+query="CREATE TABLE raw_$SNAPSHOT_NAME
+WITH (format = 'ORC')
 SELECT gbifid AS id, datasetkey AS dataset_id, publishingorgkey AS publisher_id, publishingcountry AS publisher_country
 ,v_accessrights
 ,v_bibliographiccitation
