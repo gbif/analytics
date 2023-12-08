@@ -19,19 +19,19 @@ log "Creating schema $DB"
 --user gbif --password
 
 log "Building raw scripts"
-./build_raw_scripts.sh
+./trino/import/build_raw_scripts.sh
 
 log "Executing raw_geo.q"
 /usr/local/gbif/trino.jar --insecure --debug --server "$TRINO_SERVER" --catalog=hive \
---schema="$DB" --session=$SESSION_PARAMS_SNAPPY --execute="$(<raw_geo.q)" --user gbif --password
+--schema="$DB" --session=$SESSION_PARAMS_SNAPPY --execute="$(<trino/import/raw_geo.q)" --user gbif --password
 
 log "Executing raw_taxon.q"
 /usr/local/gbif/trino.jar --insecure --debug --server "$TRINO_SERVER" --catalog=hive \
---schema="$DB" --session=$SESSION_PARAMS_SNAPPY --execute="$(<raw_taxonomy.q)" --user gbif --password
+--schema="$DB" --session=$SESSION_PARAMS_SNAPPY --execute="$(<trino/import/raw_taxonomy.q)" --user gbif --password
 
 log "Executing interp_geo.q"
 /usr/local/gbif/trino.jar --insecure --debug --server "$TRINO_SERVER" --catalog=hive \
---schema="$DB" --session=$SESSION_PARAMS_SNAPPY --execute="$(<interp_geo.q)" --user gbif --password
+--schema="$DB" --session=$SESSION_PARAMS_SNAPPY --execute="$(<trino/import/interp_geo.q)" --user gbif --password
 
 log "Executing interp_taxon.q"
 
@@ -46,14 +46,14 @@ log "Executing interp_taxon.q"
 clb_nub_location=https://api.gbif-uat.org/v1/
 log "Address is $clb_nub_location"
 
-interp_taxon_file="interp_taxon.q"
+interp_taxon_file="trino/import/interp_taxon.q"
 ./interp_taxon.sh $interp_taxon_file $clb_nub_location
 
 /usr/local/gbif/trino.jar --insecure --debug --server "$TRINO_SERVER" --catalog=hive \
 --schema="$DB" --session=$SESSION_PARAMS_SNAPPY --execute="$(<interp_taxon_file)" --user gbif --password
 
 log "Creating regions file"
-./create_regions.sh
+./trino/import/create_regions.sh
 
 # Create a directory for the regions file
 log "Creating temp directory for regions file"
@@ -66,8 +66,8 @@ kubectl --kubeconfig="$KUBE_CONFIG" cp analytics_regions.tsv gbif-develop/gbif-t
 
 log "Executing region_table.q"
 /usr/local/gbif/trino.jar --insecure --debug --server "$TRINO_SERVER" --catalog=hive \
---schema="$DB" --session=$SESSION_PARAMS_SNAPPY --execute="$(<region_table.q)" --user gbif --password
+--schema="$DB" --session=$SESSION_PARAMS_SNAPPY --execute="$(<trino/import/region_table.q)" --user gbif --password
 
 log "Create occurrence tables"
-./create_occurrence_tables.sh "$DB" "$TRINO_SERVER" "$TRINO_PASSWORD"
+./trino/import/create_occurrence_tables.sh "$DB" "$TRINO_SERVER" "$TRINO_PASSWORD"
 
