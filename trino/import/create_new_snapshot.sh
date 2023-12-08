@@ -1,11 +1,14 @@
 #!/bin/bash
 
-SNAPSHOT_DB=$1
-SNAPSHOT_NAME=$2
-SOURCE_DB=$3
-SOURCE_TABLE=$4
+TRINO_SERVER=$1
+export TRINO_PASSWORD=$2
 
-echo "CREATE TABLE $SNAPSHOT_DB.raw_$SNAPSHOT_NAME STORED AS ORC AS
+SNAPSHOT_DB=$3
+SNAPSHOT_NAME=$4
+SOURCE_DB=$5
+SOURCE_TABLE=$6
+
+query="CREATE TABLE raw_$SNAPSHOT_NAME STORED AS ORC AS
 SELECT gbifid AS id, datasetkey AS dataset_id, publishingorgkey AS publisher_id, publishingcountry AS publisher_country
 ,v_accessrights
 ,v_bibliographiccitation
@@ -188,3 +191,6 @@ SELECT gbifid AS id, datasetkey AS dataset_id, publishingorgkey AS publisher_id,
 ,v_nomenclaturalstatus
 ,v_taxonremarks
 FROM $SOURCE_DB.$SOURCE_TABLE;"
+
+/Users/marcoslopezgonzalez/dev/gbif/trino/trino.jar --insecure --debug --server "$TRINO_SERVER" --catalog=hive \
+--schema="$DB" --session="hive.compression_codec=SNAPPY" --execute="$query" --user gbif --password
