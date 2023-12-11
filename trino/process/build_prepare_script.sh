@@ -5,7 +5,7 @@
 prepare_file="$1"
 DB="$2"
 
-declare -a snapshots=()
+declare -a snapshots=("20231208" "20231209")
 max=$(( ${#snapshots[*]} - 1 ))
 last_snapshot=${snapshots[$max]}
 
