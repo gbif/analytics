@@ -3,6 +3,8 @@
 INTERP_TAXON_FILE=$1
 API_URL=$2
 
+rm -f $INTERP_TAXON_FILE
+
 echo "
 DROP TABLE IF EXISTS snapshot.tmp_taxonomy_interp;
 CREATE TABLE snapshot.tmp_taxonomy_interp

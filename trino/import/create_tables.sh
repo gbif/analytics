@@ -7,6 +7,9 @@ KUBE_CONFIG=$4
 
 SESSION_PARAMS_SNAPPY="hive.compression_codec=SNAPPY"
 
+sudo chmod +x trino/import/occurrence_*.sh
+sudo chmod +x trino/import/interp_taxon.sh
+
 log () {
   echo $(tput setaf 6)$(date '+%Y-%m-%d %H:%M:%S ')$(tput setaf 14)$1$(tput sgr0)
 }

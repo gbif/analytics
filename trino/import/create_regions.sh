@@ -1,3 +1,5 @@
+rm -f analytics_regions.tsv
+
 (
 	curl -Ssg https://api.gbif.org/v1/enumeration/country | jq -r '.[] | "\(.iso2)\t\(.gbifRegion)"'
 	# Kosovo's code isn't shown in that enumeration

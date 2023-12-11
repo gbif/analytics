@@ -21,6 +21,8 @@ last_modern_snapshot=${hdfs_v1_snapshots[$max]}
 ################ RAW TAXONOMY SCRIPT
 taxonomy_file="trino/import/raw_taxonomy.q"
 
+rm -f "$taxonomy_file"
+
 echo "
 -- THIS FILE IS GENERATED.  DO NOT EDIT BY HAND !!!
 
@@ -117,6 +119,8 @@ ORDER BY rand();' >> "$taxonomy_file"
 
 ################ RAW GEO SCRIPT
 geo_file="trino/import/raw_geo.q"
+
+rm -f "$geo_file"
 
 echo "
 -- THIS FILE IS GENERATED.  DO NOT EDIT BY HAND !!!
