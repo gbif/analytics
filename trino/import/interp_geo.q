@@ -12,5 +12,5 @@ FROM (
   SELECT
     geo_key,
     parseGeo('/gbif/geocode-layers/', latitude, longitude, country) g
-  FROM tmp_raw_geo
+  FROM snapshot.tmp_raw_geo
 ) t1;
