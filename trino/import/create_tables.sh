@@ -50,7 +50,7 @@ interp_taxon_file="trino/import/interp_taxon.q"
 ./trino/import/interp_taxon.sh $interp_taxon_file $clb_nub_location
 
 /usr/local/gbif/trino.jar --insecure --debug --server "$TRINO_SERVER" --catalog=hive \
---schema="$DB" --session=$SESSION_PARAMS_SNAPPY --execute="$(<interp_taxon_file)" --user gbif --password
+--schema="$DB" --session=$SESSION_PARAMS_SNAPPY --execute="$(<$interp_taxon_file)" --user gbif --password
 
 log "Creating regions file"
 ./trino/import/create_regions.sh
