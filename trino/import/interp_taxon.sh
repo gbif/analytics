@@ -4,8 +4,8 @@ INTERP_TAXON_FILE=$1
 API_URL=$2
 
 echo "
-DROP TABLE IF EXISTS tmp_taxonomy_interp;
-CREATE TABLE tmp_taxonomy_interp
+DROP TABLE IF EXISTS snapshot.tmp_taxonomy_interp;
+CREATE TABLE snapshot.tmp_taxonomy_interp
 WITH (format = 'ORC')
 AS
 SELECT
