@@ -98,6 +98,7 @@ if [ $downloadCsvs == "true" ]; then
   log 'Running Download CSVs stages'
   log 'Downloading the CSVs from HDFS (existing data are overwritten)'
 
+    sudo chmod +x trino/download_csvs.sh
   ./trino/download_csvs.sh "$destination_db"
 
   log '#############################'
