@@ -29,7 +29,7 @@ SELECT
 FROM (
   SELECT
     taxon_key,
-    nubLookup($API_URL, kingdom, phylum, class_rank, order_rank, family, genus, scientific_name, specific_epithet, infra_specific_epithet, rank) n
+    nubLookup('$API_URL', kingdom, phylum, class_rank, order_rank, family, genus, scientific_name, specific_epithet, infra_specific_epithet, rank) n
   FROM tmp_raw_taxonomy
 ) t1;
 " >> "$INTERP_TAXON_FILE"
