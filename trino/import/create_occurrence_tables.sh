@@ -15,7 +15,7 @@ declare -a mysql_snapshots=()
 declare -a hbase_v1_snapshots=()
 declare -a hbase_v2_snapshots=()
 declare -a hbase_v3_snapshots=()
-declare -a hdfs_v1_snapshots=()
+declare -a hdfs_v1_snapshots=("20231208" "20231209")
 
 waitForJobsOrFewer () {
     sleep 10
