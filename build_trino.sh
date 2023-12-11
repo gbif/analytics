@@ -62,7 +62,7 @@ fi
 
 if [ $interpretSnapshots == "true" ]; then
   log 'Running Interpret Snapshots stages (import and geo/taxonomy table creation)'
-  ./create_tables.sh $destination_db "$TRINO_SERVER" "$TRINO_PASSWORD" "$KUBE_CONFIG"
+  ./trino/import/create_tables.sh $destination_db "$TRINO_SERVER" "$TRINO_PASSWORD" "$KUBE_CONFIG"
 
   log '###################################'
   log 'INTERPRET SNAPSHOTS STAGE COMPLETED'
@@ -73,8 +73,8 @@ fi
 
 if [ $summarizeSnapshots == "true" ]; then
    log 'Running Summarize Snapshots stages (Existing tables are replaced)'
-    prepare_file="hive/process/prepare.q"
-    ./process/build_prepare_script.sh $prepare_file $destination_db
+    prepare_file="trino/process/prepare.q"
+    ./trino/process/build_prepare_script.sh $prepare_file $destination_db
     log 'Hive stage: Union all snapshots into a table'
     /usr/local/gbif/trino.jar --insecure --debug --server "$TRINO_SERVER" --catalog=hive \
       --schema="$DB" --session="hive.compression_codec=SNAPPY" --execute="$(<prepare_file)" --user gbif --password
@@ -98,7 +98,7 @@ if [ $downloadCsvs == "true" ]; then
   log 'Running Download CSVs stages'
   log 'Downloading the CSVs from HDFS (existing data are overwritten)'
 
-  ./download_csvs.sh "$destination_db"
+  ./trino/download_csvs.sh "$destination_db"
 
   log '#############################'
   log 'DOWNLOAD CSVS STAGE COMPLETED'

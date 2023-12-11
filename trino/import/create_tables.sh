@@ -47,7 +47,7 @@ clb_nub_location=https://api.gbif-uat.org/v1/
 log "Address is $clb_nub_location"
 
 interp_taxon_file="trino/import/interp_taxon.q"
-./interp_taxon.sh $interp_taxon_file $clb_nub_location
+./trino/import/interp_taxon.sh $interp_taxon_file $clb_nub_location
 
 /usr/local/gbif/trino.jar --insecure --debug --server "$TRINO_SERVER" --catalog=hive \
 --schema="$DB" --session=$SESSION_PARAMS_SNAPPY --execute="$(<interp_taxon_file)" --user gbif --password

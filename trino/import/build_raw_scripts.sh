@@ -19,7 +19,7 @@ max=$(( ${#hdfs_v1_snapshots[*]} - 1 ))
 last_modern_snapshot=${hdfs_v1_snapshots[$max]}
 
 ################ RAW TAXONOMY SCRIPT
-taxonomy_file="hive/normalize/raw_taxonomy.q"
+taxonomy_file="trino/import/raw_taxonomy.q"
 
 echo "
 -- THIS FILE IS GENERATED.  DO NOT EDIT BY HAND !!!
@@ -116,7 +116,7 @@ ORDER BY rand();' >> "$taxonomy_file"
 
 
 ################ RAW GEO SCRIPT
-geo_file="hive/normalize/raw_geo.q"
+geo_file="trino/import/raw_geo.q"
 
 echo "
 -- THIS FILE IS GENERATED.  DO NOT EDIT BY HAND !!!
