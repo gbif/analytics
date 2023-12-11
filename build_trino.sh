@@ -77,14 +77,14 @@ if [ $summarizeSnapshots == "true" ]; then
     ./trino/process/build_prepare_script.sh $prepare_file $destination_db
     log 'Hive stage: Union all snapshots into a table'
     /usr/local/gbif/trino.jar --insecure --debug --server "$TRINO_SERVER" --catalog=hive \
-      --schema="$DB" --session="hive.compression_codec=SNAPPY" --execute="$(<$prepare_file)" --user gbif --password
+      --schema="$destination_db" --session="hive.compression_codec=SNAPPY" --execute="$(<$prepare_file)" --user gbif --password
 
     files=$(find trino/process -name '*.q')
     for f in $files
     do
       log "Executing $f"
       /usr/local/gbif/trino.jar --insecure --debug --server "$TRINO_SERVER" --catalog=hive \
-      --schema="$DB" --session="hive.compression_codec=NONE" --execute="$(<"$f")" --user gbif --password
+      --schema="$destination_db" --session="hive.compression_codec=NONE" --execute="$(<"$f")" --user gbif --password
     done
 
     log '###################################'
