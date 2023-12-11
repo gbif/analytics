@@ -79,7 +79,7 @@ if [ $summarizeSnapshots == "true" ]; then
     /usr/local/gbif/trino.jar --insecure --debug --server "$TRINO_SERVER" --catalog=hive \
       --schema="$DB" --session="hive.compression_codec=SNAPPY" --execute="$(<$prepare_file)" --user gbif --password
 
-    files=$(find ../process -name '*.q')
+    files=$(find trino/process -name '*.q')
     for f in $files
     do
       log "Executing $f"
