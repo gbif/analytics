@@ -1,4 +1,4 @@
-DROP TABLE IF EXISTS tmp_regions;
+DROP TABLE IF EXISTS snapshot.tmp_regions;
 
 CREATE TABLE snapshot.tmp_regions (country varchar, gbif_region varchar)
 WITH (FORMAT = 'CSV',
