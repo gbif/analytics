@@ -30,12 +30,14 @@ hive --hiveconf occjar=/home/hdfs/occurrence-hive-0.187-SNAPSHOT.jar \
 # Use the webservice directly.
 # (There's no use to the caching, every query is different. And it's a huge load on Varnish.)
 log 'Finding address of checklistbank-nub-ws'
-zk_servers=c5zk1.gbif.org,c5zk2.gbif.org,c5zk3.gbif.org
-clb_nub_zk_node=$(zookeeper-client -server $zk_servers ls /prod/services/checklistbank-nub-ws 2> /dev/null | grep --only-matching ........-....-....-....-............ | tail -n 1)
-clb_nub_host=$(zookeeper-client -server $zk_servers get /prod/services/checklistbank-nub-ws/$clb_nub_zk_node 2> /dev/null | grep $clb_nub_zk_node | tail -n 1 | jq -r .address)
-clb_nub_port=$(zookeeper-client -server $zk_servers get /prod/services/checklistbank-nub-ws/$clb_nub_zk_node 2> /dev/null | grep $clb_nub_zk_node | tail -n 1 | jq -r .port)
-clb_nub_location=http://$clb_nub_host:$clb_nub_port/
-# ? clb_nub_location=http://ws2.gbif.org:9000/
+#zk_servers=c5zk1.gbif.org,c5zk2.gbif.org,c5zk3.gbif.org
+#clb_nub_zk_node=$(zookeeper-client -server $zk_servers ls /prod/services/checklistbank-nub-ws 2> /dev/null | grep --only-matching ........-....-....-....-............ | tail -n 1)
+#clb_nub_host=$(zookeeper-client -server $zk_servers get /prod/services/checklistbank-nub-ws/$clb_nub_zk_node 2> /dev/null | grep $clb_nub_zk_node | tail -n 1 | jq -r .address)
+#clb_nub_port=$(zookeeper-client -server $zk_servers get /prod/services/checklistbank-nub-ws/$clb_nub_zk_node 2> /dev/null | grep $clb_nub_zk_node | tail -n 1 | jq -r .port)
+#clb_nub_location=http://$clb_nub_host:$clb_nub_port/
+# Needs to be set, otherwise prodws gets too slow.
+clb_nub_location=http://ws2.gbif.org:7000/
+# Check curl -s 'http://ws2.gbif.org:7000/species/match?verbose=true&name=Abies'
 log "Address is $clb_nub_location"
 
 log 'Building intermediate interp taxonomy tables'

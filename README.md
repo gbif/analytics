@@ -52,7 +52,7 @@ screen -L -S analytics
   `rsync -avn registry-report/ root@analytics-files.gbif-uat.org:/var/www/html/analytics-files/registry/`
 
 ### Steps to build country reports after the R part is done
-- Check the download statistics are up-to-date, e.g. with https://github.com/gbif/registry/blob/master/populate_downloaded_records_statistics.sh
+- Check the download statistics are up-to-date (Nagios should be alerting if not, but https://api.gbif.org/v1/occurrence/download/statistics/downloadedRecordsByDataset?fromDate=2023-03). If not, update with https://github.com/gbif/registry/blob/master/populate_downloaded_records_statistics.sh
 - Generate the country reports — check you are using correct APIs! (Normally prod but UAT analytics assets.)  Instructions are in the [country-reports](https://github.org/gbif/country-reports) project.
 - rsync the reports to `root@analytics-files.gbif-uat.org:/var/www/html/analytics-files/`
   `rsync -av country-report/ root@analytics-files.gbif-uat.org:/var/www/html/analytics-files/country/`

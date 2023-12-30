@@ -8,6 +8,8 @@ function logdate() {
     echo -n $(date +%A\ %H:%M\ %Z)
 }
 
+echo "Should have a sanity check that the CLB WS is running and the correct version."
+
 # Wait until the first of the month (UTC).
 while [[ $(date -u +%-d) -ne 1 ]]; do
     echo $(logdate) "Date is "$(date -u +%Y-%m-%d)", too soon for analytics."
