@@ -58,13 +58,14 @@ interp_taxon_file="trino/import/interp_taxon.q"
 log "Creating regions file"
 ./trino/import/create_regions.sh
 
-# Copy regions to hdfs
-sudo su stackable -s /bin/bash
-export JAVA_HOME=/usr/lib/jvm/java-11-openjdk-amd64
-cd /home/stackable
-./hadoop-3.3.4/bin/hdfs dfs -mkdir -p /tmp/regions
-./hadoop-3.3.4/bin/hdfs dfs -copyFromLocal analytics_regions.csv /tmp/regions
-exit
+# Create a directory for the regions file
+log "Creating temp directory for regions file"
+kubectl --kubeconfig="$KUBE_CONFIG" exec -n gbif-develop -it gbif-trino-worker-default-0 -- bash -c "mkdir -p /tmp/regions"
+kubectl --kubeconfig="$KUBE_CONFIG" exec -n gbif-develop -it gbif-trino-coordinator-default-0 -- bash -c "mkdir -p /tmp/regions"
+
+log "Copying regions file to the pods"
+kubectl --kubeconfig="$KUBE_CONFIG" cp analytics_regions.tsv gbif-develop/gbif-trino-worker-default-0:/tmp/regions -c trino
+kubectl --kubeconfig="$KUBE_CONFIG" cp analytics_regions.tsv gbif-develop/gbif-trino-coordinator-default-0:/tmp/regions -c trino
 
 log "Executing region_table.q"
 /usr/local/gbif/trino.jar --insecure --debug --server "$TRINO_SERVER" --catalog=hive \
