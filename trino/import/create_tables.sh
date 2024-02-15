@@ -58,6 +58,10 @@ interp_taxon_file="trino/import/interp_taxon.q"
 log "Creating regions file"
 ./trino/import/create_regions.sh
 
+# Copy regions to hdfs
+hdfs dfs -mkdir -p /tmp/regions
+hdfs dfs -copyFromLocal analytics_regions.csv /tmp/regions
+
 # Create a directory for the regions file
 log "Creating temp directory for regions file"
 kubectl --kubeconfig="$KUBE_CONFIG" exec -n gbif-develop -it gbif-trino-worker-default-0 -- bash -c "mkdir -p /tmp/regions"
