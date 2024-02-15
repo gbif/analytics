@@ -58,8 +58,9 @@ log "Creating regions file"
 ./trino/import/create_regions.sh
 
 # Copy regions to hdfs
-hdfs dfs -mkdir -p /tmp/regions
-hdfs dfs -copyFromLocal analytics_regions.csv /tmp/regions
+export JAVA_HOME=/usr/lib/jvm/java-11-openjdk-amd64
+./hadoop-3.3.4/bin/hdfs dfs -mkdir -p /tmp/regions
+./hadoop-3.3.4/bin/hdfs dfs -copyFromLocal analytics_regions.csv /tmp/regions
 
 log "Executing region_table.q"
 /usr/local/gbif/trino.jar --insecure --debug --server "$TRINO_SERVER" --catalog=hive \
