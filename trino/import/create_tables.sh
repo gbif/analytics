@@ -3,7 +3,6 @@
 DB=$1
 TRINO_SERVER=$2
 export TRINO_PASSWORD=$3
-KUBE_CONFIG=$4
 
 SESSION_PARAMS_SNAPPY="hive.compression_codec=SNAPPY"
 
@@ -61,15 +60,6 @@ log "Creating regions file"
 # Copy regions to hdfs
 hdfs dfs -mkdir -p /tmp/regions
 hdfs dfs -copyFromLocal analytics_regions.csv /tmp/regions
-
-# Create a directory for the regions file
-log "Creating temp directory for regions file"
-kubectl --kubeconfig="$KUBE_CONFIG" exec -n gbif-develop -it gbif-trino-worker-default-0 -- bash -c "mkdir -p /tmp/regions"
-kubectl --kubeconfig="$KUBE_CONFIG" exec -n gbif-develop -it gbif-trino-coordinator-default-0 -- bash -c "mkdir -p /tmp/regions"
-
-log "Copying regions file to the pods"
-kubectl --kubeconfig="$KUBE_CONFIG" cp analytics_regions.tsv gbif-develop/gbif-trino-worker-default-0:/tmp/regions -c trino
-kubectl --kubeconfig="$KUBE_CONFIG" cp analytics_regions.tsv gbif-develop/gbif-trino-coordinator-default-0:/tmp/regions -c trino
 
 log "Executing region_table.q"
 /usr/local/gbif/trino.jar --insecure --debug --server "$TRINO_SERVER" --catalog=hive \
