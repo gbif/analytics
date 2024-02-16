@@ -54,13 +54,14 @@ interp_taxon_file="trino/import/interp_taxon.q"
 /usr/local/gbif/trino.jar --insecure --debug --server "$TRINO_SERVER" --catalog=hive \
 --schema="$DB" --session=$SESSION_PARAMS_SNAPPY --execute="$(<$interp_taxon_file)" --user gbif --password
 
-log "Creating regions file"
-./trino/import/create_regions.sh
+# TODO: uncomment when we can run it with the stackable user
+#log "Creating regions file"
+#./trino/import/create_regions.sh
 
 # Copy regions to hdfs
-export JAVA_HOME=/usr/lib/jvm/java-11-openjdk-amd64
-./hadoop-3.3.4/bin/hdfs dfs -mkdir -p /tmp/regions
-./hadoop-3.3.4/bin/hdfs dfs -copyFromLocal analytics_regions.csv /tmp/regions
+#export JAVA_HOME=/usr/lib/jvm/java-11-openjdk-amd64
+#./hadoop-3.3.4/bin/hdfs dfs -mkdir -p /tmp/regions
+#./hadoop-3.3.4/bin/hdfs dfs -copyFromLocal analytics_regions.csv /tmp/regions
 
 log "Executing region_table.q"
 /usr/local/gbif/trino.jar --insecure --debug --server "$TRINO_SERVER" --catalog=hive \
