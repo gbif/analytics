@@ -1,15 +1,17 @@
 #!/bin/bash
 # Builds the occurrence_<date> tables. create_tmp_interp_tables.sh has to be run before this one
 
+set -e
+
 log () {
   echo $(tput setaf 6)$(date '+%Y-%m-%d %H:%M:%S ')$(tput setaf 14)$1$(tput sgr0)
 }
 
 SONAR_REDIRECT_URL=http://repository.gbif.org/repository/gbif/org/gbif/occurrence/occurrence-hive
 VERSION=$(xmllint --xpath "string(//release)" <(curl -s "${SONAR_REDIRECT_URL}/maven-metadata.xml"))
-FILENAME=occurrence-hive-${VERSION}-jar-with-dependencies.jar
+FILENAME=occurrence-hive-${VERSION}.jar
 SONAR_DOWNLOAD_URL=${SONAR_REDIRECT_URL}/${VERSION}/${FILENAME}
-curl -SsLo /tmp/occurrence-hive.jar "${SONAR_REDIRECT_URL}/${VERSION}/${FILENAME}"
+curl -SsL --fail -o /tmp/occurrence-hive.jar "${SONAR_REDIRECT_URL}/${VERSION}/${FILENAME}"
 
 declare -a mysql_snapshots=("20071219" "20080401" "20080627" "20081010" "20081217" "20090406" "20090617" "20090925" "20091216" "20100401" "20100726" "20101117" "20110221" "20110610" "20110905" "20120118" "20120326" "20120713" "20121031" "20121211" "20130220" "20130521" "20130709" "20130910")
 declare -a hbase_v1_snapshots=("20131220" "20140328")
