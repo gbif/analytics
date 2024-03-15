@@ -8,7 +8,9 @@ function logdate() {
     echo -n $(date +%A\ %H:%M\ %Z)
 }
 
-echo "Should have a sanity check that the CLB WS is running and the correct version."
+# Used in hive/normalize/create_tmp_interp_tables.sh
+echo "Checking for CLB on http://ws2.gbif.org:7000/"
+curl -Ss --fail 'http://ws2.gbif.org:7000/species/match?name=Abies'
 
 # Wait until the first of the month (UTC).
 while [[ $(date -u +%-d) -ne 1 ]]; do
