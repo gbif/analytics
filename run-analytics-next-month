@@ -38,6 +38,22 @@ date -u -R
     fi
 ) || echo $(logdate) "Failed to suspend map tiles build" | mail -s "Failed to suspend map tiles build." mblissett@gbif.org
 
+(
+    echo $(logdate) "Suspending clustering"
+    WID=$(oozie jobs -oozie http://c5oozie.gbif.org:11000/oozie/ -jobtype coordinator -filter name=Clustering | awk 'NR==3 {print $1}')
+    if [ -n "$WID" ]; then
+	oozie job -oozie http://c5oozie.gbif.org:11000/oozie/ -suspend $WID
+    fi
+) || echo $(logdate) "Failed to suspend clustering coordinator" | mail -s "Failed to suspend clustering coordinator." mblissett@gbif.org
+
+(
+    echo $(logdate) "Suspending GRSciColl cache"
+    WID=$(oozie jobs -oozie http://c5oozie.gbif.org:11000/oozie/ -jobtype coordinator -filter name=Grscicoll-cache | awk 'NR==3 {print $1}')
+    if [ -n "$WID" ]; then
+	oozie job -oozie http://c5oozie.gbif.org:11000/oozie/ -suspend $WID
+    fi
+) || echo $(logdate) "Failed to suspend GRSciColl cache" | mail -s "Failed to suspend GRSciColl cache." mblissett@gbif.org
+
 echo $(logdate) "Starting analytics!"
 
 cd /home/hdfs/analytics/hive/import/hdfs
@@ -50,8 +66,15 @@ sleep 1m
 echo $(logdate) "Snapshot $(date +%Y%m%d) (probably) is ready for backup." | mail -s "Quarterly snapshot ready for backup" mblissett@gbif.org
 
 cd /home/hdfs/analytics
-echo $(logdate) "Running analytics"
-./build.sh -registryStatistics -interpretSnapshots -summarizeSnapshots -downloadCsvs -processCsvs -makeFigures -queryDownloads || echo $(logdate) "Analytics exited with a failure code: $?"
+
+echo $(logdate) "Running Registry analytics"
+./build.sh -registryStatistics
+
+echo $(logdate) "Waiting 6 hours to allow monthly downloads some time."
+sleep 6h
+
+echo $(logdate) "Running Occurrence analytics"
+./build.sh -interpretSnapshots -summarizeSnapshots -downloadCsvs -processCsvs -makeFigures -queryDownloads || echo $(logdate) "Analytics exited with a failure code: $?"
 echo $(logdate) "Analytics completed"
 
 echo $(logdate) "Analytics script exited." | mail -s "Analytics script exited -- map tiles needs resuming." mblissett@gbif.org
