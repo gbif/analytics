@@ -17,7 +17,7 @@ log () {
 log "Creating schema $DB"
 /usr/local/gbif/trino.jar --insecure --debug --server "$TRINO_SERVER" --catalog=hive \
 --session=$SESSION_PARAMS_SNAPPY \
---execute="CREATE SCHEMA IF NOT EXISTS $DB with (LOCATION='hdfs://gbif-hdfs/stackable/warehouse/$DB.db');" \
+--execute="CREATE SCHEMA IF NOT EXISTS $DB with (LOCATION='hdfs://gbif-hdfs/user/hive/warehouse/$DB.db');" \
 --user gbif --password
 
 log "Building raw scripts"
