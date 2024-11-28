@@ -8,7 +8,7 @@ rm -f $INTERP_TAXON_FILE
 echo "
 DROP TABLE IF EXISTS snapshot.tmp_taxonomy_interp;
 CREATE TABLE snapshot.tmp_taxonomy_interp
-WITH (format = 'ORC')
+WITH (format = 'PARQUET')
 AS
 SELECT
   t1.taxon_key,

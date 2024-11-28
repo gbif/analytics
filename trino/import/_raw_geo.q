@@ -5,7 +5,7 @@ DROP TABLE IF EXISTS tmp_raw_geo;
 SET SESSION hive.compression_codec='SNAPPY';
 
 CREATE TABLE tmp_raw_geo
-WITH (format = 'ORC')
+WITH (format = 'PARQUET')
 AS
 SELECT
   CONCAT_WS('|',

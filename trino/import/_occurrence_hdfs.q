@@ -1,7 +1,7 @@
 DROP TABLE IF EXISTS occurrence_hdfs;
 
 CREATE TABLE occurrence_hdfs
-WITH (format = 'ORC')
+WITH (format = 'PARQUET')
 AS
 SELECT
   r.id,

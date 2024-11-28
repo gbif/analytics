@@ -17,7 +17,7 @@ ADD JAR hdfs://ha-nn/user/marcos/occurrence-hive.jar;
 CREATE TEMPORARY FUNCTION parseGeo AS 'org.gbif.occurrence.hive.udf.CoordinateCountryParseUDF';
 
 DROP TABLE IF EXISTS tmp_geo_interp;
-CREATE TABLE tmp_geo_interp STORED AS ORC AS
+CREATE TABLE tmp_geo_interp STORED AS PARQUET AS
 SELECT
   t1.geo_key,
   g.latitude,

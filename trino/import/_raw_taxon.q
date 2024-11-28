@@ -3,7 +3,7 @@
 DROP TABLE IF EXISTS tmp_raw_taxonomy;
 
 CREATE TABLE tmp_raw_taxonomy
-WITH (format = 'ORC')
+WITH (format = 'PARQUET')
 AS
 SELECT
   CONCAT_WS('|',

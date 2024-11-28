@@ -17,7 +17,7 @@ echo "--
 
 DROP TABLE IF EXISTS $DB.snapshots;
 CREATE TABLE $DB.snapshots
-WITH (format = 'ORC')
+WITH (format = 'PARQUET')
 AS
 SELECT * FROM
 (" > $prepare_file

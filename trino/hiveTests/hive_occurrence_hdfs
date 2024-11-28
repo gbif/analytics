@@ -26,7 +26,7 @@ CREATE TEMPORARY FUNCTION parseDate AS 'org.gbif.occurrence.hive.udf.DateParseUD
 CREATE TEMPORARY FUNCTION parseBoR AS 'org.gbif.occurrence.hive.udf.BasisOfRecordParseUDF';
 
 DROP TABLE IF EXISTS occurrence_hdfs;
-CREATE TABLE occurrence_hdfs STORED AS ORC AS
+CREATE TABLE occurrence_hdfs STORED AS PARQUET AS
 SELECT
   r.id,
   r.dataset_id,

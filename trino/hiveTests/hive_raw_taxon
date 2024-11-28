@@ -6,7 +6,7 @@ SET mapred.output.compression.codec=org.apache.hadoop.io.compress.SnappyCodec;
 -- the union all means we can run in parallel
 SET hive.exec.parallel=true;
 
-CREATE TABLE tmp_raw_taxonomy STORED AS ORC AS
+CREATE TABLE tmp_raw_taxonomy STORED AS PARQUET AS
 SELECT
   CONCAT_WS("|",
     t1.kingdom,

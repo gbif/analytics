@@ -1,7 +1,7 @@
 DROP TABLE IF EXISTS snapshot.tmp_geo_interp;
 
 CREATE TABLE snapshot.tmp_geo_interp
-WITH (format = 'ORC')
+WITH (format = 'PARQUET')
 AS
 SELECT
   t1.geo_key,

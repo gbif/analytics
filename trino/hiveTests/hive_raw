@@ -1,6 +1,6 @@
 SET hive.support.quoted.identifiers=none;
 
-CREATE TABLE raw STORED AS ORC AS SELECT gbifid AS id, datasetkey AS dataset_id, publishingorgkey AS publisher_id, publishingcountry AS publisher_country, `v_.*`
+CREATE TABLE raw STORED AS PARQUET AS SELECT gbifid AS id, datasetkey AS dataset_id, publishingorgkey AS publisher_id, publishingcountry AS publisher_country, `v_.*`
 FROM dev.occurrence
 LIMIT 441862;
 

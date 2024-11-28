@@ -10,7 +10,7 @@ echo "
 DROP TABLE IF EXISTS snapshot.occurrence_$SNAPSHOT_NAME;
 
 CREATE TABLE snapshot.occurrence_$SNAPSHOT_NAME
-WITH (format = 'ORC')
+WITH (format = 'PARQUET')
 AS
 SELECT
   r.id,

@@ -7,7 +7,7 @@ SET mapred.output.compression.codec=org.apache.hadoop.io.compress.SnappyCodec;
 SET hive.exec.parallel=true;
 
 
-CREATE TABLE tmp_raw_geo STORED AS ORC AS
+CREATE TABLE tmp_raw_geo STORED AS PARQUET AS
 SELECT
   CONCAT_WS("|",
     t1.latitude,

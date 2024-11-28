@@ -78,7 +78,7 @@ more data than hive in the tables created from the raw data.
 ````
 PREPARE interp_geo FROM
 CREATE TABLE tmp_geo_interp
-WITH (format = 'ORC')
+WITH (format = 'PARQUET')
 AS
 SELECT
   t1.geo_key,

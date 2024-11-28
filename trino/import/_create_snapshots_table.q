@@ -1,6 +1,6 @@
 DROP TABLE IF EXISTS snapshots;
 CREATE TABLE snapshots
-WITH (format = 'ORC')
+WITH (format = 'PARQUET')
 AS
 SELECT current_date AS snapshot, CAST(id AS BIGINT) as id, CAST(dataset_id AS varchar) AS dataset_id, CAST(publisher_id AS varchar) AS publisher_id,
     kingdom, phylum, class_rank, order_rank, family, genus, species, scientific_name, kingdom_id, phylum_id, class_id, order_id,
