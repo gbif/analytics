@@ -5,6 +5,7 @@ TRINO_SERVER=$2
 export TRINO_PASSWORD=$3
 
 SESSION_PARAMS_SNAPPY="hive.compression_codec=SNAPPY"
+SESSION_PARAMS_QUERY="query_max_execution_time='10000m'"
 
 sudo chmod +x trino/import/occurrence_*.sh
 sudo chmod +x trino/import/interp_taxon.sh
@@ -52,7 +53,7 @@ interp_taxon_file="trino/import/interp_taxon.q"
 ./trino/import/interp_taxon.sh $interp_taxon_file $clb_nub_location
 
 /usr/local/gbif/trino.jar --insecure --debug --server "$TRINO_SERVER" --catalog=hive \
---schema="$DB" --session=$SESSION_PARAMS_SNAPPY --execute="$(<$interp_taxon_file)" --user gbif --password
+--schema="$DB" --session=$SESSION_PARAMS_SNAPPY --session=$SESSION_PARAMS_QUERY --execute="$(<$interp_taxon_file)" --user gbif --password
 
 # TODO: uncomment when we can run it with the stackable user
 #log "Creating regions file"
