@@ -5,7 +5,7 @@ TRINO_SERVER=$2
 export TRINO_PASSWORD=$3
 
 SESSION_PARAMS_SNAPPY="hive.compression_codec=SNAPPY"
-SESSION_PARAMS_QUERY="query_max_execution_time='10000m'"
+SESSION_PARAMS_QUERY="query_max_execution_time=10000m"
 
 sudo chmod +x trino/import/occurrence_*.sh
 sudo chmod +x trino/import/interp_taxon.sh
