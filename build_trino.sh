@@ -73,8 +73,8 @@ fi
 if [ $summarizeSnapshots == "true" ]; then
    log 'Running Summarize Snapshots stages (Existing tables are replaced)'
     prepare_file="trino/process/prepare.q"
-    ./trino/process/build_prepare_script.sh $prepare_file $destination_db
-    log 'Hive stage: Union all snapshots into a table'
+    ./trino/process/build_prepare_script.sh $prepare_file $destination_db $snapshot_db
+    log 'Trino stage: Union all snapshots into a table'
     /usr/local/gbif/trino.jar --insecure --debug --server "$TRINO_SERVER" --catalog=hive \
       --schema="$destination_db" --session="hive.compression_codec=SNAPPY" --execute="$(<$prepare_file)" --user gbif --password
 
