@@ -2,7 +2,6 @@
 
 TRINO_SERVER=$1
 export TRINO_PASSWORD=$2
-KUBE_CONFIG=$3
 
 registryStatistics="false"
 interpretSnapshots="false"
@@ -62,7 +61,7 @@ fi
 
 if [ $interpretSnapshots == "true" ]; then
   log 'Running Interpret Snapshots stages (import and geo/taxonomy table creation)'
-  ./trino/import/create_tables.sh $destination_db "$TRINO_SERVER" "$TRINO_PASSWORD" "$KUBE_CONFIG"
+  ./trino/import/create_tables.sh $destination_db "$TRINO_SERVER" "$TRINO_PASSWORD"
 
   log '###################################'
   log 'INTERPRET SNAPSHOTS STAGE COMPLETED'
