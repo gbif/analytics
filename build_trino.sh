@@ -76,7 +76,7 @@ if [ $summarizeSnapshots == "true" ]; then
     log "Creating schema $destination_db"
     /usr/local/gbif/trino.jar --insecure --debug --server "$TRINO_SERVER" --catalog=hive \
       --session="hive.compression_codec=SNAPPY" \
-      --execute="CREATE SCHEMA IF NOT EXISTS $$destination_db with (LOCATION='hdfs://gbif-hdfs/user/hive/warehouse/$destination_db.db');" \
+      --execute="CREATE SCHEMA IF NOT EXISTS $destination_db with (LOCATION='hdfs://gbif-hdfs/user/hive/warehouse/$destination_db.db');" \
       --user gbif --password
 
     prepare_file="trino/process/prepare.q"
