@@ -79,7 +79,7 @@ if [ $summarizeSnapshots == "true" ]; then
       --execute="CREATE SCHEMA IF NOT EXISTS $destination_db with (LOCATION='hdfs://gbif-hdfs/user/hive/warehouse/$destination_db.db');" \
       --user gbif --password
 
-    prepare_file="trino/process/prepare.q"
+    prepare_file="trino/process/prepare.query"
     ./trino/process/build_prepare_script.sh $prepare_file $destination_db $snapshot_db
     log 'Trino stage: Union all snapshots into a table'
     /usr/local/gbif/trino.jar --insecure --debug --server "$TRINO_SERVER" --catalog=hive \
