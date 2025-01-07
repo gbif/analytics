@@ -2,7 +2,7 @@
 
 DB=$1
 
-SOURCE_DB=/stackable/warehouse/$DB.db
+SOURCE_DB=/user/hive/warehouse/$DB.db
 DESTINATION_DIR=hadoop
 
 export JAVA_HOME=/usr/lib/jvm/java-17-openjdk-amd64
