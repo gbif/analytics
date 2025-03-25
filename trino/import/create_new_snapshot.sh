@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# NOTE: the v_* fields have to be updated each time we create an snapshot because trino doesn't allow to
+# select fields by prefix. It'd be ideal to automate this
+
 TRINO_SERVER=$1
 export TRINO_PASSWORD=$2
 
@@ -11,8 +14,11 @@ SOURCE_TABLE=$6
 query="CREATE TABLE $SNAPSHOT_DB.raw_$SNAPSHOT_NAME
 WITH (format = 'PARQUET')
 AS
-SELECT gbifid AS id, datasetkey AS dataset_id, publishingorgkey AS publisher_id, publishingcountry AS publisher_country
-,v_accessrights
+SELECT gbifid AS id
+,datasetkey AS dataset_id
+,publishingorgkey AS publisher_id
+,publishingcountry AS publisher_country
+,v_accessrights varchar
 ,v_bibliographiccitation
 ,v_language
 ,v_license
@@ -43,7 +49,9 @@ SELECT gbifid AS id, datasetkey AS dataset_id, publishingorgkey AS publisher_id,
 ,v_sex
 ,v_lifestage
 ,v_reproductivecondition
+,v_caste
 ,v_behavior
+,v_vitality
 ,v_establishmentmeans
 ,v_degreeofestablishment
 ,v_pathway
@@ -64,9 +72,13 @@ SELECT gbifid AS id, datasetkey AS dataset_id, publishingorgkey AS publisher_id,
 ,v_associatedorganisms
 ,v_previousidentifications
 ,v_organismremarks
+,v_materialentityid
+,v_materialentityremarks
+,v_verbatimlabel
 ,v_materialsampleid
 ,v_eventid
 ,v_parenteventid
+,v_eventtype
 ,v_fieldnumber
 ,v_eventdate
 ,v_eventtime
@@ -118,7 +130,7 @@ SELECT gbifid AS id, datasetkey AS dataset_id, publishingorgkey AS publisher_id,
 ,v_verbatimlatitude
 ,v_verbatimlongitude
 ,v_verbatimcoordinatesystem
-,v_verbatimsrs
+, v_verbatimsrs
 ,v_footprintwkt
 ,v_footprintsrs
 ,v_footprintspatialfit
@@ -161,7 +173,7 @@ SELECT gbifid AS id, datasetkey AS dataset_id, publishingorgkey AS publisher_id,
 ,v_parentnameusageid
 ,v_originalnameusageid
 ,v_nameaccordingtoid
-,v_namepublishedinid
+, v_namepublishedinid
 ,v_taxonconceptid
 ,v_scientificname
 ,v_acceptednameusage
@@ -175,8 +187,11 @@ SELECT gbifid AS id, datasetkey AS dataset_id, publishingorgkey AS publisher_id,
 ,v_phylum
 ,v_class
 ,v_order
+,v_superfamily
 ,v_family
 ,v_subfamily
+,v_tribe
+,v_subtribe
 ,v_genus
 ,v_genericname
 ,v_subgenus
@@ -191,7 +206,7 @@ SELECT gbifid AS id, datasetkey AS dataset_id, publishingorgkey AS publisher_id,
 ,v_nomenclaturalcode
 ,v_taxonomicstatus
 ,v_nomenclaturalstatus
-,v_taxonremarks
+,v_taxonremark
 FROM $SOURCE_DB.$SOURCE_TABLE;"
 
 /data/trino.jar --insecure --debug --server "$TRINO_SERVER" --catalog=hive \
