@@ -5,7 +5,7 @@ DB=$1
 SOURCE_DB=/user/hive/warehouse/$DB.db
 DESTINATION_DIR=hadoop
 
-export JAVA_HOME=/usr/lib/jvm/java-17-openjdk-amd64
+#export JAVA_HOME=/usr/lib/jvm/java-17-openjdk-amd64
 
 # This might be a symlink to somewhere with more disk space
 mkdir -p $DESTINATION_DIR
