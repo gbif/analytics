@@ -16,7 +16,7 @@ log () {
 
 # Create schema first if it doesn't exist
 log "Creating schema $DB"
-/usr/local/gbif/trino.jar --insecure --debug --server "$TRINO_SERVER" --catalog=hive \
+/data/trino.jar --insecure --debug --server "$TRINO_SERVER" --catalog=hive \
 --session=$SESSION_PARAMS_SNAPPY \
 --execute="CREATE SCHEMA IF NOT EXISTS $DB with (LOCATION='hdfs://gbif-hdfs/user/hive/warehouse/$DB.db');" \
 --user gbif --password
@@ -25,15 +25,15 @@ log "Building raw scripts"
 ./trino/import/build_raw_scripts.sh
 
 log "Executing raw_geo.q"
-/usr/local/gbif/trino.jar --insecure --debug --server "$TRINO_SERVER" --catalog=hive \
+/data/trino.jar --insecure --debug --server "$TRINO_SERVER" --catalog=hive \
 --schema="$DB" --session=$SESSION_PARAMS_SNAPPY --execute="$(<trino/import/raw_geo.q)" --user gbif --password
 
 log "Executing raw_taxon.q"
-/usr/local/gbif/trino.jar --insecure --debug --server "$TRINO_SERVER" --catalog=hive \
+/data/trino.jar --insecure --debug --server "$TRINO_SERVER" --catalog=hive \
 --schema="$DB" --session=$SESSION_PARAMS_SNAPPY --execute="$(<trino/import/raw_taxonomy.q)" --user gbif --password
 
 log "Executing interp_geo.q"
-/usr/local/gbif/trino.jar --insecure --debug --server "$TRINO_SERVER" --catalog=hive \
+/data/trino.jar --insecure --debug --server "$TRINO_SERVER" --catalog=hive \
 --schema="$DB" --session=$SESSION_PARAMS_SNAPPY --execute="$(<trino/import/interp_geo.q)" --user gbif --password
 
 log "Executing interp_taxon.q"
@@ -46,13 +46,13 @@ log "Executing interp_taxon.q"
 #clb_nub_host=$(zookeeper-client -server $zk_servers get /prod/services/checklistbank-nub-ws/$clb_nub_zk_node 2> /dev/null | grep $clb_nub_zk_node | tail -n 1 | jq -r .address)
 #clb_nub_port=$(zookeeper-client -server $zk_servers get /prod/services/checklistbank-nub-ws/$clb_nub_zk_node 2> /dev/null | grep $clb_nub_zk_node | tail -n 1 | jq -r .port)
 #clb_nub_location=http://$clb_nub_host:$clb_nub_port/
-clb_nub_location=https://api.gbif-uat2.org/v1/
+clb_nub_location=https://api.gbif.org/v1/
 log "Address is $clb_nub_location"
 
 interp_taxon_file="trino/import/interp_taxon.q"
 ./trino/import/interp_taxon.sh $interp_taxon_file $clb_nub_location
 
-/usr/local/gbif/trino.jar --insecure --debug --server "$TRINO_SERVER" --catalog=hive \
+/data/trino.jar --insecure --debug --server "$TRINO_SERVER" --catalog=hive \
 --schema="$DB" --session=$SESSION_PARAMS_SNAPPY --session=$SESSION_PARAMS_QUERY --execute="$(<$interp_taxon_file)" --user gbif --password
 
 # TODO: uncomment when we can run it with the stackable user
@@ -65,7 +65,7 @@ interp_taxon_file="trino/import/interp_taxon.q"
 #./hadoop-3.3.4/bin/hdfs dfs -copyFromLocal analytics_regions.csv /tmp/regions
 
 log "Executing region_table.q"
-/usr/local/gbif/trino.jar --insecure --debug --server "$TRINO_SERVER" --catalog=hive \
+/data/trino.jar --insecure --debug --server "$TRINO_SERVER" --catalog=hive \
 --schema="$DB" --session=$SESSION_PARAMS_SNAPPY --execute="$(<trino/import/region_table.q)" --user gbif --password
 
 log "Create occurrence tables"

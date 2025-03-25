@@ -74,7 +74,7 @@ if [ $summarizeSnapshots == "true" ]; then
    log 'Running Summarize Snapshots stages (Existing tables are replaced)'
     # Create schema first if it doesn't exist
     log "Creating schema $destination_db"
-    /usr/local/gbif/trino.jar --insecure --debug --server "$TRINO_SERVER" --catalog=hive \
+    /data/trino.jar --insecure --debug --server "$TRINO_SERVER" --catalog=hive \
       --session="hive.compression_codec=SNAPPY" \
       --execute="CREATE SCHEMA IF NOT EXISTS $destination_db with (LOCATION='hdfs://gbif-hdfs/user/hive/warehouse/$destination_db.db');" \
       --user gbif --password
@@ -82,14 +82,14 @@ if [ $summarizeSnapshots == "true" ]; then
     prepare_file="trino/process/prepare.query"
     ./trino/process/build_prepare_script.sh $prepare_file $destination_db $snapshot_db
     log 'Trino stage: Union all snapshots into a table'
-    /usr/local/gbif/trino.jar --insecure --debug --server "$TRINO_SERVER" --catalog=hive \
+    /data/trino.jar --insecure --debug --server "$TRINO_SERVER" --catalog=hive \
       --schema="$destination_db" --session="hive.compression_codec=SNAPPY" --execute="$(<$prepare_file)" --user gbif --password
 
     files=$(find trino/process -name '*.q')
     for f in $files
     do
       log "Executing $f"
-      /usr/local/gbif/trino.jar --insecure --debug --server "$TRINO_SERVER" --catalog=hive \
+      /data/trino.jar --insecure --debug --server "$TRINO_SERVER" --catalog=hive \
       --schema="$destination_db" --session="hive.compression_codec=NONE" --execute="$(<"$f")" --user gbif --password
     done
 
