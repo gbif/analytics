@@ -40,13 +40,14 @@ log "Executing interp_taxon.q"
 
 # Use the webservice directly.
 # (There's no use to the caching, every query is different. And it's a huge load on Varnish.)
-log 'Finding address of checklistbank-nub-ws'
-zk_servers=sc4n1.gbif.org:30578,sc4n3.gbif.org:30578,uc6n10.gbif.org:30578,uc6n11.gbif.org:30578,uc6n12.gbif.org:30578
-clb_nub_zk_node=$(zookeeper-client -server $zk_servers ls /prod/services/checklistbank-nub-ws 2> /dev/null | grep --only-matching ........-....-....-....-............ | tail -n 1)
-clb_nub_host=$(zookeeper-client -server $zk_servers get /prod/services/checklistbank-nub-ws/$clb_nub_zk_node 2> /dev/null | grep $clb_nub_zk_node | tail -n 1 | jq -r .address)
-clb_nub_port=$(zookeeper-client -server $zk_servers get /prod/services/checklistbank-nub-ws/$clb_nub_zk_node 2> /dev/null | grep $clb_nub_zk_node | tail -n 1 | jq -r .port)
-clb_nub_location=http://$clb_nub_host:$clb_nub_port/
+# log 'Finding address of checklistbank-nub-ws'
+# zk_servers=sc4n1.gbif.org:30578,sc4n3.gbif.org:30578,uc6n10.gbif.org:30578,uc6n11.gbif.org:30578,uc6n12.gbif.org:30578
+# clb_nub_zk_node=$(zookeeper-client -server $zk_servers ls /prod/services/checklistbank-nub-ws 2> /dev/null | grep --only-matching ........-....-....-....-............ | tail -n 1)
+# clb_nub_host=$(zookeeper-client -server $zk_servers get /prod/services/checklistbank-nub-ws/$clb_nub_zk_node 2> /dev/null | grep $clb_nub_zk_node | tail -n 1 | jq -r .address)
+# clb_nub_port=$(zookeeper-client -server $zk_servers get /prod/services/checklistbank-nub-ws/$clb_nub_zk_node 2> /dev/null | grep $clb_nub_zk_node | tail -n 1 | jq -r .port)
+# clb_nub_location=http://$clb_nub_host:$clb_nub_port/
 #clb_nub_location=https://api.gbif.org/v1/
+clb_nub_location=http://uatws-vh.gbif-uat.org:9000/
 log "Address is $clb_nub_location"
 
 interp_taxon_file="trino/import/interp_taxon.q"
