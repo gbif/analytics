@@ -206,7 +206,7 @@ SELECT gbifid AS id
 ,v_nomenclaturalcode
 ,v_taxonomicstatus
 ,v_nomenclaturalstatus
-,v_taxonremark
+,v_taxonremarks
 FROM $SOURCE_DB.$SOURCE_TABLE;"
 
 /data/trino.jar --insecure --debug --server "$TRINO_SERVER" --catalog=hive \
