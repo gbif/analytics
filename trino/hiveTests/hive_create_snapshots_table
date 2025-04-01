@@ -1,0 +1,16 @@
+SET hive.exec.parallel=true;
+
+-- Set up memory for YARN
+SET mapreduce.map.memory.mb = 4096;
+SET mapreduce.reduce.memory.mb = 4096;
+SET mapreduce.map.java.opts = -Xmx3072m;
+SET mapreduce.reduce.java.opts = -Xmx3072m;
+
+DROP TABLE IF EXISTS snapshots;
+
+CREATE TABLE snapshots STORED AS PARQUET AS
+SELECT "hdfs" AS snapshot, CAST(id AS BIGINT), CAST(dataset_id AS String) AS dataset_id, CAST(publisher_id AS String) AS publisher_id, kingdom, phylum, class_rank, order_rank, family, genus, species, scientific_name, kingdom_id, phylum_id, class_id, order_id, family_id, genus_id, species_id, taxon_id, basis_of_record, latitude, longitude, country, day, month, year, publisher_country, gbif_region, publisher_gbif_region
+FROM occurrence_hdfs;
+
+Time taken: 22.347 seconds
+Time taken: 20.234 seconds

@@ -1,0 +1,40 @@
+-- Fix UDF classpath issues
+SET mapreduce.task.classpath.user.precedence = true;
+SET mapreduce.user.classpath.first=true;
+
+-- Use Snappy
+SET hive.exec.compress.output=true;
+SET mapred.output.compression.type=BLOCK;
+SET mapred.output.compression.codec=org.apache.hadoop.io.compress.SnappyCodec;
+
+-- Control the number of mappers.  About 50 meant this script completed in 2 minutes in 2022-10.
+SET hive.input.format=org.apache.hadoop.hive.ql.io.CombineHiveInputFormat;
+SET hive.merge.mapfiles = true;
+SET mapreduce.input.fileinputformat.split.minsize = 20000000; -- 20 MB
+SET mapreduce.input.fileinputformat.split.maxsize = 90000000; -- 90 MB
+
+ADD JAR hdfs://ha-nn/user/marcos/occurrence-hive.jar;
+CREATE TEMPORARY FUNCTION parseGeo AS 'org.gbif.occurrence.hive.udf.CoordinateCountryParseUDF';
+
+DROP TABLE IF EXISTS tmp_geo_interp;
+CREATE TABLE tmp_geo_interp STORED AS PARQUET AS
+SELECT
+  t1.geo_key,
+  g.latitude,
+  g.longitude,
+  g.country
+FROM (
+  SELECT
+    geo_key,
+    parseGeo("/mnt/auto/maps/geocode/layers/", latitude, longitude, country) g
+  FROM tmp_raw_geo
+) t1;
+
+Time taken: 21.51 seconds
+Time taken: 22.244 seconds
+Time taken: 20.609 seconds
+
+
+> select count(*) from tmp_geo_interp = 88778
+
+Time taken: 22.168 seconds

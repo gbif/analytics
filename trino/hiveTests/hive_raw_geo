@@ -1,0 +1,33 @@
+-- Use Snappy
+SET hive.exec.compress.output=true;
+SET mapred.output.compression.type=BLOCK;
+SET mapred.output.compression.codec=org.apache.hadoop.io.compress.SnappyCodec;
+
+-- the union all means we can run in parallel
+SET hive.exec.parallel=true;
+
+
+CREATE TABLE tmp_raw_geo STORED AS PARQUET AS
+SELECT
+  CONCAT_WS("|",
+    t1.latitude,
+    t1.longitude,
+    t1.country
+  ) AS geo_key,
+  t1.latitude,
+  t1.longitude,
+  t1.country
+FROM
+  (
+  SELECT COALESCE(v_decimallatitude,v_verbatimlatitude,"") AS latitude, COALESCE(v_decimallongitude,v_verbatimlongitude,"") AS longitude, COALESCE(v_country,"") AS country
+    FROM raw
+    GROUP BY COALESCE(v_decimallatitude,v_verbatimlatitude,""), COALESCE(v_decimallongitude,v_verbatimlongitude,""), COALESCE(v_country,"")
+  ) t1
+    GROUP BY t1.latitude, t1.longitude, t1.country
+    ORDER BY rand();
+
+Time taken: 44.124 seconds
+Time taken: 48.906 seconds
+Time taken: 46.305 seconds
+
+
