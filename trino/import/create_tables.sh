@@ -63,7 +63,7 @@ log "Creating regions file"
 
 # Copy regions to hdfs
 $HADOOP_HOME/bin/hdfs dfs -mkdir -p /tmp/regions
-$HADOOP_HOME/bin/hdfs dfs -copyFromLocal analytics_regions.csv /tmp/regions
+$HADOOP_HOME/bin/hdfs dfs -put -f analytics_regions.csv /tmp/regions
 
 log "Executing region_table.q"
 /data/trino.jar --insecure --debug --server "$TRINO_SERVER" --catalog=hive \
