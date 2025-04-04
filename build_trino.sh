@@ -134,7 +134,7 @@ if [ $processCsvs == "true" ]; then
   log 'R script occ_cells.R'
   Rscript R/csv/occ_cells.R
   log 'Python script occ_density.py'
-  $PyScript R/geotiff/occ_density.py
+  PyScript R/geotiff/occ_density.py
 
   log 'R script spe_kingdom.R'
   Rscript R/csv/spe_kingdom.R
