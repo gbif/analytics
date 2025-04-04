@@ -45,7 +45,7 @@ for country total in ${(kv)publishingOrganizationsPerCountry}; do
     echo "$country	$total" >> $countFile
 done
 
-./data/analytics/registry/generate-country-map.sh -i "$countFile" -o "$mapSvg" -t "$title" -l "$legend"
+./registry/generate-country-map.sh -i "$countFile" -o "$mapSvg" -t "$title" -l "$legend"
 
 ln -sf $mapSvg:t /data/analytics/registry/registry-report/organization/active_gbif_publishing_organizations_by_country.svg
 ln -sf $mapData:t /data/analytics/registry/registry-report/organization/active_gbif_publishing_organizations.tsv
