@@ -34,7 +34,7 @@ export LANG=en_GB.UTF-8
 # user running the makeFigures command because font stuff will be
 # written there on first load
 Rscript="docker run --rm -it -v $PWD:/analytics/ -v $(realpath hadoop/):/analytics/hadoop/ docker.gbif.org/analytics-figures Rscript"
-PyScript="docker run --rm -it -v $PWD:/analytics/ -v $(realpath hadoop/):/analytics/hadoop/ docker.gbif.org/analytics-figures python3"
+#PyScript="docker run --rm -it -v $PWD:/analytics/ -v $(realpath hadoop/):/analytics/hadoop/ docker.gbif.org/analytics-figures python3"
 # Set the permissions correctly afterwards
 RscriptChown="docker run --rm -it -v $PWD:/analytics/ docker.gbif.org/analytics-figures chown --recursive --from root:root --reference build.sh report"
 
@@ -44,7 +44,7 @@ log () {
 
 if [ $registryStatistics == "true" ]; then
   log 'Removing the registry statistics output folder'
-  rm -Rf registry-report/
+  rm -Rf registry/registry-report/
   mkdir -p registry/registry-report/dataset registry/registry-report/organization registry/registry-report/node
 
   log 'Running Registry Statistics stage'
@@ -134,7 +134,7 @@ if [ $processCsvs == "true" ]; then
   log 'R script occ_cells.R'
   Rscript R/csv/occ_cells.R
   log 'Python script occ_density.py'
-  PyScript R/geotiff/occ_density.py
+  python3 R/geotiff/occ_density.py
 
   log 'R script spe_kingdom.R'
   Rscript R/csv/spe_kingdom.R

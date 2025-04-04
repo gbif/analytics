@@ -4,7 +4,7 @@
 # by about/publishedBy, and futher by snapshot.
 #
 # For each of these create a matrix of 3600×1800 pixels, with the value equal to the density.
-# 
+#
 # Write this as a GeoTIFF.
 #
 
@@ -15,8 +15,8 @@ import pandas as pd
 from osgeo import gdal
 from osgeo import osr
 
-sourceDir = "hadoop"
-targetDir = "report"
+sourceDir = "/data/analytics/hadoop"
+targetDir = "/data/analytics/report"
 
 image_size = (1800, 3600)
 
