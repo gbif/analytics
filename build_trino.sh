@@ -36,7 +36,7 @@ export LANG=en_GB.UTF-8
 Rscript="docker run --rm -it -v $PWD:/analytics/ -v $(realpath hadoop/):/analytics/hadoop/ docker.gbif.org/analytics-figures Rscript"
 #PyScript="docker run --rm -it -v $PWD:/analytics/ -v $(realpath hadoop/):/analytics/hadoop/ docker.gbif.org/analytics-figures python3"
 # Set the permissions correctly afterwards
-RscriptChown="docker run --rm -it -v $PWD:/analytics/ docker.gbif.org/analytics-figures chown --recursive --from root:root --reference build.sh report"
+#RscriptChown="docker run --rm -it -v $PWD:/analytics/ docker.gbif.org/analytics-figures chown --recursive --from root:root --reference build.sh report"
 
 log () {
   echo $(tput setaf 3)$(date '+%Y-%m-%d %H:%M:%S ')$(tput setaf 11)$1$(tput sgr0)
@@ -146,7 +146,7 @@ if [ $processCsvs == "true" ]; then
   Rscript R/csv/spe_repatriation.R
   log 'R script spe.R'
   Rscript R/csv/spe.R
-  RscriptChown
+  chown --recursive --from root:root --reference build.sh report
 
   log '############################'
   log 'PROCESS CSVS STAGE COMPLETED'
@@ -158,7 +158,7 @@ fi
 if [ $makeFigures == "true" ]; then
   log 'Generating the figures'
   Rscript R/report.R
-  RscriptChown
+  chown --recursive --from root:root --reference build.sh report
 
   log 'Copying placeholders'
   country_reports/copy_placeholders.sh
