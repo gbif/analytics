@@ -15,8 +15,8 @@
 isoDate=$(date +%Y-%m-%d)
 longDate=$(date +'%-d %B %Y')
 
-mapSvg=registry-report/organization/active_gbif_publishing_organizations_by_country_$isoDate.svg
-mapData=registry-report/organization/active_gbif_publishing_organizations_$isoDate.tsv
+mapSvg=/data/analytics/registry/registry-report/organization/active_gbif_publishing_organizations_by_country_$isoDate.svg
+mapData=/data/analytics/registry/registry-report/organization/active_gbif_publishing_organizations_$isoDate.tsv
 
 title="Active GBIF data publishing organizations by country or area.  $longDate."
 legend="Number of active publishers by country or area.  $longDate."
@@ -45,16 +45,16 @@ for country total in ${(kv)publishingOrganizationsPerCountry}; do
     echo "$country	$total" >> $countFile
 done
 
-./registry/generate-country-map.sh -i "$countFile" -o "$mapSvg" -t "$title" -l "$legend"
+./data/analytics/registry/generate-country-map.sh -i "$countFile" -o "$mapSvg" -t "$title" -l "$legend"
 
-ln -sf $mapSvg:t registry-report/organization/active_gbif_publishing_organizations_by_country.svg
-ln -sf $mapData:t registry-report/organization/active_gbif_publishing_organizations.tsv
+ln -sf $mapSvg:t /data/analytics/registry/registry-report/organization/active_gbif_publishing_organizations_by_country.svg
+ln -sf $mapData:t /data/analytics/registry/registry-report/organization/active_gbif_publishing_organizations.tsv
 
 # Report new countries
 echo "Newly publishing countries (check if any small areas will need highlighting)"
 if ! diff \
     <(curl -Ss https://analytics-files.gbif.org/registry/organization/active_gbif_publishing_organizations.tsv | cut -d $'\t' -f 2 | sort -u) \
-    <(cat registry-report/organization/active_gbif_publishing_organizations.tsv | cut -d $'\t' -f 2 | sort -u) \
+    <(cat /data/analytics/registry/registry-report/organization/active_gbif_publishing_organizations.tsv | cut -d $'\t' -f 2 | sort -u) \
     > registry-report-new-countries; then
     cat registry-report-new-countries | mail -s "Newly publishing countries, check if any are small and will need special highlighting" mblissett@gbif.org
 fi
