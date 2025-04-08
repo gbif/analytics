@@ -47,9 +47,12 @@ screen -L -S analytics
 
 (Detach from the screen with "^A d", reattach with `screen -x`.)
 
-- rsync the CSVs, GeoTIFFs, figures and maps to `root@analytics-files.gbif-uat.org:/var/www/html/analytics-files/` and check (this server is also used for gbif-dev.org)
+- copy the CSVs, GeoTIFFs, figures and maps to `root@analytics-files.gbif-uat.org:/var/www/html/analytics-files/` and check (this server is also used for gbif-dev.org)
   `rsync -avn report/ root@analytics-files.gbif-uat.org:/var/www/html/analytics-files/`
   `rsync -avn registry-report/ root@analytics-files.gbif-uat.org:/var/www/html/analytics-files/registry/`
+  or
+  `kubectl exec gbif-toolbox-0 -- tar -cf - -C /data/analytics/report . | pv | sh -c 'ssh root@analytics-files.gbif-uat.org tar -C /var/www/html/analytics-files -xf -'
+  `kubectl exec gbif-toolbox-0 -- tar -cf - -C /data/analytics/registry/registry-report . | pv | sh -c 'ssh root@analytics-files.gbif-uat.org tar -C /var/www/html/analytics-files/registry -xf -'
 
 ### Steps to build country reports after the R part is done
 - Check the download statistics are up-to-date (Nagios should be alerting if not, but https://api.gbif.org/v1/occurrence/download/statistics/downloadedRecordsByDataset?fromDate=2023-03). If not, update with https://github.com/gbif/registry/blob/master/populate_downloaded_records_statistics.sh
@@ -61,6 +64,7 @@ screen -L -S analytics
 - rsync the CSVs, GeoTIFFs, figures and maps to `root@analytics-files.gbif.org:/var/www/html/analytics-files/`
   `rsync -avn report/ root@analytics-files.gbif.org:/var/www/html/analytics-files/`
   `rsync -avn registry-report/ root@analytics-files.gbif.org:/var/www/html/analytics-files/registry/`
+  or with `kubectl` commands as above.
 - rsync the reports to `root@analytics-files.gbif.org:/var/www/html/analytics-files/`
   `rsync -av country-report/ root@analytics-files.gbif.org:/var/www/html/analytics-files/country/`
 - Check https://www.gbif.org/analytics, write an email to staff@gbif.org giving heads up on the new data, and accept the many accolades due your outstanding achievement in the field of excellence!

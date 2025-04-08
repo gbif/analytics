@@ -18,7 +18,8 @@ if (Sys.info()[['sysname']] == "Windows") {
     print("Cannot run in parallel on Windows.")
     cores <- 1
 } else {
-    cores <- detectCores()
+    #cores <- detectCores()
+    cores <- 6
     print(sprintf("Will run in parallel on %d cores.", cores))
 }
 
