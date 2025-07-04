@@ -25,3 +25,11 @@ Times for the Q1-2023 analytics:
 * Download CSVs stage: 15 minutes
 * Process CSVs stage: 1 hour
 * Figures stage: 1½ hours
+
+
+Trino for the Q2-2025 analytics:
+* Interpret snapshots stage: 37h
+* Summarize snapshots stage: 17h
+* Download CSVs stage: 3m
+* Process CSVs stage: 1h 20m
+* Figures stage: 2h 15m
