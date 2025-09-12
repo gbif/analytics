@@ -21,7 +21,7 @@ shifted AS (
     ST_WrapX(
       ST_Translate(
         ST_Difference(p.geom, l.geom),
-        -15,
+        -11,
         0
       ),
       -180,
@@ -64,7 +64,7 @@ usa AS (
   SELECT
            ST_Translate(
              ST_SimplifyPreserveTopology(ST_Difference(p.geom, l.geom), 0.05),
-             -15,
+             -11,
              0
            ) AS geom,
          iso_a2,
