@@ -14,7 +14,7 @@
 # https://commons.wikimedia.org/wiki/File:BlankMap-World.svg
 #
 
-projection=robinson
+projection=equalearth
 
 land='#fbfbfb'
 gt1='#cbdbc5'
@@ -77,6 +77,10 @@ echo >> $outputSvg
 
 echo "/* Begin calculated styles */" >> $outputSvg
 echo >> $outputSvg
+
+# For maps up to 2021-04-01
+# echo "/* Generated from approximate historical data — see https://github.com/gbif/analytics/pull/25 for limitations. */" >> $outputSvg
+# echo >> $outputSvg
 
 typeset -A countPerCountry
 

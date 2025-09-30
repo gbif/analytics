@@ -15,7 +15,8 @@
 isoDate=$(date +%Y-%m-%d)
 longDate=$(date +'%-d %B %Y')
 
-mapSvg=/data/analytics/registry/registry-report/organization/active_gbif_publishing_organizations_by_country_$isoDate.svg
+robMapSvg=/data/analytics/registry/registry-report/organization/active_gbif_publishing_organizations_by_country_robinson_$isoDate.svg
+eqaMapSvg=/data/analytics/registry/registry-report/organization/active_gbif_publishing_organizations_by_country_$isoDate.svg
 mapData=/data/analytics/registry/registry-report/organization/active_gbif_publishing_organizations_$isoDate.tsv
 
 title="Active GBIF data publishing organizations by country or area.  $longDate."
@@ -45,9 +46,10 @@ for country total in ${(kv)publishingOrganizationsPerCountry}; do
     echo "$country	$total" >> $countFile
 done
 
-./registry/generate-country-map.sh -i "$countFile" -o "$mapSvg" -t "$title" -l "$legend"
+./registry/generate-country-map.sh -p robinson   -i "$countFile" -o "$robMapSvg" -t "$title" -l "$legend"
+./registry/generate-country-map.sh -p equalearth -i "$countFile" -o "$eqaMapSvg" -t "$title" -l "$legend"
 
-ln -sf $mapSvg:t /data/analytics/registry/registry-report/organization/active_gbif_publishing_organizations_by_country.svg
+ln -sf $eqaMapSvg:t /data/analytics/registry/registry-report/organization/active_gbif_publishing_organizations_by_country.svg
 ln -sf $mapData:t /data/analytics/registry/registry-report/organization/active_gbif_publishing_organizations.tsv
 
 # Report new countries
