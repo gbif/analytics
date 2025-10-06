@@ -47,18 +47,18 @@ screen -L -S analytics
 
 (Detach from the screen with "^A d", reattach with `screen -x`.)
 
-- copy the CSVs, GeoTIFFs, figures and maps to `root@analytics-files.gbif-uat.org:/var/www/html/analytics-files/` and check (this server is also used for gbif-dev.org)
-  `rsync -avn report/ root@analytics-files.gbif-uat.org:/var/www/html/analytics-files/`
-  `rsync -avn registry-report/ root@analytics-files.gbif-uat.org:/var/www/html/analytics-files/registry/`
+- copy the CSVs, GeoTIFFs, figures and maps to `root@analytics-files.gbif-test.org:/var/www/html/analytics-files/` and check (this server is also used for gbif-dev.org)
+  `rsync -avn report/ root@analytics-files.gbif-test.org:/var/www/html/analytics-files/`
+  `rsync -avn registry-report/ root@analytics-files.gbif-test.org:/var/www/html/analytics-files/registry/`
   or
-  `kubectl exec gbif-toolbox-0 -- tar -cf - -C /data/analytics/report . | pv | sh -c 'ssh root@analytics-files.gbif-uat.org tar -C /var/www/html/analytics-files -xf -'
-  `kubectl exec gbif-toolbox-0 -- tar -cf - -C /data/analytics/registry/registry-report . | pv | sh -c 'ssh root@analytics-files.gbif-uat.org tar -C /var/www/html/analytics-files/registry -xf -'
+  `kubectl --context production exec gbif-toolbox-0 -- tar -cf - -C /data/analytics/report . | pv | sh -c 'ssh root@analytics-files.gbif-test.org tar -C /var/www/html/analytics-files -xf -'`
+  `kubectl --context production exec gbif-toolbox-0 -- tar -cf - -C /data/analytics/registry/registry-report . | pv | sh -c 'ssh root@analytics-files.gbif-test.org tar -C /var/www/html/analytics-files/registry -xf -'`
 
 ### Steps to build country reports after the R part is done
 - Check the download statistics are up-to-date (Nagios should be alerting if not, but https://api.gbif.org/v1/occurrence/download/statistics/downloadedRecordsByDataset?fromDate=2023-03). If not, update with https://github.com/gbif/registry/blob/master/populate_downloaded_records_statistics.sh
 - Generate the country reports — check you are using correct APIs! (Normally prod but UAT analytics assets.)  Instructions are in the [country-reports](https://github.org/gbif/country-reports) project.
-- rsync the reports to `root@analytics-files.gbif-uat.org:/var/www/html/analytics-files/`
-  `rsync -av country-report/ root@analytics-files.gbif-uat.org:/var/www/html/analytics-files/country/`
+- rsync the reports to `root@analytics-files.gbif-test.org:/var/www/html/analytics-files/`
+  `rsync -av country-report/ root@analytics-files.gbif-test.org:/var/www/html/analytics-files/country/`
 
 ### Steps to deploy to production
 - rsync the CSVs, GeoTIFFs, figures and maps to `root@analytics-files.gbif.org:/var/www/html/analytics-files/`
