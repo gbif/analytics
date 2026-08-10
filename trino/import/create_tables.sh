@@ -47,13 +47,11 @@ log "Executing interp_taxon.q"
 # clb_nub_port=$(zookeeper-client -server $zk_servers get /prod/services/checklistbank-nub-ws/$clb_nub_zk_node 2> /dev/null | grep $clb_nub_zk_node | tail -n 1 | jq -r .port)
 # clb_nub_location=http://$clb_nub_host:$clb_nub_port/
 #clb_nub_location=https://api.gbif.org/v1/
-nub_location=http://ws2.gbif.org:7088
-log "Nub address is $nub_location"
-clb_location=http://ws2.gbif.org:7086
-log "CLB address is $clb_location"
+api_matching_service_location=http://ws2.gbif.org:7088
+log "Matching service address is $api_matching_service_location"
 
 interp_taxon_file="trino/import/interp_taxon.q"
-./trino/import/interp_taxon.sh $interp_taxon_file $nub_location $clb_location
+./trino/import/interp_taxon.sh $interp_taxon_file $api_matching_service_location
 
 /data/trino.jar --insecure --debug --server "$TRINO_SERVER" --catalog=hive \
 --schema="$DB" --session=$SESSION_PARAMS_SNAPPY --session=$SESSION_PARAMS_QUERY --execute="$(<$interp_taxon_file)" --user gbif --password

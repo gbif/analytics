@@ -14,7 +14,7 @@ AS SELECT
     CASE WHEN order_id IS NOT NULL THEN 'Order' ELSE NULL END,
     CASE WHEN class_id IS NOT NULL THEN 'Class' ELSE NULL END,
     CASE WHEN phylum_id IS NOT NULL THEN 'Phylum' ELSE NULL END,
-    CASE WHEN kingdom_id IS NOT NULL AND kingdom_id != 0 THEN 'Kingdom' ELSE NULL END,
+    CASE WHEN kingdom_id IS NOT NULL AND kingdom_id != 'S' THEN 'Kingdom' ELSE NULL END,
     'Unknown'
   ) AS varchar) AS rank,
   CAST(COALESCE(
@@ -42,7 +42,7 @@ GROUP BY
     CASE WHEN order_id IS NOT NULL THEN 'Order' ELSE NULL END,
     CASE WHEN class_id IS NOT NULL THEN 'Class' ELSE NULL END,
     CASE WHEN phylum_id IS NOT NULL THEN 'Phylum' ELSE NULL END,
-    CASE WHEN kingdom_id IS NOT NULL AND kingdom_id != 0 THEN 'Kingdom' ELSE NULL END,
+    CASE WHEN kingdom_id IS NOT NULL AND kingdom_id != 'S' THEN 'Kingdom' ELSE NULL END,
     'Unknown'
   ),
   COALESCE(
@@ -73,7 +73,7 @@ AS SELECT
     CASE WHEN order_id IS NOT NULL THEN 'Order' ELSE NULL END,
     CASE WHEN class_id IS NOT NULL THEN 'Class' ELSE NULL END,
     CASE WHEN phylum_id IS NOT NULL THEN 'Phylum' ELSE NULL END,
-    CASE WHEN kingdom_id IS NOT NULL AND kingdom_id != 0 THEN 'Kingdom' ELSE NULL END,
+    CASE WHEN kingdom_id IS NOT NULL AND kingdom_id != 'S' THEN 'Kingdom' ELSE NULL END,
     'Unknown'
   ) AS varchar) AS rank,
   CAST(COALESCE(
@@ -101,7 +101,7 @@ GROUP BY
     CASE WHEN order_id IS NOT NULL THEN 'Order' ELSE NULL END,
     CASE WHEN class_id IS NOT NULL THEN 'Class' ELSE NULL END,
     CASE WHEN phylum_id IS NOT NULL THEN 'Phylum' ELSE NULL END,
-    CASE WHEN kingdom_id IS NOT NULL AND kingdom_id != 0 THEN 'Kingdom' ELSE NULL END,
+    CASE WHEN kingdom_id IS NOT NULL AND kingdom_id != 'S' THEN 'Kingdom' ELSE NULL END,
     'Unknown'
   ),
   COALESCE(
@@ -132,7 +132,7 @@ AS SELECT
     CASE WHEN order_id IS NOT NULL THEN 'Order' ELSE NULL END,
     CASE WHEN class_id IS NOT NULL THEN 'Class' ELSE NULL END,
     CASE WHEN phylum_id IS NOT NULL THEN 'Phylum' ELSE NULL END,
-    CASE WHEN kingdom_id IS NOT NULL AND kingdom_id != 0 THEN 'Kingdom' ELSE NULL END,
+    CASE WHEN kingdom_id IS NOT NULL AND kingdom_id != 'S' THEN 'Kingdom' ELSE NULL END,
     'Unknown'
   ) AS varchar) AS rank,
   CAST(COALESCE(
@@ -160,7 +160,7 @@ GROUP BY
     CASE WHEN order_id IS NOT NULL THEN 'Order' ELSE NULL END,
     CASE WHEN class_id IS NOT NULL THEN 'Class' ELSE NULL END,
     CASE WHEN phylum_id IS NOT NULL THEN 'Phylum' ELSE NULL END,
-    CASE WHEN kingdom_id IS NOT NULL AND kingdom_id != 0 THEN 'Kingdom' ELSE NULL END,
+    CASE WHEN kingdom_id IS NOT NULL AND kingdom_id != 'S' THEN 'Kingdom' ELSE NULL END,
     'Unknown'
   ),
   COALESCE(
@@ -191,7 +191,7 @@ AS SELECT
     CASE WHEN order_id IS NOT NULL THEN 'Order' ELSE NULL END,
     CASE WHEN class_id IS NOT NULL THEN 'Class' ELSE NULL END,
     CASE WHEN phylum_id IS NOT NULL THEN 'Phylum' ELSE NULL END,
-    CASE WHEN kingdom_id IS NOT NULL AND kingdom_id != 0 THEN 'Kingdom' ELSE NULL END,
+    CASE WHEN kingdom_id IS NOT NULL AND kingdom_id != 'S' THEN 'Kingdom' ELSE NULL END,
     'Unknown'
   ) AS varchar) AS rank,
   CAST(COALESCE(
@@ -219,7 +219,7 @@ GROUP BY
     CASE WHEN order_id IS NOT NULL THEN 'Order' ELSE NULL END,
     CASE WHEN class_id IS NOT NULL THEN 'Class' ELSE NULL END,
     CASE WHEN phylum_id IS NOT NULL THEN 'Phylum' ELSE NULL END,
-    CASE WHEN kingdom_id IS NOT NULL AND kingdom_id != 0 THEN 'Kingdom' ELSE NULL END,
+    CASE WHEN kingdom_id IS NOT NULL AND kingdom_id != 'S' THEN 'Kingdom' ELSE NULL END,
     'Unknown'
   ),
   COALESCE(
@@ -249,7 +249,7 @@ AS SELECT
     CASE WHEN order_id IS NOT NULL THEN 'Order' ELSE NULL END,
     CASE WHEN class_id IS NOT NULL THEN 'Class' ELSE NULL END,
     CASE WHEN phylum_id IS NOT NULL THEN 'Phylum' ELSE NULL END,
-    CASE WHEN kingdom_id IS NOT NULL AND kingdom_id != 0 THEN 'Kingdom' ELSE NULL END,
+    CASE WHEN kingdom_id IS NOT NULL AND kingdom_id != 'S' THEN 'Kingdom' ELSE NULL END,
     'Unknown'
   ) AS varchar) AS rank,
   CAST(COALESCE(
@@ -276,7 +276,7 @@ GROUP BY
     CASE WHEN order_id IS NOT NULL THEN 'Order' ELSE NULL END,
     CASE WHEN class_id IS NOT NULL THEN 'Class' ELSE NULL END,
     CASE WHEN phylum_id IS NOT NULL THEN 'Phylum' ELSE NULL END,
-    CASE WHEN kingdom_id IS NOT NULL AND kingdom_id != 0 THEN 'Kingdom' ELSE NULL END,
+    CASE WHEN kingdom_id IS NOT NULL AND kingdom_id != 'S' THEN 'Kingdom' ELSE NULL END,
     'Unknown'
   ),
   COALESCE(

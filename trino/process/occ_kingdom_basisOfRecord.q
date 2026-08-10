@@ -42,14 +42,14 @@ INSERT INTO occ_country_kingdom_basisOfRecord
   SELECT
     CAST(snapshot AS VARCHAR) AS snapshot,
     country,
-    CAST(COALESCE(kingdom_id, 0) AS VARCHAR) AS kingdom_id,
+    CAST(COALESCE(kingdom_id, 'S') AS VARCHAR) AS kingdom_id,
     COALESCE(basis_of_record, 'UNKNOWN') AS basis_of_record,
     CAST(COUNT(*) AS VARCHAR) AS occurrence_count
   FROM snapshots
   GROUP BY
     snapshot,
     country,
-    COALESCE(kingdom_id, 0),
+    COALESCE(kingdom_id, 'S'),
     COALESCE(basis_of_record, 'UNKNOWN');
 
 
@@ -57,14 +57,14 @@ INSERT INTO occ_publisherCountry_kingdom_basisOfRecord
   SELECT
     CAST(snapshot AS VARCHAR) AS snapshot,
     publisher_country,
-    CAST(COALESCE(kingdom_id, 0) AS VARCHAR) AS kingdom_id,
+    CAST(COALESCE(kingdom_id, 'S') AS VARCHAR) AS kingdom_id,
     COALESCE(basis_of_record, 'UNKNOWN') AS basis_of_record,
     CAST(COUNT(*) AS VARCHAR) AS occurrence_count
   FROM snapshots
   GROUP BY
     snapshot,
     publisher_country,
-    COALESCE(kingdom_id, 0),
+    COALESCE(kingdom_id, 'S'),
     COALESCE(basis_of_record, 'UNKNOWN');
 
 
@@ -72,14 +72,14 @@ INSERT INTO occ_gbifRegion_kingdom_basisOfRecord
   SELECT
     CAST(snapshot AS VARCHAR) AS snapshot,
     gbif_region,
-    CAST(COALESCE(kingdom_id, 0) AS VARCHAR) AS kingdom_id,
+    CAST(COALESCE(kingdom_id, 'S') AS VARCHAR) AS kingdom_id,
     COALESCE(basis_of_record, 'UNKNOWN') AS basis_of_record,
     CAST(COUNT(*) AS VARCHAR) AS occurrence_count
   FROM snapshots
   GROUP BY
     snapshot,
     gbif_region,
-    COALESCE(kingdom_id, 0),
+    COALESCE(kingdom_id, 'S'),
     COALESCE(basis_of_record, 'UNKNOWN');
 
 
@@ -87,14 +87,14 @@ INSERT INTO occ_publisherGbifRegion_kingdom_basisOfRecord
   SELECT
     CAST(snapshot AS VARCHAR) AS snapshot,
     publisher_gbif_region,
-    CAST(COALESCE(kingdom_id, 0) AS VARCHAR) AS kingdom_id,
+    CAST(COALESCE(kingdom_id, 'S') AS VARCHAR) AS kingdom_id,
     COALESCE(basis_of_record, 'UNKNOWN') AS basis_of_record,
     CAST(COUNT(*) AS VARCHAR) AS occurrence_count
   FROM snapshots
   GROUP BY
     snapshot,
     publisher_gbif_region,
-    COALESCE(kingdom_id, 0),
+    COALESCE(kingdom_id, 'S'),
     COALESCE(basis_of_record, 'UNKNOWN');
 
 

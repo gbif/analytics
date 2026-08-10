@@ -1,10 +1,9 @@
 #!/bin/bash
 
 INTERP_TAXON_FILE=$1
-API_NUB_URL=$2
-API_CLB_URL=$3
+API_MATCHING_SERVICE_URL=$2
 
-rm -f $INTERP_TAXON_FILE
+rm -f "$INTERP_TAXON_FILE"
 
 echo "
 DROP TABLE IF EXISTS snapshot.tmp_taxonomy_interp;
@@ -32,7 +31,7 @@ SELECT
 FROM (
   SELECT
     taxon_key,
-    nubLookup('$API_NUB_URL', '$API_CLB_URL', kingdom, phylum, class_rank, order_rank, family, genus, scientific_name, specific_epithet, infra_specific_epithet, rank) n
+    nubLookup('$API_MATCHING_SERVICE_URL', CAST(NULL AS VARCHAR), kingdom, phylum, class_rank, order_rank, family, genus, scientific_name, specific_epithet, infra_specific_epithet, rank) n
   FROM snapshot.tmp_raw_taxonomy
 ) t1;
 " >> "$INTERP_TAXON_FILE"
