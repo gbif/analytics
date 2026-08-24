@@ -36,11 +36,11 @@ saveSvg <- function(plot, file) {
 
 # rewrite kingdom
 interpKingdom <- function(id) {
-  if (id==0) {
+  if (id=="S") {
     return("Unknown")
-  } else if (id==1) {
+  } else if (id=="N") {
     return("Animalia")
-  } else if (id==6) {
+  } else if (id=="P") {
     return("Plantae")
   }
   return("Other")
