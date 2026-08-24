@@ -11,7 +11,7 @@ processCsvs="false"
 makeFigures="false"
 queryDownloads="false"
 
-destination_db="analytics_col"
+destination_db="analytics"
 snapshot_db="snapshot"
 
 [[ $* =~ (^| )"-registryStatistics"($| ) ]] && registryStatistics="true"
